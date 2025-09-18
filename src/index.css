@@ -8,80 +8,81 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Professional pharma color palette */
-    --background: 0 0% 98%;
-    --foreground: 220 20% 20%;
+    /* Apple-inspired professional design system */
+    --background: 0 0% 99%;
+    --foreground: 220 15% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 220 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 220 15% 25%;
 
-    /* Deep medical blue primary */
-    --primary: 210 75% 25%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 210 75% 35%;
+    /* Premium blue palette */
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 210 100% 60%;
+    --primary-soft: 210 100% 96%;
 
-    /* Clean secondary grays */
-    --secondary: 220 15% 95%;
-    --secondary-foreground: 220 20% 25%;
+    /* Soft grays */
+    --secondary: 220 10% 96%;
+    --secondary-foreground: 220 15% 30%;
 
-    /* Muted backgrounds */
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 220 8% 97%;
+    --muted-foreground: 220 8% 50%;
 
-    /* Teal accent for highlights */
-    --accent: 180 55% 45%;
-    --accent-foreground: 0 0% 98%;
-    --accent-glow: 180 55% 55%;
+    /* Vibrant accent */
+    --accent: 170 70% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 170 70% 60%;
+    --accent-soft: 170 70% 96%;
 
-    /* Status colors */
-    --success: 140 70% 45%;
-    --success-foreground: 0 0% 98%;
-    --warning: 35 90% 55%;
-    --warning-foreground: 220 20% 20%;
-    --destructive: 0 70% 55%;
-    --destructive-foreground: 0 0% 98%;
-    --info: 210 75% 55%;
-    --info-foreground: 0 0% 98%;
+    /* System colors */
+    --success: 140 60% 50%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 140 60% 96%;
+    
+    --warning: 35 85% 55%;
+    --warning-foreground: 220 15% 25%;
+    --warning-soft: 35 85% 96%;
+    
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-soft: 0 75% 96%;
+    
+    --info: 210 100% 55%;
+    --info-foreground: 0 0% 100%;
+    --info-soft: 210 100% 96%;
 
     /* Borders and inputs */
-    --border: 220 15% 88%;
-    --input: 220 15% 92%;
-    --ring: 210 75% 25%;
+    --border: 220 8% 90%;
+    --input: 220 8% 95%;
+    --ring: 210 100% 50%;
 
-    /* Professional gradients */
+    /* Apple-style radius */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    /* Premium gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-surface: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1));
 
-    /* Elegant shadows */
-    --shadow-card: 0 4px 20px -4px hsl(var(--primary) / 0.1);
-    --shadow-elevated: 0 8px 40px -8px hsl(var(--primary) / 0.15);
-    --shadow-floating: 0 16px 60px -16px hsl(var(--primary) / 0.2);
+    /* Apple-style shadows */
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 2px 12px -4px rgba(0, 0, 0, 0.08);
+    --shadow-floating: 0 8px 30px -8px rgba(0, 0, 0, 0.12);
 
     /* Smooth transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --transition-quick: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .dark {
@@ -112,6 +113,7 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

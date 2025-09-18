@@ -11,45 +11,45 @@ interface QuickActionsProps {
 export const QuickActions = ({ onVoiceNote, onAskAI, onReports, onNewAction }: QuickActionsProps) => {
   return (
     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="flex items-center gap-3 bg-card/95 backdrop-blur-sm border border-border rounded-full px-4 py-3 shadow-floating">
+      <div className="flex items-center gap-4 bg-card/95 backdrop-blur-xl border border-border/50 rounded-3xl px-6 py-4 shadow-floating">
         <Button
           variant="ghost"
           size="sm"
           onClick={onVoiceNote}
-          className="rounded-full h-12 w-12 p-0 hover:bg-accent hover:text-accent-foreground"
+          className="rounded-2xl h-14 w-14 p-0 hover:bg-accent/10 hover:text-accent transition-all duration-200 hover:scale-110"
         >
           <Mic className="h-5 w-5" />
         </Button>
         
-        <div className="h-6 w-px bg-border" />
+        <div className="h-8 w-px bg-border/50" />
         
         <Button
           variant="ghost"
           size="sm"
           onClick={onAskAI}
-          className="rounded-full h-12 w-12 p-0 hover:bg-primary hover:text-primary-foreground group"
+          className="rounded-2xl h-14 w-14 p-0 hover:bg-primary/10 hover:text-primary group transition-all duration-200 hover:scale-110"
         >
-          <Brain className="h-5 w-5 group-hover:scale-110 transition-transform" />
+          <Brain className="h-6 w-6 group-hover:scale-110 transition-transform" />
         </Button>
         
         <Button
           variant="ghost"
           size="sm"
           onClick={onReports}
-          className="rounded-full h-12 w-12 p-0 hover:bg-accent hover:text-accent-foreground"
+          className="rounded-2xl h-14 w-14 p-0 hover:bg-accent/10 hover:text-accent transition-all duration-200 hover:scale-110"
         >
-          <FileText className="h-5 w-5" />
+          <FileText className="h-6 w-6" />
         </Button>
         
-        <div className="h-6 w-px bg-border" />
+        <div className="h-8 w-px bg-border/50" />
         
         <Button
           variant="default"
           size="sm"
           onClick={onNewAction}
-          className="rounded-full h-12 w-12 p-0 bg-gradient-to-r from-primary to-primary-glow hover:shadow-lg transition-all"
+          className="rounded-2xl h-14 w-14 p-0 bg-gradient-primary hover:shadow-xl transition-all duration-300 hover:scale-110"
         >
-          <Plus className="h-5 w-5" />
+          <Plus className="h-6 w-6" />
         </Button>
       </div>
     </div>

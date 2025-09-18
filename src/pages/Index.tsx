@@ -1,7 +1,7 @@
-import { DailyOverview } from "@/components/DailyOverview";
+import { AppContainer } from "@/components/AppContainer";
 
 const Index = () => {
-  return <DailyOverview />;
+  return <AppContainer />;
 };
 
 export default Index;

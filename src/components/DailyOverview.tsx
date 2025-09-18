@@ -16,13 +16,22 @@ interface Meeting {
   status: "upcoming" | "in-progress" | "debrief-needed" | "done";
 }
 
+interface DailyOverviewProps {
+  onPrepare: (id: string) => void;
+  onDebrief: (id: string) => void;
+  onVoiceNote: () => void;
+  onAskAI: () => void;
+  onReports: () => void;
+  onNewAction: () => void;
+}
+
 const mockMeetings: Meeting[] = [
   {
     id: "1",
     time: "9:00 AM",
     duration: "45 min",
     hcpName: "Dr. Sarah Johnson",
-    specialty: "Cardiology",
+    specialty: "Cardiology", 
     location: "Metro Medical Center",
     status: "upcoming"
   },
@@ -55,33 +64,22 @@ const mockMeetings: Meeting[] = [
   }
 ];
 
-export const DailyOverview = () => {
+export const DailyOverview = ({ 
+  onPrepare, 
+  onDebrief, 
+  onVoiceNote, 
+  onAskAI, 
+  onReports, 
+  onNewAction 
+}: DailyOverviewProps) => {
   const [meetings, setMeetings] = useState<Meeting[]>(mockMeetings);
 
   const handlePrepare = (id: string) => {
-    console.log("Preparing for meeting:", id);
-    // Navigate to prep view
+    onPrepare(id);
   };
 
   const handleDebrief = (id: string) => {
-    console.log("Starting debrief for meeting:", id);
-    // Navigate to debrief view
-  };
-
-  const handleVoiceNote = () => {
-    console.log("Starting voice note recording");
-  };
-
-  const handleAskAI = () => {
-    console.log("Opening AI assistant");
-  };
-
-  const handleReports = () => {
-    console.log("Opening reports modal");
-  };
-
-  const handleNewAction = () => {
-    console.log("Creating new action");
+    onDebrief(id);
   };
 
   const todayDate = new Date().toLocaleDateString("en-US", { 
@@ -100,15 +98,15 @@ export const DailyOverview = () => {
       {/* Header */}
       <div className="px-6 pt-8 pb-6">
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground mb-1">Daily Overview</h1>
+          <div className="animate-slide-up">
+            <h1 className="text-3xl font-bold text-foreground mb-1">Daily Overview</h1>
             <p className="text-muted-foreground">{todayDate}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+          <div className="flex items-center gap-2 animate-fade-in">
+            <Button variant="outline" size="sm" className="rounded-xl hover:scale-105 transition-transform">
               <Calendar className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="rounded-xl hover:scale-105 transition-transform">
               <User className="h-4 w-4" />
             </Button>
           </div>
@@ -116,16 +114,16 @@ export const DailyOverview = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{upcomingCount}</div>
+          <Card className="p-4 text-center shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm animate-scale-in" style={{animationDelay: "0.1s"}}>
+            <div className="text-3xl font-bold text-primary">{upcomingCount}</div>
             <div className="text-sm text-muted-foreground">Upcoming</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-warning">{debriefCount}</div>
+          <Card className="p-4 text-center shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm animate-scale-in" style={{animationDelay: "0.2s"}}>
+            <div className="text-3xl font-bold text-warning">{debriefCount}</div>
             <div className="text-sm text-muted-foreground">Need Debrief</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-success">{completedCount}</div>
+          <Card className="p-4 text-center shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm animate-scale-in" style={{animationDelay: "0.3s"}}>
+            <div className="text-3xl font-bold text-success">{completedCount}</div>
             <div className="text-sm text-muted-foreground">Completed</div>
           </Card>
         </div>
@@ -161,10 +159,10 @@ export const DailyOverview = () => {
 
       {/* Quick Actions Dock */}
       <QuickActions 
-        onVoiceNote={handleVoiceNote}
-        onAskAI={handleAskAI}
-        onReports={handleReports}
-        onNewAction={handleNewAction}
+        onVoiceNote={onVoiceNote}
+        onAskAI={onAskAI}
+        onReports={onReports}
+        onNewAction={onNewAction}
       />
     </div>
   );

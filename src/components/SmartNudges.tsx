@@ -54,7 +54,7 @@ const mockNudges: Nudge[] = [
 
 export const SmartNudges = () => {
   return (
-    <Card className="p-4">
+    <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm animate-fade-in">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-card-foreground">Smart Nudges</h3>
         <Badge variant="secondary" className="text-xs">
