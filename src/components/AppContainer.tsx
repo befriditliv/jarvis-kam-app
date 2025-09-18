@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DailyOverview } from "./DailyOverviewApple";
+import { DailyOverviewApple } from "./DailyOverviewApple";
 import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
 import { AIAssistant } from "./AIAssistant";
@@ -103,7 +103,7 @@ export const AppContainer = () => {
 
   return (
     <>
-      <DailyOverview
+      <DailyOverviewApple
         onPrepare={handlePrepare}
         onDebrief={handleDebrief}
         onVoiceNote={handleVoiceNote}

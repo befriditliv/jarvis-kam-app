@@ -98,7 +98,7 @@ const statusLabels = {
   done: "Complete"
 };
 
-export const DailyOverview = ({
+export const DailyOverviewApple = ({
   onPrepare, 
   onDebrief, 
   onVoiceNote, 
