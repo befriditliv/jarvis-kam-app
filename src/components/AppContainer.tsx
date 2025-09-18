@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DailyOverview } from "./DailyOverview";
-import { MeetingPrepView } from "./MeetingPrepView";
+import { DailyOverview } from "./DailyOverviewApple";
+import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
 import { AIAssistant } from "./AIAssistant";
 import { VoiceRecorder } from "./VoiceRecorder";
@@ -83,7 +83,7 @@ export const AppContainer = () => {
 
   if (currentView === "prep" && selectedMeetingId) {
     return (
-      <MeetingPrepView
+      <PrepPage
         meetingId={selectedMeetingId}
         onBack={handleBackToOverview}
         onStartMeeting={handleStartMeeting}
