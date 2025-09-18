@@ -9,6 +9,7 @@ interface DailyOverviewProps {
   onAskAI: () => void;
   onReports: () => void;
   onNewAction: () => void;
+  onIntelligence: () => void;
 }
 
 interface Meeting {
@@ -104,7 +105,8 @@ export const DailyOverviewApple = ({
   onVoiceNote, 
   onAskAI, 
   onReports, 
-  onNewAction 
+  onNewAction,
+  onIntelligence
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
 

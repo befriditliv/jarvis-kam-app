@@ -163,6 +163,7 @@ export const DailyOverview = ({
         onAskAI={onAskAI}
         onReports={onReports}
         onNewAction={onNewAction}
+        onIntelligence={() => {}}
       />
     </div>
   );

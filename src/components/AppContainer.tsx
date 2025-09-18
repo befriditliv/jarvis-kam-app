@@ -4,8 +4,9 @@ import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
 import { AIAssistant } from "./AIAssistant";
 import { VoiceRecorder } from "./VoiceRecorder";
+import { MeetingIntelligence } from "./MeetingIntelligence";
 
-type AppView = "overview" | "prep" | "debrief";
+type AppView = "overview" | "prep" | "debrief" | "intelligence";
 
 interface VoiceRecording {
   id: string;
@@ -81,6 +82,10 @@ export const AppContainer = () => {
     // TODO: Implement new action creation
   };
 
+  const handleIntelligence = () => {
+    setCurrentView("intelligence");
+  };
+
   if (currentView === "prep" && selectedMeetingId) {
     return (
       <PrepPage
@@ -101,6 +106,10 @@ export const AppContainer = () => {
     );
   }
 
+  if (currentView === "intelligence") {
+    return <MeetingIntelligence />;
+  }
+
   return (
     <>
       <DailyOverviewApple
@@ -110,6 +119,7 @@ export const AppContainer = () => {
         onAskAI={handleAskAI}
         onReports={handleReports}
         onNewAction={handleNewAction}
+        onIntelligence={handleIntelligence}
       />
       
       <AIAssistant 
