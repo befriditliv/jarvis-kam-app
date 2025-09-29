@@ -49,14 +49,6 @@ const mockMeetings: Meeting[] = [{
   specialty: "Endocrinology",
   location: "University Health System",
   status: "upcoming"
-}, {
-  id: "4",
-  time: "4:30 PM",
-  duration: "30 min",
-  hcpName: "Dr. James Wilson",
-  specialty: "Nephrology",
-  location: "Regional Medical Center",
-  status: "done"
 }];
 
 // HCP data with access level and consent status
@@ -210,7 +202,11 @@ export const DailyOverviewApple = ({
           <div>
             <h2 className="text-lg font-medium text-foreground mb-4">Schedule</h2>
             <div className="space-y-4">
-              {meetings.map(meeting => <div key={meeting.id} className="flex items-center justify-between p-6 border border-border rounded-xl hover:bg-accent/30 transition-all duration-200">
+              {meetings.map((meeting, index) => {
+                const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
+                return <div key={meeting.id} className={`flex items-center justify-between p-6 border rounded-xl hover:bg-accent/30 transition-all duration-200 ${
+                  isNextUpcoming ? "border-primary bg-primary/5 shadow-md" : "border-border"
+                }`}>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="font-medium text-foreground">{meeting.time}</div>
@@ -247,8 +243,9 @@ export const DailyOverviewApple = ({
                     {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90">
                         Debrief
                       </Button>}
-                  </div>
-                </div>)}
+                   </div>
+                 </div>;
+               })}
             </div>
           </div>
         </div>
