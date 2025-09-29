@@ -54,7 +54,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [phase, setPhase] = useState<'template' | 'debrief'>('template');
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
-    outcome: 3,
+    outcome: 0,
     objectives: [],
     keyConcerns: false,
     hasInizioFollowUp: false,
@@ -152,7 +152,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               </div>
               <Button 
                 onClick={handleStartDebrief}
-                disabled={template.objectives.length === 0}
                 className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl"
               >
                 <Play className="h-4 w-4 mr-2" />
@@ -290,8 +289,15 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           </Card>
 
-          <div className="text-center text-sm text-muted-foreground">
-            Select at least one objective to continue to the voice debrief
+          <div className="text-center">
+            <Button 
+              onClick={handleStartDebrief}
+              size="lg"
+              className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-4 text-lg"
+            >
+              <Mic className="h-5 w-5 mr-3" />
+              Start Voice Debrief
+            </Button>
           </div>
         </div>
       </div>
