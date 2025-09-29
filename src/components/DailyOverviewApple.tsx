@@ -235,7 +235,7 @@ export const DailyOverviewApple = ({
           {/* Task Center Preview */}
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">AI Recommendations</h2>
+              <h2 className="text-lg font-semibold text-foreground">Jarvis AI Recommendations</h2>
               <Button onClick={() => setIsTaskCenterOpen(true)} variant="outline" size="sm" className="rounded-xl text-xs font-medium">
                 <Target className="h-4 w-4 mr-2" />
                 View All
