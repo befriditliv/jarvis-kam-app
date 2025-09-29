@@ -143,11 +143,9 @@ export const DailyOverviewApple = ({
                 Next call with <span className="underline text-primary">{nextHCPData.name}</span> at {nextMeeting.time}
               </h2>
               
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border/50">
-                <div className="w-6 h-6 bg-yellow-500/10 rounded-full flex items-center justify-center">
-                  <Lightbulb className="w-3 h-3 text-yellow-500" />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">Jarvis Suggestions</h3>
+              <div className="mb-4 pb-3 border-b border-primary/20">
+                <h3 className="text-base font-medium text-primary mb-1">AI Meeting Insights</h3>
+                <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
               </div>
               
               <div className="space-y-2 mb-4">
