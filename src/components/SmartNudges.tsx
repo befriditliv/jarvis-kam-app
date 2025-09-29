@@ -13,18 +13,18 @@ interface Nudge {
 const nudgeTypeConfig = {
   reminder: {
     icon: Lightbulb,
-    color: "text-info",
-    bgColor: "bg-info/10"
+    color: "text-primary-foreground",
+    bgColor: "bg-primary"
   },
   opportunity: {
     icon: TrendingUp,
-    color: "text-success",
-    bgColor: "bg-success/10"
+    color: "text-success-foreground",
+    bgColor: "bg-success"
   },
   alert: {
     icon: AlertCircle,
-    color: "text-warning",
-    bgColor: "bg-warning/10"
+    color: "text-warning-foreground",
+    bgColor: "bg-warning"
   }
 };
 
