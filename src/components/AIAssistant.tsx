@@ -49,13 +49,13 @@ const categoryConfig = {
   },
   competitive: {
     icon: Building,
-    color: "text-purple-500",
-    bg: "bg-purple-500/10"
+    color: "text-blue-400",
+    bg: "bg-blue-400/10"
   },
   clinical: {
     icon: Calendar,
-    color: "text-green-500",
-    bg: "bg-green-500/10"
+    color: "text-blue-600",
+    bg: "bg-blue-600/10"
   }
 };
 export const AIAssistant = ({
