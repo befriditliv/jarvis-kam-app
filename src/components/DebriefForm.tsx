@@ -24,9 +24,9 @@ interface DebriefData {
 interface DebriefTemplate {
   outcome: number;
   objectives: string[];
-  keyConcerns: boolean;
-  hasInizioFollowUp: boolean;
-  materialsShared: boolean;
+  keyConcerns: boolean | undefined;
+  hasInizioFollowUp: boolean | undefined;
+  materialsShared: boolean | undefined;
 }
 
 interface Objective {
@@ -56,9 +56,9 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [template, setTemplate] = useState<DebriefTemplate>({
     outcome: 0,
     objectives: [],
-    keyConcerns: false,
-    hasInizioFollowUp: false,
-    materialsShared: false
+    keyConcerns: undefined,
+    hasInizioFollowUp: undefined,
+    materialsShared: undefined
   });
   const [voiceNotes, setVoiceNotes] = useState("");
 
@@ -121,9 +121,9 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     const debriefData: DebriefData = {
       outcome: template.outcome,
       objectivesAchieved: template.objectives,
-      keyConcerns: template.keyConcerns,
-      hasInizioFollowUp: template.hasInizioFollowUp,
-      materialsShared: template.materialsShared,
+      keyConcerns: template.keyConcerns || false,
+      hasInizioFollowUp: template.hasInizioFollowUp || false,
+      materialsShared: template.materialsShared || false,
       voiceNotes
     };
     onSave(debriefData);
@@ -225,7 +225,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <h3 className="text-lg font-semibold text-card-foreground mb-4">Any Key Concerns voiced?</h3>
             <div className="grid grid-cols-2 gap-4">
               <Button
-                variant={template.keyConcerns ? "default" : "outline"}
+                variant={template.keyConcerns === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: true }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -233,7 +233,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 Yes
               </Button>
               <Button
-                variant={!template.keyConcerns ? "default" : "outline"}
+                variant={template.keyConcerns === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: false }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -248,7 +248,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <h3 className="text-lg font-semibold text-card-foreground mb-4">Materials shared or presented?</h3>
             <div className="grid grid-cols-2 gap-4">
               <Button
-                variant={template.materialsShared ? "default" : "outline"}
+                variant={template.materialsShared === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -256,7 +256,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 Yes
               </Button>
               <Button
-                variant={!template.materialsShared ? "default" : "outline"}
+                variant={template.materialsShared === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -271,7 +271,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <h3 className="text-lg font-semibold text-card-foreground mb-4">Follow-up Task for Inizio?</h3>
             <div className="grid grid-cols-2 gap-4">
               <Button
-                variant={template.hasInizioFollowUp ? "default" : "outline"}
+                variant={template.hasInizioFollowUp === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: true }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -279,7 +279,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 Yes
               </Button>
               <Button
-                variant={!template.hasInizioFollowUp ? "default" : "outline"}
+                variant={template.hasInizioFollowUp === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: false }))}
                 className="h-16 rounded-xl text-lg"
               >
@@ -350,11 +350,11 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         <Card className="p-4 bg-gradient-subtle border-primary/20 border">
           <h4 className="font-semibold text-sm mb-2 text-primary">Your Template Setup:</h4>
           <div className="text-xs space-y-1 text-muted-foreground">
-            <div>Outcome: {outcomes.find(o => o.value === template.outcome)?.label} ({template.outcome}/5)</div>
+            <div>Outcome: {template.outcome > 0 ? `${outcomes.find(o => o.value === template.outcome)?.label} (${template.outcome}/5)` : 'Not selected'}</div>
             <div>Objectives: {template.objectives.length} selected</div>
-            <div>Key Concerns: {template.keyConcerns ? 'Yes' : 'No'}</div>
-            <div>Materials Shared: {template.materialsShared ? 'Yes' : 'No'}</div>
-            <div>Inizio Follow-up: {template.hasInizioFollowUp ? 'Required' : 'Not needed'}</div>
+            <div>Key Concerns: {template.keyConcerns === undefined ? 'Not selected' : template.keyConcerns ? 'Yes' : 'No'}</div>
+            <div>Materials Shared: {template.materialsShared === undefined ? 'Not selected' : template.materialsShared ? 'Yes' : 'No'}</div>
+            <div>Inizio Follow-up: {template.hasInizioFollowUp === undefined ? 'Not selected' : template.hasInizioFollowUp ? 'Required' : 'Not needed'}</div>
           </div>
         </Card>
 
