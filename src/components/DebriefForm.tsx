@@ -293,7 +293,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <Button 
               onClick={handleStartDebrief}
               size="lg"
-              className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-4 text-lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-4 text-lg font-semibold"
             >
               <Mic className="h-5 w-5 mr-3" />
               Start Voice Debrief
