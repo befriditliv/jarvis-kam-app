@@ -31,31 +31,26 @@ const querySuggestions: QuerySuggestion[] = [
   },
   {
     id: "2",
-    text: "Show adoption trends in oncology at City Medical Center",
+    text: "Show adoption trends in oncology",
     category: "trends"
   },
   {
     id: "3", 
-    text: "Compare our CV portfolio vs competitors this quarter",
+    text: "Compare our portfolio vs competitors",
     category: "competitive"
   },
   {
     id: "4",
-    text: "What clinical trials are relevant for Dr. Johnson?",
+    text: "What clinical trials are relevant?",
     category: "clinical"
-  },
-  {
-    id: "5",
-    text: "Identify high-potential HCPs in cardiology",
-    category: "insights"
   }
 ];
 
 const categoryConfig = {
   insights: { icon: Brain, color: "text-primary", bg: "bg-primary/10" },
-  trends: { icon: TrendingUp, color: "text-accent", bg: "bg-accent/10" },
-  competitive: { icon: Users, color: "text-warning", bg: "bg-warning/10" },
-  clinical: { icon: Calendar, color: "text-success", bg: "bg-success/10" }
+  trends: { icon: TrendingUp, color: "text-blue-500", bg: "bg-blue-500/10" },
+  competitive: { icon: Building, color: "text-purple-500", bg: "bg-purple-500/10" },
+  clinical: { icon: Calendar, color: "text-green-500", bg: "bg-green-500/10" }
 };
 
 export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
@@ -124,38 +119,37 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
             </div>
           </div>
 
-          {/* Query Suggestions */}
-          <div className="p-4 border-b border-border">
-            <h3 className="text-sm font-medium text-card-foreground mb-3">Quick Queries</h3>
-            <div className="space-y-2">
-              {querySuggestions.map((suggestion) => {
-                const config = categoryConfig[suggestion.category];
-                const Icon = config.icon;
-                
-                return (
-                  <div
-                    key={suggestion.id}
-                    onClick={() => handleSendQuery(suggestion.text)}
-                    className="p-3 rounded-lg border border-border/50 hover:bg-secondary/30 cursor-pointer transition-all duration-200 group"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`p-2 rounded-lg ${config.bg} group-hover:scale-110 transition-transform`}>
-                        <Icon className={`h-4 w-4 ${config.color}`} />
-                      </div>
-                      <p className="text-sm text-card-foreground leading-relaxed">{suggestion.text}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Response History */}
+          {/* Chat History */}
           <div className="flex-1 overflow-y-auto p-4">
             {responses.length === 0 && !isLoading && (
-              <div className="text-center py-8">
-                <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-3 opacity-50" />
-                <p className="text-sm text-muted-foreground">Ask a question to get started</p>
+              <div className="text-center py-12">
+                <Brain className="h-16 w-16 text-muted-foreground mx-auto mb-4 opacity-30" />
+                <h3 className="text-lg font-medium text-card-foreground mb-2">Start a conversation</h3>
+                <p className="text-sm text-muted-foreground mb-6">Ask me anything about your data and insights</p>
+                
+                {/* Quick Query Suggestions */}
+                <div className="space-y-2 max-w-sm mx-auto">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Quick suggestions</p>
+                  {querySuggestions.map((suggestion) => {
+                    const config = categoryConfig[suggestion.category];
+                    const Icon = config.icon;
+                    
+                    return (
+                      <button
+                        key={suggestion.id}
+                        onClick={() => handleSendQuery(suggestion.text)}
+                        className="w-full p-3 rounded-lg border border-border/50 hover:bg-secondary/30 transition-all duration-200 group text-left"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`p-1.5 rounded-md ${config.bg}`}>
+                            <Icon className={`h-3.5 w-3.5 ${config.color}`} />
+                          </div>
+                          <p className="text-sm text-card-foreground">{suggestion.text}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -197,21 +191,22 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
             </div>
           </div>
 
-          {/* Input */}
-          <div className="p-4 border-t border-border">
-            <div className="flex gap-2">
+          {/* Chat Input */}
+          <div className="p-4 border-t border-border bg-background/50">
+            <div className="flex gap-3">
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Ask about trends, competitors, clinical data..."
+                placeholder="Type your message here..."
                 onKeyDown={(e) => e.key === "Enter" && handleSendQuery()}
-                className="flex-1 rounded-xl border-border/50 focus:border-primary"
+                className="flex-1 rounded-xl border-border/50 focus:border-primary bg-background"
                 disabled={isLoading}
               />
               <Button
                 onClick={() => handleSendQuery()}
                 disabled={!query.trim() || isLoading}
-                className="rounded-xl bg-gradient-primary hover:shadow-lg"
+                size="sm"
+                className="rounded-xl bg-gradient-primary hover:shadow-lg px-4"
               >
                 <Send className="h-4 w-4" />
               </Button>
