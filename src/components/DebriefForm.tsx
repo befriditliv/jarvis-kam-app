@@ -161,23 +161,23 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </div>
         </div>
 
-        <div className="px-6 py-6 space-y-6">
+        <div className="px-6 py-4 space-y-4">
           {/* Meeting Outcome */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Meeting Outcome</h3>
-            <div className="grid grid-cols-5 gap-3">
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Meeting Outcome</h3>
+            <div className="grid grid-cols-5 gap-2">
               {outcomes.map((outcome) => (
                 <div
                   key={outcome.value}
                   onClick={() => setTemplate(prev => ({ ...prev, outcome: outcome.value }))}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                  className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
                     template.outcome === outcome.value 
                       ? `border-primary ${outcome.bgColor} scale-105 shadow-lg` 
                       : "border-border/50 hover:border-border"
                   }`}
                 >
                   <div className="text-center">
-                    <div className={`text-2xl font-bold mb-1 ${outcome.color}`}>
+                    <div className={`text-xl font-bold mb-1 ${outcome.color}`}>
                       {outcome.value}
                     </div>
                     <div className="text-xs font-medium text-muted-foreground">
@@ -190,14 +190,14 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </Card>
 
           {/* Objectives */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Select Achieved Objectives</h3>
-            <div className="space-y-3">
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Select Achieved Objectives</h3>
+            <div className="space-y-2">
               {mockObjectives.map((objective) => (
                 <div
                   key={objective.id}
                   onClick={() => toggleObjective(objective.title)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
                     template.objectives.includes(objective.title)
                       ? "border-success/50 bg-success/5 hover:bg-success/10" 
                       : "border-border/50 hover:bg-secondary/20"
@@ -221,13 +221,13 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </Card>
 
           {/* Key Concerns */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Any Key Concerns voiced?</h3>
-            <div className="grid grid-cols-2 gap-4">
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Any Key Concerns voiced?</h3>
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 variant={template.keyConcerns === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: true }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <CheckCircle className="h-5 w-5 mr-2" />
                 Yes
@@ -235,7 +235,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               <Button
                 variant={template.keyConcerns === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: false }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <XCircle className="h-5 w-5 mr-2" />
                 No
@@ -244,13 +244,13 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </Card>
 
           {/* Materials Shared */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Materials shared or presented?</h3>
-            <div className="grid grid-cols-2 gap-4">
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Materials shared or presented?</h3>
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 variant={template.materialsShared === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <CheckCircle className="h-5 w-5 mr-2" />
                 Yes
@@ -258,7 +258,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               <Button
                 variant={template.materialsShared === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <XCircle className="h-5 w-5 mr-2" />
                 No
@@ -267,13 +267,13 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </Card>
 
           {/* Inizio Follow-up */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Follow-up Task for Inizio?</h3>
-            <div className="grid grid-cols-2 gap-4">
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Follow-up Task for Inizio?</h3>
+            <div className="grid grid-cols-2 gap-3">
               <Button
                 variant={template.hasInizioFollowUp === true ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: true }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <CheckCircle className="h-5 w-5 mr-2" />
                 Yes
@@ -281,7 +281,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               <Button
                 variant={template.hasInizioFollowUp === false ? "default" : "outline"}
                 onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: false }))}
-                className="h-16 rounded-xl text-lg"
+                className="h-12 rounded-lg text-base"
               >
                 <XCircle className="h-5 w-5 mr-2" />
                 No
@@ -293,7 +293,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <Button 
               onClick={handleStartDebrief}
               size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-4 text-lg font-semibold"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-lg px-6 py-3 text-base font-semibold"
             >
               <Mic className="h-5 w-5 mr-3" />
               Start Voice Debrief
