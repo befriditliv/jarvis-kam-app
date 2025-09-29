@@ -27,12 +27,14 @@ const prepSections: PrepSection[] = [{
   icon: FileText,
   items: [{
     id: "1",
-    title: "Review client history",
-    subtitle: "Last interaction 2 weeks ago"
+    title: "Practice Profile",
+    subtitle: "Metro Medical Center - 450 physicians, 12 cardiologists. Dr. Johnson leads the heart failure clinic with 800+ patients annually.",
+    status: "completed"
   }, {
     id: "2",
-    title: "Access Level Analysis",
-    subtitle: "High access • Cardiology specialist"
+    title: "Prescribing Patterns",
+    subtitle: "High prescriber of ACE inhibitors and beta-blockers. Shows preference for evidence-based protocols and latest clinical guidelines.",
+    status: "completed"
   }]
 }, {
   id: "recent",
@@ -40,12 +42,14 @@ const prepSections: PrepSection[] = [{
   icon: History,
   items: [{
     id: "3",
-    title: "Q4 Review Meeting",
-    subtitle: "Discussed patient adherence strategies"
+    title: "Q4 Cardiology Review",
+    subtitle: "Discussed SGLT2 inhibitor adoption and patient monitoring protocols. Dr. Johnson expressed interest in expanding heart failure management options.",
+    status: "completed"
   }, {
     id: "4",
-    title: "Protocol Update Session",
-    subtitle: "Positive feedback on new guidelines"
+    title: "Clinical Data Discussion",
+    subtitle: "Reviewed DAPA-HF trial outcomes. Positive reception to real-world evidence and patient quality of life improvements.",
+    status: "completed"
   }]
 }, {
   id: "actions",
@@ -53,12 +57,14 @@ const prepSections: PrepSection[] = [{
   icon: TrendingUp,
   items: [{
     id: "5",
-    title: "Prepare key messages",
-    subtitle: "CV protocol & adherence focus"
+    title: "Present SGLT2 Clinical Benefits",
+    subtitle: "Focus on cardiovascular outcomes and reduced hospitalizations. Highlight the 26% reduction in heart failure progression from recent studies.",
+    status: "pending"
   }, {
     id: "6",
-    title: "Review clinical data",
-    subtitle: "Latest trial results available"
+    title: "Discuss Implementation Strategy",
+    subtitle: "Address patient selection criteria and monitoring protocols. Provide practical guidance for transitioning eligible patients.",
+    status: "pending"
   }]
 }, {
   id: "digital",
@@ -66,12 +72,14 @@ const prepSections: PrepSection[] = [{
   icon: Globe,
   items: [{
     id: "7",
-    title: "Check formulary status",
-    subtitle: "Metro Health preferred access"
+    title: "Email Engagement",
+    subtitle: "95% open rate on cardiology newsletters. Downloaded 8 clinical studies in the past month, particularly focused on heart failure management.",
+    status: "completed"
   }, {
     id: "8",
-    title: "Portal Activity Review",
-    subtitle: "Downloaded 3 studies this month"
+    title: "Platform Activity",
+    subtitle: "Active user of our clinical portal with 15 logins this quarter. Frequently accesses dosing calculators and patient education materials.",
+    status: "completed"
   }]
 }];
 const sectionDescriptions = {
