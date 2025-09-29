@@ -200,7 +200,7 @@ export const DailyOverviewApple = ({
               <h2 className="text-lg font-medium text-foreground mb-4">
                 Next call with <span className="underline">{nextHCPData.name}</span>
               </h2>
-              <div className="space-y-3 mb-4">
+              <div className="space-y-2 mb-4">
                 {nextHCPData.importantPoints.map((point, index) => (
                   <div 
                     key={index}
