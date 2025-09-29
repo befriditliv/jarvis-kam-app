@@ -21,8 +21,8 @@ interface DebriefData {
   outcome: number;
   objectivesAchieved: string[];
   keyConcerns: string[];
-  nextSteps: string;
-  notes: string;
+  hasInizioFollowUp: boolean;
+  voiceNotes: string;
 }
 
 export const AppContainer = () => {
