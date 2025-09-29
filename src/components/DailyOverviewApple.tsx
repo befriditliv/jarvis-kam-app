@@ -246,13 +246,13 @@ export const DailyOverviewApple = ({
               {/* High Priority Task Preview */}
               <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-300 bg-card/50 backdrop-blur-sm hover:shadow-md">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Calendar className="h-5 w-5 text-red-500" />
+                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Calendar className="h-5 w-5 text-primary" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-foreground text-sm">Schedule Meeting with Category A Client</h3>
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-red-500/10 text-red-500 border border-red-500/20">
+                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-primary/10 text-primary border border-primary/20">
                         High Priority
                       </span>
                     </div>
@@ -267,13 +267,13 @@ export const DailyOverviewApple = ({
               {/* Medium Priority Task Preview */}
               <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-300 bg-card/50 backdrop-blur-sm hover:shadow-md">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="h-5 w-5 text-green-500" />
+                  <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="h-5 w-5 text-blue-500" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-foreground text-sm">Follow-up on Study Download</h3>
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20">
+                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-blue-500/10 text-blue-500 border border-blue-500/20">
                         High Priority
                       </span>
                     </div>
