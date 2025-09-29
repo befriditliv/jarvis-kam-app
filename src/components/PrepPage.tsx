@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Clock, User, MapPin, Calendar, Play, FileText, TrendingUp, Globe, History } from "lucide-react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { ArrowLeft, Clock, User, MapPin, Calendar, Play, FileText, TrendingUp, Globe, History, ChevronRight } from "lucide-react";
 interface PrepPageProps {
   meetingId: string;
   onBack: () => void;
@@ -129,23 +130,46 @@ export const PrepPage = ({
         {/* Preparation Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {prepSections.map(section => {
-          const IconComponent = section.icon;
-          return <Card key={section.id} className="p-6 hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <IconComponent className="h-5 w-5 text-primary" />
+            const IconComponent = section.icon;
+            return (
+              <Drawer key={section.id}>
+                <DrawerTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="h-auto p-6 border-0 bg-card/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <IconComponent className="h-5 w-5 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-foreground">{section.title}</h3>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <IconComponent className="h-5 w-5 text-primary" />
+                      </div>
+                      {section.title}
+                    </DrawerTitle>
+                  </DrawerHeader>
+                  <div className="px-4 pb-8">
+                    <div className="space-y-4">
+                      {section.items.map(item => (
+                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg">
+                          <h4 className="font-medium text-foreground text-sm mb-2">{item.title}</h4>
+                          <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-foreground">{section.title}</h3>
-                </div>
-                
-                <div className="space-y-3">
-                  {section.items.map(item => <div key={item.id} className="p-3 bg-secondary/30 rounded-lg">
-                      <h4 className="font-medium text-foreground text-sm">{item.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{item.subtitle}</p>
-                    </div>)}
-                </div>
-              </Card>;
-        })}
+                </DrawerContent>
+              </Drawer>
+            );
+          })}
         </div>
 
         {/* Audio Presentation */}
