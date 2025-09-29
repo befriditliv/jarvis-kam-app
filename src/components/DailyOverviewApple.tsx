@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 interface DailyOverviewProps {
@@ -271,9 +271,9 @@ export const DailyOverviewApple = ({
             onClick={() => setIsTaskCenterOpen(true)} 
             size="sm" 
             variant="outline" 
-            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent"
+            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent group"
           >
-            <Bell className="h-5 w-5" />
+            <Target className="h-5 w-5 group-hover:text-primary transition-colors" />
           </Button>
           <Button onClick={onAskAI} className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg">
             <MessageCircle className="h-6 w-6" />
