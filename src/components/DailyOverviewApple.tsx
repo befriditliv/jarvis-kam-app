@@ -155,7 +155,7 @@ export const DailyOverviewApple = ({
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Important for Next Meeting */}
           {nextHCPData && <div className="bg-card border border-primary rounded-xl p-6 shadow-sm relative">
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rotate-45"></div>
+              
               <h2 className="text-lg font-medium text-foreground mb-4">
                 Next call with <span className="underline text-primary">{nextHCPData.name}</span>
               </h2>
@@ -201,14 +201,12 @@ export const DailyOverviewApple = ({
 
           {/* Today's Schedule */}
           <div className="relative">
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-primary"></div>
+            
             <h2 className="text-lg font-medium text-foreground mb-4">Schedule</h2>
             <div className="space-y-4">
               {meetings.map((meeting, index) => {
-                const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
-                return <div key={meeting.id} className={`flex items-center justify-between p-6 border rounded-xl hover:bg-accent/30 transition-all duration-200 ${
-                  isNextUpcoming ? "border-primary bg-primary/5 shadow-md" : "border-border"
-                }`}>
+              const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
+              return <div key={meeting.id} className={`flex items-center justify-between p-6 border rounded-xl hover:bg-accent/30 transition-all duration-200 ${isNextUpcoming ? "border-primary bg-primary/5 shadow-md" : "border-border"}`}>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="font-medium text-foreground">{meeting.time}</div>
@@ -247,7 +245,7 @@ export const DailyOverviewApple = ({
                       </Button>}
                    </div>
                  </div>;
-               })}
+            })}
             </div>
           </div>
         </div>
