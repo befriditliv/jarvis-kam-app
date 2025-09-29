@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ArrowLeft, Clock, User, MapPin, Calendar, Play, FileText, TrendingUp, Globe, History, ChevronRight } from "lucide-react";
 interface PrepPageProps {
   meetingId: string;
@@ -74,6 +74,13 @@ const prepSections: PrepSection[] = [{
     subtitle: "Downloaded 3 studies this month"
   }]
 }];
+
+const sectionDescriptions = {
+  overview: "General client information including employee count, HCP network, and organizational structure to help you understand the healthcare landscape.",
+  recent: "Summary of the last couple of engagements with this client, including key discussion points, outcomes, and follow-up items from previous meetings.",
+  actions: "Strategic recommendations and objectives tailored for this meeting, including key messages to deliver and specific goals to achieve.",
+  digital: "Overview of client's digital platform engagement including newsletter open rates, customer platform signups, portal usage, and online interaction patterns."
+};
 export const PrepPage = ({
   meetingId,
   onBack,
@@ -132,42 +139,45 @@ export const PrepPage = ({
           {prepSections.map(section => {
             const IconComponent = section.icon;
             return (
-              <Drawer key={section.id}>
-                <DrawerTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="h-auto p-6 border-0 bg-card/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <IconComponent className="h-5 w-5 text-primary" />
+              <Sheet key={section.id}>
+                <SheetTrigger asChild>
+                  <Card className="p-0 border-0 bg-card/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                    <div className="p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <IconComponent className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground text-lg">{section.title}</h3>
+                          <p className="text-sm text-muted-foreground">Click to explore details</p>
+                        </div>
                       </div>
-                      <h3 className="font-semibold text-foreground">{section.title}</h3>
+                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle className="flex items-center gap-3">
+                  </Card>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[400px] sm:w-[500px]">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                         <IconComponent className="h-5 w-5 text-primary" />
                       </div>
                       {section.title}
-                    </DrawerTitle>
-                  </DrawerHeader>
-                  <div className="px-4 pb-8">
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <p className="text-muted-foreground mb-6">{sectionDescriptions[section.id as keyof typeof sectionDescriptions]}</p>
                     <div className="space-y-4">
                       {section.items.map(item => (
-                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg">
-                          <h4 className="font-medium text-foreground text-sm mb-2">{item.title}</h4>
+                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg border border-border/50">
+                          <h4 className="font-medium text-foreground mb-2">{item.title}</h4>
                           <p className="text-sm text-muted-foreground">{item.subtitle}</p>
                         </div>
                       ))}
                     </div>
                   </div>
-                </DrawerContent>
-              </Drawer>
+                </SheetContent>
+              </Sheet>
             );
           })}
         </div>
