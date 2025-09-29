@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb } from "lucide-react";
-
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -12,7 +11,6 @@ interface DailyOverviewProps {
   onNewAction: () => void;
   onIntelligence: () => void;
 }
-
 interface Meeting {
   id: string;
   time: string;
@@ -22,51 +20,44 @@ interface Meeting {
   location: string;
   status: "upcoming" | "in-progress" | "debrief-needed" | "done";
 }
-
 interface Nudge {
   id: string;
   text: string;
   priority: "high" | "medium";
 }
-
-const mockMeetings: Meeting[] = [
-  {
-    id: "1",
-    time: "9:00 AM",
-    duration: "45 min",
-    hcpName: "Dr. Sarah Johnson",
-    specialty: "Cardiology", 
-    location: "Metro Medical Center",
-    status: "upcoming"
-  },
-  {
-    id: "2",
-    time: "11:30 AM",
-    duration: "30 min",
-    hcpName: "Dr. Michael Chen",
-    specialty: "Oncology",
-    location: "City General Hospital",
-    status: "debrief-needed"
-  },
-  {
-    id: "3",
-    time: "2:00 PM",
-    duration: "60 min",
-    hcpName: "Dr. Emily Rodriguez",
-    specialty: "Endocrinology",
-    location: "University Health System",
-    status: "upcoming"
-  },
-  {
-    id: "4",
-    time: "4:30 PM",
-    duration: "30 min",
-    hcpName: "Dr. James Wilson",
-    specialty: "Nephrology",
-    location: "Regional Medical Center",
-    status: "done"
-  }
-];
+const mockMeetings: Meeting[] = [{
+  id: "1",
+  time: "9:00 AM",
+  duration: "45 min",
+  hcpName: "Dr. Sarah Johnson",
+  specialty: "Cardiology",
+  location: "Metro Medical Center",
+  status: "upcoming"
+}, {
+  id: "2",
+  time: "11:30 AM",
+  duration: "30 min",
+  hcpName: "Dr. Michael Chen",
+  specialty: "Oncology",
+  location: "City General Hospital",
+  status: "debrief-needed"
+}, {
+  id: "3",
+  time: "2:00 PM",
+  duration: "60 min",
+  hcpName: "Dr. Emily Rodriguez",
+  specialty: "Endocrinology",
+  location: "University Health System",
+  status: "upcoming"
+}, {
+  id: "4",
+  time: "4:30 PM",
+  duration: "30 min",
+  hcpName: "Dr. James Wilson",
+  specialty: "Nephrology",
+  location: "Regional Medical Center",
+  status: "done"
+}];
 
 // HCP data with access level and consent status
 interface HCPData {
@@ -78,7 +69,6 @@ interface HCPData {
   daysSinceLastInteraction: number;
   importantPoints: string[];
 }
-
 const mockHCPData: Record<string, HCPData> = {
   "Dr. Sarah Johnson": {
     id: "1",
@@ -87,66 +77,52 @@ const mockHCPData: Record<string, HCPData> = {
     consentStatus: "OPT IN",
     segmentationStatus: "At risk",
     daysSinceLastInteraction: 34,
-    importantPoints: [
-      "Present new study data on cardiovascular outcomes",
-      "Address patient adherence strategies and concerns", 
-      "Discuss formulary status updates and access"
-    ]
+    importantPoints: ["Present new study data on cardiovascular outcomes", "Address patient adherence strategies and concerns", "Discuss formulary status updates and access"]
   },
   "Dr. Michael Chen": {
-    id: "2", 
+    id: "2",
     name: "Dr. Michael Chen",
     accessLevel: "Medium",
     consentStatus: "OPT OUT",
     segmentationStatus: "Stable",
     daysSinceLastInteraction: 21,
-    importantPoints: [
-      "Schedule overdue follow-up appointments",
-      "Review recent treatment protocols"
-    ]
+    importantPoints: ["Schedule overdue follow-up appointments", "Review recent treatment protocols"]
   }
 };
-
 const statusStyles = {
   upcoming: "text-primary",
   "in-progress": "text-warning",
   "debrief-needed": "text-destructive",
   done: "text-muted-foreground"
 };
-
 const statusLabels = {
   upcoming: "Upcoming",
-  "in-progress": "In Progress", 
+  "in-progress": "In Progress",
   "debrief-needed": "Needs Debrief",
   done: "Complete"
 };
-
 export const DailyOverviewApple = ({
-  onPrepare, 
-  onDebrief, 
-  onVoiceNote, 
-  onAskAI, 
-  onReports, 
+  onPrepare,
+  onDebrief,
+  onVoiceNote,
+  onAskAI,
+  onReports,
   onNewAction,
   onIntelligence
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
-
-  const todayDate = new Date().toLocaleDateString("en-US", { 
-    weekday: "long", 
-    month: "long", 
-    day: "numeric" 
+  const todayDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric"
   });
-
   const upcomingCount = meetings.filter(m => m.status === "upcoming").length;
   const debriefCount = meetings.filter(m => m.status === "debrief-needed").length;
-  
+
   // Get next upcoming meeting
   const nextMeeting = meetings.find(m => m.status === "upcoming");
   const nextHCPData = nextMeeting ? mockHCPData[nextMeeting.hcpName] : null;
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="px-6 pt-12 pb-8">
         <div className="max-w-4xl mx-auto">
@@ -156,18 +132,8 @@ export const DailyOverviewApple = ({
               <p className="text-muted-foreground">{todayDate}</p>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onAskAI}
-                className="rounded-xl hover:bg-accent"
-              >
-                <Calendar className="h-5 w-5" />
-              </Button>
-              <Button
-                onClick={onNewAction}
-                className="rounded-xl bg-primary hover:bg-primary/90 px-6"
-              >
+              
+              <Button onClick={onNewAction} className="rounded-xl bg-primary hover:bg-primary/90 px-6">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask Jarvis
               </Button>
@@ -196,21 +162,15 @@ export const DailyOverviewApple = ({
       <div className="px-6 pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Important for Next Meeting */}
-          {nextHCPData && (
-            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+          {nextHCPData && <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
               <h2 className="text-lg font-medium text-foreground mb-4">
                 Next call with <span className="underline">{nextHCPData.name}</span>
               </h2>
               <div className="space-y-2 mb-4">
-                {nextHCPData.importantPoints.map((point, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg"
-                  >
+                {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
                     <Lightbulb className="w-4 h-4 mt-1 text-yellow-500" />
                     <p className="text-foreground">{point}</p>
-                  </div>
-                ))}
+                  </div>)}
               </div>
               
               {/* Access Level and Consent Status */}
@@ -223,11 +183,7 @@ export const DailyOverviewApple = ({
                 <div className="px-3 py-2 bg-accent rounded-lg">
                   <span className="text-sm font-medium text-foreground">
                     Consent Status: 
-                    <span className={`ml-1 ${
-                      nextHCPData.consentStatus === "OPT IN" ? "text-primary" :
-                      nextHCPData.consentStatus === "OPT OUT" ? "text-destructive" :
-                      "text-warning"
-                    }`}>
+                    <span className={`ml-1 ${nextHCPData.consentStatus === "OPT IN" ? "text-primary" : nextHCPData.consentStatus === "OPT OUT" ? "text-destructive" : "text-warning"}`}>
                       {nextHCPData.consentStatus}
                       {nextHCPData.consentStatus === "OPT OUT" && " - Get consent back"}
                       {nextHCPData.consentStatus === "Blank" && " - Get consent if possible"}
@@ -237,11 +193,7 @@ export const DailyOverviewApple = ({
                 <div className="px-3 py-2 bg-accent rounded-lg">
                   <span className="text-sm font-medium text-foreground">
                     Segmentation: 
-                    <span className={`ml-1 ${
-                      nextHCPData.segmentationStatus === "At risk" ? "text-yellow-500" :
-                      nextHCPData.segmentationStatus === "Growing" ? "text-primary" :
-                      "text-warning"
-                    }`}>
+                    <span className={`ml-1 ${nextHCPData.segmentationStatus === "At risk" ? "text-yellow-500" : nextHCPData.segmentationStatus === "Growing" ? "text-primary" : "text-warning"}`}>
                       {nextHCPData.segmentationStatus}
                     </span>
                   </span>
@@ -252,18 +204,13 @@ export const DailyOverviewApple = ({
                   </span>
                 </div>
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Today's Schedule */}
           <div>
             <h2 className="text-lg font-medium text-foreground mb-4">Schedule</h2>
             <div className="space-y-4">
-              {meetings.map((meeting) => (
-                <div
-                  key={meeting.id}
-                  className="flex items-center justify-between p-6 border border-border rounded-xl hover:bg-accent/30 transition-all duration-200"
-                >
+              {meetings.map(meeting => <div key={meeting.id} className="flex items-center justify-between p-6 border border-border rounded-xl hover:bg-accent/30 transition-all duration-200">
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <div className="font-medium text-foreground">{meeting.time}</div>
@@ -293,28 +240,15 @@ export const DailyOverviewApple = ({
                       {statusLabels[meeting.status]}
                     </div>
                     
-                    {meeting.status === "upcoming" && (
-                      <Button
-                        onClick={() => onPrepare(meeting.id)}
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl"
-                      >
+                    {meeting.status === "upcoming" && <Button onClick={() => onPrepare(meeting.id)} variant="outline" size="sm" className="rounded-xl">
                         Prepare
-                      </Button>
-                    )}
+                      </Button>}
                     
-                    {meeting.status === "debrief-needed" && (
-                      <Button
-                        onClick={() => onDebrief(meeting.id)}
-                        className="rounded-xl bg-destructive hover:bg-destructive/90"
-                      >
+                    {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90">
                         Debrief
-                      </Button>
-                    )}
+                      </Button>}
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -323,22 +257,13 @@ export const DailyOverviewApple = ({
       {/* Floating Actions */}
       <div className="fixed bottom-8 right-8">
         <div className="flex flex-col gap-3">
-          <Button
-            onClick={onVoiceNote}
-            size="sm"
-            variant="outline"
-            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent"
-          >
+          <Button onClick={onVoiceNote} size="sm" variant="outline" className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent">
             <Bell className="h-5 w-5" />
           </Button>
-          <Button
-            onClick={onAskAI}
-            className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg"
-          >
+          <Button onClick={onAskAI} className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg">
             <MessageCircle className="h-6 w-6" />
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
