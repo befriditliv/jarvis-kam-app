@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, MapPin, User } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Clock, MapPin, User, ChevronDown } from "lucide-react";
 
 interface Meeting {
   id: string;
@@ -17,6 +18,7 @@ interface MeetingCardProps {
   meeting: Meeting;
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
+  onQuickAction?: (id: string, action: string) => void;
 }
 
 const statusConfig = {
@@ -42,7 +44,7 @@ const statusConfig = {
   }
 };
 
-export const MeetingCard = ({ meeting, onPrepare, onDebrief }: MeetingCardProps) => {
+export const MeetingCard = ({ meeting, onPrepare, onDebrief, onQuickAction }: MeetingCardProps) => {
   const config = statusConfig[meeting.status];
   
   const handleAction = () => {
@@ -82,21 +84,64 @@ export const MeetingCard = ({ meeting, onPrepare, onDebrief }: MeetingCardProps)
         </div>
         
         <div className="ml-4">
-          {meeting.status !== "done" && meeting.status !== "in-progress" && (
+          {meeting.status === "debrief-needed" ? (
+            <div className="flex gap-2">
+              <Button 
+                variant="destructive"
+                size="sm"
+                onClick={handleAction}
+                className="min-w-[80px]"
+              >
+                {config.actionLabel}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="px-2">
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-popover border border-border">
+                  <DropdownMenuItem 
+                    onClick={() => onQuickAction?.(meeting.id, "nothing-to-debrief")}
+                    className="cursor-pointer hover:bg-accent"
+                  >
+                    Nothing to debrief
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onQuickAction?.(meeting.id, "materials-handed-over")}
+                    className="cursor-pointer hover:bg-accent"
+                  >
+                    Materials handed over
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onQuickAction?.(meeting.id, "schedule-3-months")}
+                    className="cursor-pointer hover:bg-accent"
+                  >
+                    Schedule meeting in 3 months
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => onQuickAction?.(meeting.id, "schedule-6-months")}
+                    className="cursor-pointer hover:bg-accent"
+                  >
+                    Schedule meeting in 6 months
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : meeting.status === "upcoming" ? (
             <Button 
-              variant={meeting.status === "debrief-needed" ? "destructive" : "default"}
+              variant="default"
               size="sm"
               onClick={handleAction}
               className="min-w-[80px]"
             >
               {config.actionLabel}
             </Button>
-          )}
-          {meeting.status === "in-progress" && (
+          ) : meeting.status === "in-progress" ? (
             <div className="px-3 py-1 bg-warning/10 text-warning-foreground rounded-md text-sm font-medium">
               Active
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </Card>
