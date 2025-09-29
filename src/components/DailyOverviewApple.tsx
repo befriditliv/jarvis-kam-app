@@ -67,23 +67,38 @@ const mockMeetings: Meeting[] = [
   }
 ];
 
-const mockNudges: Nudge[] = [
-  {
+// HCP data with access level and consent status
+interface HCPData {
+  id: string;
+  name: string;
+  accessLevel: "High" | "Medium" | "Low";
+  consentStatus: "OPT IN" | "OPT OUT" | "Blank";
+  importantPoints: string[];
+}
+
+const mockHCPData: Record<string, HCPData> = {
+  "Dr. Sarah Johnson": {
     id: "1",
-    text: "Remember to bring up adherence with Dr. Johnson",
-    priority: "high"
+    name: "Dr. Sarah Johnson",
+    accessLevel: "High",
+    consentStatus: "OPT IN",
+    importantPoints: [
+      "Discuss new study data on cardiovascular outcomes",
+      "Address recent patient adherence concerns",
+      "Follow up on formulary status changes"
+    ]
   },
-  {
-    id: "2",
-    text: "Michael Chen is overdue for follow-up scheduling",
-    priority: "high"
-  },
-  {
-    id: "3",
-    text: "Metro Health updated formulary access",
-    priority: "medium"
+  "Dr. Michael Chen": {
+    id: "2", 
+    name: "Dr. Michael Chen",
+    accessLevel: "Medium",
+    consentStatus: "OPT OUT",
+    importantPoints: [
+      "Schedule overdue follow-up appointments",
+      "Review recent treatment protocols"
+    ]
   }
-];
+};
 
 const statusStyles = {
   upcoming: "text-primary",
@@ -118,6 +133,10 @@ export const DailyOverviewApple = ({
 
   const upcomingCount = meetings.filter(m => m.status === "upcoming").length;
   const debriefCount = meetings.filter(m => m.status === "debrief-needed").length;
+  
+  // Get next upcoming meeting
+  const nextMeeting = meetings.find(m => m.status === "upcoming");
+  const nextHCPData = nextMeeting ? mockHCPData[nextMeeting.hcpName] : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,22 +188,45 @@ export const DailyOverviewApple = ({
       {/* Content */}
       <div className="px-6 pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Smart Nudges */}
-          {mockNudges.length > 0 && (
+          {/* Important for Next Meeting */}
+          {nextHCPData && (
             <div>
-              <h2 className="text-lg font-medium text-foreground mb-4">Important</h2>
-              <div className="space-y-3">
-                {mockNudges.map((nudge) => (
+              <h2 className="text-lg font-medium text-foreground mb-4">
+                Important for your call with {nextHCPData.name}
+              </h2>
+              <div className="space-y-3 mb-4">
+                {nextHCPData.importantPoints.map((point, index) => (
                   <div 
-                    key={nudge.id}
+                    key={index}
                     className="flex items-start gap-3 p-4 bg-secondary/30 rounded-xl"
                   >
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      nudge.priority === "high" ? "bg-destructive" : "bg-warning"
-                    }`} />
-                    <p className="text-foreground">{nudge.text}</p>
+                    <div className="w-2 h-2 rounded-full mt-2 bg-primary" />
+                    <p className="text-foreground">{point}</p>
                   </div>
                 ))}
+              </div>
+              
+              {/* Access Level and Consent Status */}
+              <div className="flex gap-4">
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Access Level: <span className="text-primary">{nextHCPData.accessLevel}</span>
+                  </span>
+                </div>
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Consent Status: 
+                    <span className={`ml-1 ${
+                      nextHCPData.consentStatus === "OPT IN" ? "text-primary" :
+                      nextHCPData.consentStatus === "OPT OUT" ? "text-destructive" :
+                      "text-warning"
+                    }`}>
+                      {nextHCPData.consentStatus}
+                      {nextHCPData.consentStatus === "OPT OUT" && " - Get consent back"}
+                      {nextHCPData.consentStatus === "Blank" && " - Get consent if possible"}
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
           )}
