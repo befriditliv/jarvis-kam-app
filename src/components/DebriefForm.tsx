@@ -190,33 +190,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           </Card>
 
-          {/* Meeting Outcome */}
-          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-base font-semibold text-card-foreground mb-3">Meeting Outcome</h3>
-            <div className="grid grid-cols-5 gap-2">
-              {outcomes.map((outcome) => (
-                <div
-                  key={outcome.value}
-                  onClick={() => setTemplate(prev => ({ ...prev, outcome: outcome.value }))}
-                  className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                    template.outcome === outcome.value 
-                      ? `border-primary ${outcome.bgColor} scale-105 shadow-lg` 
-                      : "border-border/50 hover:border-border"
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className={`text-xl font-bold mb-1 ${outcome.color}`}>
-                      {outcome.value}
-                    </div>
-                    <div className="text-xs font-medium text-muted-foreground">
-                      {outcome.label}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
           {/* Conditional rendering based on quick debrief selection */}
           {template.quickDebrief ? (
             <div className="text-center space-y-4">
