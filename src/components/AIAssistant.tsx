@@ -183,7 +183,7 @@ export const AIAssistant = ({
           <div className="p-4 border-t border-border bg-background/50">
             <div className="flex gap-3">
               <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Type your message here..." onKeyDown={e => e.key === "Enter" && handleSendQuery()} className="flex-1 rounded-xl border-border/50 focus:border-primary bg-background" disabled={isLoading} />
-              <Button onClick={() => handleSendQuery()} disabled={!query.trim() || isLoading} size="sm" className="rounded-xl bg-gradient-primary hover:shadow-lg px-4">
+              <Button onClick={() => handleSendQuery()} disabled={!query.trim() || isLoading} size="sm" className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground px-4 shadow-md">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
