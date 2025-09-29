@@ -144,7 +144,7 @@ export const DailyOverviewApple = ({
               </h2>
               
               <div className="mb-4 pb-3 border-b border-primary/20">
-                <h3 className="text-base font-medium text-primary mb-1">AI Meeting Insights</h3>
+                <h3 className="text-base font-medium text-primary mb-1">Jarvis Recommended Actions</h3>
                 <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
               </div>
               
