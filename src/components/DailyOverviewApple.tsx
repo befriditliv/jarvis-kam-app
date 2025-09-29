@@ -116,20 +116,16 @@ export const DailyOverviewApple = ({
   const nextMeeting = meetings.find(m => m.status === "upcoming");
   const nextHCPData = nextMeeting ? mockHCPData[nextMeeting.hcpName] : null;
   return <div className="min-h-screen bg-background">
-      {/* Brand Header */}
-      <div className="px-6 pt-8 pb-4 border-b border-border/50">
-        <div className="max-w-4xl mx-auto flex items-center justify-center">
-          <img src={jarvisLogo} alt="Jarvis" className="h-16 w-16" />
-        </div>
-      </div>
-
       {/* Header */}
-      <div className="px-6 pt-8 pb-8">
+      <div className="px-6 pt-12 pb-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-light text-foreground mb-1">Today</h1>
-              <p className="text-muted-foreground">{todayDate}</p>
+            <div className="flex items-center gap-4">
+              <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10" />
+              <div>
+                <h1 className="text-3xl font-light text-foreground mb-1">Today</h1>
+                <p className="text-muted-foreground">{todayDate}</p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Button onClick={onNewAction} className="rounded-xl bg-primary hover:bg-primary/90 px-6">
