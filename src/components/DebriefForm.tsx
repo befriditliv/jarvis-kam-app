@@ -13,6 +13,7 @@ interface DebriefFormProps {
 }
 
 interface DebriefData {
+  quickDebrief?: string;
   outcome: number;
   objectivesAchieved: string[];
   keyConcerns: boolean;
@@ -22,6 +23,7 @@ interface DebriefData {
 }
 
 interface DebriefTemplate {
+  quickDebrief?: string;
   outcome: number;
   objectives: string[];
   keyConcerns: boolean | undefined;
@@ -49,11 +51,19 @@ const outcomes = [
   { value: 5, label: "Excellent", color: "text-success", bgColor: "bg-success/10" }
 ];
 
+const quickDebriefOptions = [
+  { value: "meeting-cancelled", label: "Meeting Cancelled" },
+  { value: "material-handover", label: "Material handover" },
+  { value: "agreed-call-3", label: "Agreed to call in 3 months" },
+  { value: "agreed-call-6", label: "Agreed to call in 6 months" }
+];
+
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
   const [phase, setPhase] = useState<'template' | 'debrief'>('template');
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
+    quickDebrief: undefined,
     outcome: 0,
     objectives: [],
     keyConcerns: undefined,
@@ -119,6 +129,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
   const handleSave = () => {
     const debriefData: DebriefData = {
+      quickDebrief: template.quickDebrief,
       outcome: template.outcome,
       objectivesAchieved: template.objectives,
       keyConcerns: template.keyConcerns || false,
@@ -162,6 +173,23 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         </div>
 
         <div className="px-6 py-4 space-y-4">
+          {/* Quick Debrief Options */}
+          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-base font-semibold text-card-foreground mb-3">Quick Debrief Option</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {quickDebriefOptions.map((option) => (
+                <Button
+                  key={option.value}
+                  variant={template.quickDebrief === option.value ? "default" : "outline"}
+                  onClick={() => setTemplate(prev => ({ ...prev, quickDebrief: option.value }))}
+                  className="h-12 rounded-lg text-sm"
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+          </Card>
+
           {/* Meeting Outcome */}
           <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
             <h3 className="text-base font-semibold text-card-foreground mb-3">Meeting Outcome</h3>
@@ -350,6 +378,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         <Card className="p-4 bg-gradient-subtle border-primary/20 border">
           <h4 className="font-semibold text-sm mb-2 text-primary">Your Template Setup:</h4>
           <div className="text-xs space-y-1 text-muted-foreground">
+            <div>Quick Debrief: {template.quickDebrief ? quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label : 'None selected'}</div>
             <div>Outcome: {template.outcome > 0 ? `${outcomes.find(o => o.value === template.outcome)?.label} (${template.outcome}/5)` : 'Not selected'}</div>
             <div>Objectives: {template.objectives.length} selected</div>
             <div>Key Concerns: {template.keyConcerns === undefined ? 'Not selected' : template.keyConcerns ? 'Yes' : 'No'}</div>
