@@ -222,7 +222,7 @@ export const DailyOverviewApple = ({
 
                   <div className="flex items-center gap-3">
                     <div className={`text-sm font-medium ${statusStyles[meeting.status]}`}>
-                      {statusLabels[meeting.status]}
+                      {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
                     </div>
                     
                     {meeting.status === "upcoming" && <Button onClick={() => onPrepare(meeting.id)} variant="outline" size="sm" className="rounded-xl">
