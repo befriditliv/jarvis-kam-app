@@ -162,6 +162,12 @@ export const DailyOverviewApple = ({
               <h2 className="text-lg font-medium text-foreground mb-4">
                 Next call with <span className="underline text-primary">{nextHCPData.name}</span> at {nextMeeting.time}
               </h2>
+              
+              <div className="flex items-center gap-2 mb-3">
+                <Lightbulb className="w-4 h-4 text-yellow-500" />
+                <h3 className="text-sm font-medium text-muted-foreground">Jarvis Suggestions</h3>
+              </div>
+              
               <div className="space-y-2 mb-4">
                 {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
                     <Lightbulb className="w-4 h-4 mt-1 text-yellow-500" />
