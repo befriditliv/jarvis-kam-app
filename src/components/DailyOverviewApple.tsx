@@ -160,7 +160,7 @@ export const DailyOverviewApple = ({
           {nextHCPData && <div className="bg-card border border-primary rounded-xl p-6 shadow-sm relative">
               
               <h2 className="text-lg font-medium text-foreground mb-4">
-                Next call with <span className="underline text-primary">{nextHCPData.name}</span>
+                Next call with <span className="underline text-primary">{nextHCPData.name}</span> at {nextMeeting.time}
               </h2>
               <div className="space-y-2 mb-4">
                 {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
