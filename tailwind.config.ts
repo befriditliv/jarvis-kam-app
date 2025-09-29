@@ -26,12 +26,10 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
           light: "hsl(var(--primary-light))",
-          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
-          light: "hsl(var(--secondary-light))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -45,7 +43,6 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          light: "hsl(var(--accent-light))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -76,28 +73,12 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
-      spacing: {
-        'safe-top': 'var(--space-safe-top)',
-        'safe-bottom': 'var(--space-safe-bottom)',
-        'safe-left': 'var(--space-safe-left)',
-        'safe-right': 'var(--space-safe-right)',
-        '18': '4.5rem',
-        '88': '22rem',
-      },
       boxShadow: {
         xs: "var(--shadow-xs)",
         sm: "var(--shadow-sm)",
         DEFAULT: "var(--shadow-md)",
         md: "var(--shadow-md)",
         lg: "var(--shadow-lg)",
-        xl: "var(--shadow-xl)",
-        'mobile-fab': '0 8px 24px -4px rgba(0, 0, 0, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08)',
-        'mobile-card': '0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04)',
-      },
-      backgroundImage: {
-        'gradient-primary': 'var(--gradient-primary)',
-        'gradient-surface': 'var(--gradient-surface)',
-        'gradient-glow': 'var(--gradient-glow)',
       },
       borderRadius: {
         DEFAULT: "var(--radius)",

@@ -8,81 +8,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Mobile-First Modern Design System */
-    --background: 248 250 252;
-    --foreground: 15 23 42;
+    /* Classic Apple color palette */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
 
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    /* Vibrant Mobile Primary */
-    --primary: 239 68 68;
-    --primary-foreground: 255 255 255;
-    --primary-light: 254 242 242;
-    --primary-glow: 239 68 68 / 0.2;
+    /* Apple blue accent */
+    --primary: 212 100% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 212 100% 95%;
 
-    /* Rich Mobile Secondary */
-    --secondary: 99 102 241;
-    --secondary-foreground: 255 255 255;
-    --secondary-light: 238 242 255;
+    /* Subtle grays */
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 241 245 249;
-    --muted-foreground: 100 116 139;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Mobile-friendly accent */
-    --accent: 14 165 233;
-    --accent-foreground: 255 255 255;
-    --accent-light: 240 249 255;
+    /* Clean accent */
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 20%;
 
-    /* System colors for mobile feedback */
-    --success: 34 197 94;
-    --success-foreground: 255 255 255;
-    --success-light: 240 253 244;
+    /* System colors */
+    --success: 120 60% 50%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 120 60% 95%;
     
-    --warning: 251 146 60;
-    --warning-foreground: 255 255 255;
-    --warning-light: 255 251 235;
+    --warning: 35 100% 50%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 35 100% 95%;
     
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
-    --destructive-light: 254 242 242;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 75% 95%;
 
-    /* Mobile-optimized borders */
-    --border: 226 232 240;
-    --input: 248 250 252;
-    --ring: 239 68 68;
+    /* Borders and inputs */
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 212 100% 48%;
 
-    /* Mobile-friendly radius */
-    --radius: 16px;
-    --radius-sm: 8px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
+    /* Apple radius */
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
 
-    /* Mobile shadows with depth */
+    /* Minimal shadows */
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.06), 0 1px 2px 0 rgb(0 0 0 / 0.06);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-    /* Mobile-optimized transitions */
-    --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    /* Mobile spacing system */
-    --space-safe-top: env(safe-area-inset-top);
-    --space-safe-bottom: env(safe-area-inset-bottom);
-    --space-safe-left: env(safe-area-inset-left);
-    --space-safe-right: env(safe-area-inset-right);
-
-    /* Mobile gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
-    --gradient-surface: linear-gradient(145deg, hsl(var(--card)), hsl(var(--muted)));
-    --gradient-glow: radial-gradient(circle at 50% 50%, hsl(var(--primary-glow)) 0%, transparent 70%);
+    /* Apple transitions */
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -130,44 +114,7 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  html {
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent;
-  }
-
   body {
-    @apply bg-background text-foreground antialiased;
-    padding-top: var(--space-safe-top);
-    padding-bottom: var(--space-safe-bottom);
-    padding-left: var(--space-safe-left);
-    padding-right: var(--space-safe-right);
-    touch-action: manipulation;
-    overscroll-behavior-y: none;
-  }
-
-  /* Mobile-first responsive typography */
-  .text-mobile-xs { font-size: 0.75rem; line-height: 1rem; }
-  .text-mobile-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .text-mobile-base { font-size: 1rem; line-height: 1.5rem; }
-  .text-mobile-lg { font-size: 1.125rem; line-height: 1.75rem; }
-  .text-mobile-xl { font-size: 1.25rem; line-height: 1.75rem; }
-  .text-mobile-2xl { font-size: 1.5rem; line-height: 2rem; }
-  .text-mobile-3xl { font-size: 1.875rem; line-height: 2.25rem; }
-
-  /* Touch-friendly interactions */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* Mobile scroll enhancement */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Mobile pull-to-refresh disable */
-  .no-pull-refresh {
-    overscroll-behavior-y: contain;
+    @apply bg-background text-foreground;
   }
 }
