@@ -22,7 +22,8 @@ interface DebriefData {
 
 interface DebriefTemplate {
   outcome: number;
-  objectives: string[];
+  objectivesAchieved: boolean;
+  materialsShared: boolean;
   concerns: string[];
   hasInizioFollowUp: boolean;
 }
@@ -60,20 +61,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
     outcome: 3,
-    objectives: [],
+    objectivesAchieved: false,
+    materialsShared: false,
     concerns: [],
     hasInizioFollowUp: false
   });
   const [voiceNotes, setVoiceNotes] = useState("");
-
-  const toggleObjective = (objectiveTitle: string) => {
-    setTemplate(prev => ({
-      ...prev,
-      objectives: prev.objectives.includes(objectiveTitle)
-        ? prev.objectives.filter(obj => obj !== objectiveTitle)
-        : [...prev.objectives, objectiveTitle]
-    }));
-  };
 
   const toggleConcern = (concern: string) => {
     setTemplate(prev => ({
@@ -109,8 +102,16 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       prompt += "• What went particularly well that contributed to this excellent outcome?\n";
     }
     
-    if (template.objectives.length > 0) {
-      prompt += `• For the objectives you marked (${template.objectives.join(', ')}), tell me more about how they were achieved.\n`;
+    if (template.objectivesAchieved) {
+      prompt += "• Tell me more about how the meeting objectives were achieved.\n";
+    } else {
+      prompt += "• What prevented the meeting objectives from being fully achieved?\n";
+    }
+    
+    if (template.materialsShared) {
+      prompt += "• How were the materials received and what was the client's reaction?\n";
+    } else {
+      prompt += "• Why weren't materials shared during this meeting?\n";
     }
     
     if (template.concerns.length > 0) {
@@ -128,7 +129,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const handleSave = () => {
     const debriefData: DebriefData = {
       outcome: template.outcome,
-      objectivesAchieved: template.objectives,
+      objectivesAchieved: template.objectivesAchieved ? ["Meeting objectives achieved"] : [],
       keyConcerns: template.concerns,
       hasInizioFollowUp: template.hasInizioFollowUp,
       voiceNotes
@@ -159,7 +160,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               </div>
               <Button 
                 onClick={handleStartDebrief}
-                disabled={template.objectives.length === 0}
                 className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl"
               >
                 <Play className="h-4 w-4 mr-2" />
@@ -197,34 +197,49 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           </Card>
 
-          {/* Objectives */}
+          {/* Objectives Achieved */}
           <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Select Achieved Objectives</h3>
-            <div className="space-y-3">
-              {mockObjectives.map((objective) => (
-                <div
-                  key={objective.id}
-                  onClick={() => toggleObjective(objective.title)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
-                    template.objectives.includes(objective.title)
-                      ? "border-success/50 bg-success/5 hover:bg-success/10" 
-                      : "border-border/50 hover:bg-secondary/20"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {template.objectives.includes(objective.title) ? (
-                      <CheckCircle className="h-5 w-5 text-success animate-scale-in" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-muted-foreground" />
-                    )}
-                    <span className={`font-medium ${
-                      template.objectives.includes(objective.title) ? "text-success" : "text-card-foreground"
-                    }`}>
-                      {objective.title}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Objectives Achieved?</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant={template.objectivesAchieved ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, objectivesAchieved: true }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Yes
+              </Button>
+              <Button
+                variant={!template.objectivesAchieved ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, objectivesAchieved: false }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <XCircle className="h-5 w-5 mr-2" />
+                No
+              </Button>
+            </div>
+          </Card>
+
+          {/* Materials Shared */}
+          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Materials Shared or Presented?</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant={template.materialsShared ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Yes
+              </Button>
+              <Button
+                variant={!template.materialsShared ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <XCircle className="h-5 w-5 mr-2" />
+                No
+              </Button>
             </div>
           </Card>
 
@@ -269,7 +284,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </Card>
 
           <div className="text-center text-sm text-muted-foreground">
-            Select at least one objective to continue to the voice debrief
+            Complete your template to continue to the voice debrief
           </div>
         </div>
       </div>
@@ -323,7 +338,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           <h4 className="font-semibold text-sm mb-2 text-primary">Your Template Setup:</h4>
           <div className="text-xs space-y-1 text-muted-foreground">
             <div>Outcome: {outcomes.find(o => o.value === template.outcome)?.label} ({template.outcome}/5)</div>
-            <div>Objectives: {template.objectives.length} selected</div>
+            <div>Objectives: {template.objectivesAchieved ? 'Achieved' : 'Not achieved'}</div>
+            <div>Materials: {template.materialsShared ? 'Shared' : 'Not shared'}</div>
             <div>Concerns: {template.concerns.length} identified</div>
             <div>Inizio Follow-up: {template.hasInizioFollowUp ? 'Required' : 'Not needed'}</div>
           </div>
