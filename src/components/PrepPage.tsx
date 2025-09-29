@@ -173,11 +173,11 @@ export const PrepPage = ({
                   </SheetHeader>
                   <div className="mt-6">
                     <p className="text-muted-foreground mb-6">{sectionDescriptions[section.id as keyof typeof sectionDescriptions]}</p>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {section.items.map(item => (
-                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg border border-border/50">
+                        <div key={item.id}>
                           <h4 className="font-medium text-foreground mb-2">{item.title}</h4>
-                          <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{item.subtitle}</p>
                         </div>
                       ))}
                     </div>
