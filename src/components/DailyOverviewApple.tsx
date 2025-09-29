@@ -130,23 +130,23 @@ export const DailyOverviewApple = ({
           </div>
 
           {/* Today Overview */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-light text-foreground mb-1">Today</h1>
+          <div className="bg-card border border-border rounded-xl p-6 shadow-sm mb-8">
+            <h2 className="text-lg font-medium text-foreground mb-4">Today</h2>
             <p className="text-sm text-muted-foreground mb-4">{todayDate}</p>
             
             {/* Summary Stats */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-lg font-light text-foreground">{meetings.length}</div>
-                <div className="text-xs text-muted-foreground">Total meetings</div>
+              <div className="bg-accent/30 rounded-lg p-4 text-center">
+                <div className="text-xl font-medium text-foreground">{meetings.length}</div>
+                <div className="text-sm text-muted-foreground">Total meetings</div>
               </div>
-              <div className="text-center">
-                <div className="text-lg font-light text-primary">{upcomingCount}</div>
-                <div className="text-xs text-muted-foreground">Upcoming</div>
+              <div className="bg-primary/10 rounded-lg p-4 text-center">
+                <div className="text-xl font-medium text-primary">{upcomingCount}</div>
+                <div className="text-sm text-muted-foreground">Upcoming</div>
               </div>
-              <div className="text-center">
-                <div className="text-lg font-light text-destructive">{debriefCount}</div>
-                <div className="text-xs text-muted-foreground">Need debrief</div>
+              <div className="bg-destructive/10 rounded-lg p-4 text-center">
+                <div className="text-xl font-medium text-destructive">{debriefCount}</div>
+                <div className="text-sm text-muted-foreground">Need debrief</div>
               </div>
             </div>
           </div>
