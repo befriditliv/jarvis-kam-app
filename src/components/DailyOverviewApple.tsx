@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb } from "lucide-react";
+import jarvisLogo from "@/assets/jarvis-logo.svg";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -124,7 +125,7 @@ export const DailyOverviewApple = ({
               <p className="text-muted-foreground">{todayDate}</p>
             </div>
             <div className="flex items-center gap-3">
-              
+              <img src={jarvisLogo} alt="Jarvis Logo" className="h-8 w-8" />
               <Button onClick={onNewAction} className="rounded-xl bg-primary hover:bg-primary/90 px-6">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask Jarvis
