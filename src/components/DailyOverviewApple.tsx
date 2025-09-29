@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 interface DailyOverviewProps {
@@ -130,28 +130,6 @@ export const DailyOverviewApple = ({
               </Button>
             </div>
           </div>
-
-          {/* Today Overview */}
-          <div className="bg-card border border-border rounded-xl p-4 shadow-sm mb-8">
-            <h2 className="text-base font-medium text-foreground mb-2">Today</h2>
-            <p className="text-xs text-muted-foreground mb-3">{todayDate}</p>
-            
-            {/* Summary Stats */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-accent/30 rounded-lg p-3 text-center">
-                <div className="text-lg font-medium text-foreground">{meetings.length}</div>
-                <div className="text-xs text-muted-foreground">Total meetings</div>
-              </div>
-              <div className="bg-primary/10 rounded-lg p-3 text-center">
-                <div className="text-lg font-medium text-primary">{upcomingCount}</div>
-                <div className="text-xs text-muted-foreground">Upcoming</div>
-              </div>
-              <div className="bg-destructive/10 rounded-lg p-3 text-center">
-                <div className="text-lg font-medium text-destructive">{debriefCount}</div>
-                <div className="text-xs text-muted-foreground">Need debrief</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -259,6 +237,71 @@ export const DailyOverviewApple = ({
                    </div>
                  </div>;
             })}
+            </div>
+          </div>
+
+          {/* Task Center Preview */}
+          <div className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium text-foreground">AI Recommendations</h2>
+              <Button 
+                onClick={() => setIsTaskCenterOpen(true)} 
+                variant="outline" 
+                size="sm" 
+                className="rounded-xl"
+              >
+                <Target className="h-4 w-4 mr-2" />
+                View All
+              </Button>
+            </div>
+            
+            <div className="space-y-3">
+              {/* High Priority Task Preview */}
+              <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-red-500/5 to-transparent">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Calendar className="h-5 w-5 text-red-500" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-medium text-foreground">Schedule Meeting with Category A Client</h3>
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-500 border border-red-500/20">
+                        High Priority
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Dr. Patricia Williams (Cardiology) - Last interaction 89 days ago</p>
+                  </div>
+                  <Button size="sm" variant="outline" className="rounded-lg flex-shrink-0">
+                    Schedule
+                  </Button>
+                </div>
+              </div>
+
+              {/* Medium Priority Task Preview */}
+              <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-green-500/5 to-transparent">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="h-5 w-5 text-green-500" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-medium text-foreground">Follow-up on Study Download</h3>
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20">
+                        High Priority
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Dr. James Martinez downloaded cardiovascular study yesterday</p>
+                  </div>
+                  <Button size="sm" variant="outline" className="rounded-lg flex-shrink-0">
+                    Follow-up
+                  </Button>
+                </div>
+              </div>
+              
+              {/* View more indicator */}
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">+ 3 more AI-generated tasks</p>
+              </div>
             </div>
           </div>
         </div>
