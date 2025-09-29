@@ -196,7 +196,7 @@ export const DailyOverviewApple = ({
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Important for Next Meeting */}
           {nextHCPData && (
-            <div>
+            <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
               <h2 className="text-lg font-medium text-foreground mb-4">
                 Next call with <span className="underline">{nextHCPData.name}</span>
               </h2>
@@ -204,7 +204,7 @@ export const DailyOverviewApple = ({
                 {nextHCPData.importantPoints.map((point, index) => (
                   <div 
                     key={index}
-                    className="flex items-start gap-3 p-4 bg-secondary/30 rounded-xl"
+                    className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg"
                   >
                     <div className="w-2 h-2 rounded-full mt-2 bg-primary" />
                     <p className="text-foreground">{point}</p>
