@@ -73,6 +73,8 @@ interface HCPData {
   name: string;
   accessLevel: "High" | "Medium" | "Low";
   consentStatus: "OPT IN" | "OPT OUT" | "Blank";
+  segmentationStatus: "At risk" | "Stable" | "Growing";
+  daysSinceLastInteraction: number;
   importantPoints: string[];
 }
 
@@ -82,6 +84,8 @@ const mockHCPData: Record<string, HCPData> = {
     name: "Dr. Sarah Johnson",
     accessLevel: "High",
     consentStatus: "OPT IN",
+    segmentationStatus: "At risk",
+    daysSinceLastInteraction: 14,
     importantPoints: [
       "Discuss new study data on cardiovascular outcomes",
       "Address recent patient adherence concerns",
@@ -93,6 +97,8 @@ const mockHCPData: Record<string, HCPData> = {
     name: "Dr. Michael Chen",
     accessLevel: "Medium",
     consentStatus: "OPT OUT",
+    segmentationStatus: "Stable",
+    daysSinceLastInteraction: 21,
     importantPoints: [
       "Schedule overdue follow-up appointments",
       "Review recent treatment protocols"
@@ -207,7 +213,7 @@ export const DailyOverviewApple = ({
               </div>
               
               {/* Access Level and Consent Status */}
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="px-3 py-2 bg-accent rounded-lg">
                   <span className="text-sm font-medium text-foreground">
                     Access Level: <span className="text-primary">{nextHCPData.accessLevel}</span>
@@ -225,6 +231,23 @@ export const DailyOverviewApple = ({
                       {nextHCPData.consentStatus === "OPT OUT" && " - Get consent back"}
                       {nextHCPData.consentStatus === "Blank" && " - Get consent if possible"}
                     </span>
+                  </span>
+                </div>
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Segmentation: 
+                    <span className={`ml-1 ${
+                      nextHCPData.segmentationStatus === "At risk" ? "text-destructive" :
+                      nextHCPData.segmentationStatus === "Growing" ? "text-primary" :
+                      "text-warning"
+                    }`}>
+                      {nextHCPData.segmentationStatus}
+                    </span>
+                  </span>
+                </div>
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Days since last interaction: <span className="text-muted-foreground">{nextHCPData.daysSinceLastInteraction}</span>
                   </span>
                 </div>
               </div>
