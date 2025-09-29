@@ -110,7 +110,7 @@ export const AIAssistant = ({
                   <Brain className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-card-foreground">AI Assistant</h2>
+                  <h2 className="text-lg font-semibold text-card-foreground">Ask Jarvis</h2>
                   <p className="text-sm text-muted-foreground">Ask anything about your data</p>
                 </div>
               </div>
