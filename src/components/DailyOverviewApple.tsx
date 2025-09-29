@@ -154,9 +154,10 @@ export const DailyOverviewApple = ({
       <div className="px-6 pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Important for Next Meeting */}
-          {nextHCPData && <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+          {nextHCPData && <div className="bg-card border border-primary rounded-xl p-6 shadow-sm relative">
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rotate-45"></div>
               <h2 className="text-lg font-medium text-foreground mb-4">
-                Next call with <span className="underline">{nextHCPData.name}</span>
+                Next call with <span className="underline text-primary">{nextHCPData.name}</span>
               </h2>
               <div className="space-y-2 mb-4">
                 {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
@@ -199,7 +200,8 @@ export const DailyOverviewApple = ({
             </div>}
 
           {/* Today's Schedule */}
-          <div>
+          <div className="relative">
+            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-primary"></div>
             <h2 className="text-lg font-medium text-foreground mb-4">Schedule</h2>
             <div className="space-y-4">
               {meetings.map((meeting, index) => {
