@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, Plus, Calendar, Bell } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Clock, MapPin, User, Plus, Calendar, Bell, CheckCircle, Settings, Mic, Sparkles, BarChart3, Zap } from "lucide-react";
+import { MeetingCard } from "./MeetingCard";
+import { SmartNudges } from "./SmartNudges";
+import { QuickActions } from "./QuickActions";
 
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
@@ -20,12 +24,6 @@ interface Meeting {
   specialty: string;
   location: string;
   status: "upcoming" | "in-progress" | "debrief-needed" | "done";
-}
-
-interface Nudge {
-  id: string;
-  text: string;
-  priority: "high" | "medium";
 }
 
 const mockMeetings: Meeting[] = [
@@ -67,211 +65,147 @@ const mockMeetings: Meeting[] = [
   }
 ];
 
-const mockNudges: Nudge[] = [
-  {
-    id: "1",
-    text: "Remember to bring up adherence with Dr. Johnson",
-    priority: "high"
-  },
-  {
-    id: "2",
-    text: "Michael Chen is overdue for follow-up scheduling",
-    priority: "high"
-  },
-  {
-    id: "3",
-    text: "Metro Health updated formulary access",
-    priority: "medium"
-  }
-];
-
-const statusStyles = {
-  upcoming: "text-primary",
-  "in-progress": "text-warning",
-  "debrief-needed": "text-destructive",
-  done: "text-muted-foreground"
-};
-
-const statusLabels = {
-  upcoming: "Upcoming",
-  "in-progress": "In Progress", 
-  "debrief-needed": "Needs Debrief",
-  done: "Complete"
-};
-
-export const DailyOverviewApple = ({
+export const DailyOverviewApple = ({ 
   onPrepare, 
   onDebrief, 
   onVoiceNote, 
   onAskAI, 
   onReports, 
   onNewAction,
-  onIntelligence
+  onIntelligence 
 }: DailyOverviewProps) => {
-  const [meetings] = useState<Meeting[]>(mockMeetings);
+  const [meetings, setMeetings] = useState<Meeting[]>(mockMeetings);
 
-  const todayDate = new Date().toLocaleDateString("en-US", { 
-    weekday: "long", 
-    month: "long", 
-    day: "numeric" 
-  });
+  const handlePrepare = (id: string) => {
+    onPrepare(id);
+  };
 
-  const upcomingCount = meetings.filter(m => m.status === "upcoming").length;
-  const debriefCount = meetings.filter(m => m.status === "debrief-needed").length;
+  const handleDebrief = (id: string) => {
+    onDebrief(id);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="px-6 pt-12 pb-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-light text-foreground mb-1">Today</h1>
-              <p className="text-muted-foreground">{todayDate}</p>
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 overflow-hidden no-pull-refresh">
+      {/* Mobile Status Bar Spacing */}
+      <div className="h-safe-top bg-gradient-to-r from-primary/10 to-secondary/10"></div>
+      
+      {/* Header with Mobile-First Design */}
+      <div className="relative bg-gradient-to-r from-primary/5 to-secondary/5 backdrop-blur-sm border-b border-border/50">
+        <div className="px-4 py-6">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex-1">
+              <h1 className="text-mobile-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Today
+              </h1>
+              <p className="text-mobile-sm text-muted-foreground font-medium">
+                {new Date().toLocaleDateString('en-US', { 
+                  weekday: 'long',
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
             </div>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="touch-target rounded-xl border-border/50 bg-card/80 backdrop-blur-sm hover:bg-primary/10 transition-all duration-200"
+              >
+                <User className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
                 size="sm"
-                onClick={onAskAI}
-                className="rounded-xl hover:bg-accent"
+                className="touch-target rounded-xl border-border/50 bg-card/80 backdrop-blur-sm hover:bg-primary/10 transition-all duration-200"
               >
-                <Calendar className="h-5 w-5" />
+                <Settings className="h-4 w-4" />
               </Button>
-              <Button
-                onClick={onNewAction}
-                className="rounded-xl bg-primary hover:bg-primary/90 px-6"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New
-              </Button>
-            </div>
-          </div>
-
-          {/* Summary Stats */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="text-center">
-              <div className="text-2xl font-light text-foreground">{meetings.length}</div>
-              <div className="text-sm text-muted-foreground">Total meetings</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-primary">{upcomingCount}</div>
-              <div className="text-sm text-muted-foreground">Upcoming</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-destructive">{debriefCount}</div>
-              <div className="text-sm text-muted-foreground">Need debrief</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-6 pb-24">
-        <div className="max-w-4xl mx-auto space-y-8">
-          {/* Smart Nudges */}
-          {mockNudges.length > 0 && (
-            <div>
-              <h2 className="text-lg font-medium text-foreground mb-4">Important</h2>
-              <div className="space-y-3">
-                {mockNudges.map((nudge) => (
-                  <div 
-                    key={nudge.id}
-                    className="flex items-start gap-3 p-4 bg-secondary/30 rounded-xl"
-                  >
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      nudge.priority === "high" ? "bg-destructive" : "bg-warning"
-                    }`} />
-                    <p className="text-foreground">{nudge.text}</p>
-                  </div>
-                ))}
+      {/* Content with Mobile Padding */}
+      <div className="px-4 pb-safe-bottom">
+        {/* Mobile Stats Cards */}
+        <div className="grid grid-cols-3 gap-3 mb-6 mt-4">
+          <Card className="text-center p-4 bg-gradient-to-br from-card to-primary-light/20 border-border/30 shadow-mobile-card hover:shadow-lg transition-all duration-300 transform hover:scale-105 touch-target">
+            <div className="flex flex-col items-center gap-2">
+              <div className="p-2 rounded-full bg-gradient-to-r from-primary/20 to-primary/10">
+                <Calendar className="h-5 w-5 text-primary" />
               </div>
+              <div className="text-mobile-xl font-bold text-foreground">3</div>
+              <div className="text-mobile-xs text-muted-foreground font-medium">Upcoming</div>
             </div>
-          )}
-
-          {/* Today's Schedule */}
-          <div>
-            <h2 className="text-lg font-medium text-foreground mb-4">Schedule</h2>
-            <div className="space-y-4">
-              {meetings.map((meeting) => (
-                <div
-                  key={meeting.id}
-                  className="flex items-center justify-between p-6 border border-border rounded-xl hover:bg-accent/30 transition-all duration-200"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <div className="font-medium text-foreground">{meeting.time}</div>
-                      <div className="text-sm text-muted-foreground">{meeting.duration}</div>
-                    </div>
-                    
-                    <div className="w-px h-12 bg-border" />
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
-                        <User className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-foreground">{meeting.hcpName}</h3>
-                        <p className="text-sm text-muted-foreground">{meeting.specialty}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="h-4 w-4" />
-                      <span>{meeting.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className={`text-sm font-medium ${statusStyles[meeting.status]}`}>
-                      {statusLabels[meeting.status]}
-                    </div>
-                    
-                    {meeting.status === "upcoming" && (
-                      <Button
-                        onClick={() => onPrepare(meeting.id)}
-                        variant="outline"
-                        size="sm"
-                        className="rounded-xl"
-                      >
-                        Prepare
-                      </Button>
-                    )}
-                    
-                    {meeting.status === "debrief-needed" && (
-                      <Button
-                        onClick={() => onDebrief(meeting.id)}
-                        className="rounded-xl bg-destructive hover:bg-destructive/90"
-                      >
-                        Debrief
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ))}
+          </Card>
+          <Card className="text-center p-4 bg-gradient-to-br from-card to-warning-light/20 border-border/30 shadow-mobile-card hover:shadow-lg transition-all duration-300 transform hover:scale-105 touch-target">
+            <div className="flex flex-col items-center gap-2">
+              <div className="p-2 rounded-full bg-gradient-to-r from-warning/20 to-warning/10">
+                <Clock className="h-5 w-5 text-warning" />
+              </div>
+              <div className="text-mobile-xl font-bold text-foreground">2</div>
+              <div className="text-mobile-xs text-muted-foreground font-medium">Need Debrief</div>
             </div>
+          </Card>
+          <Card className="text-center p-4 bg-gradient-to-br from-card to-success-light/20 border-border/30 shadow-mobile-card hover:shadow-lg transition-all duration-300 transform hover:scale-105 touch-target">
+            <div className="flex flex-col items-center gap-2">
+              <div className="p-2 rounded-full bg-gradient-to-r from-success/20 to-success/10">
+                <CheckCircle className="h-5 w-5 text-success" />
+              </div>
+              <div className="text-mobile-xl font-bold text-foreground">4</div>
+              <div className="text-mobile-xs text-muted-foreground font-medium">Completed</div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Smart Nudges Mobile */}
+        <div className="mb-6">
+          <SmartNudges />
+        </div>
+
+        {/* Today's Schedule Mobile */}
+        <div className="space-y-4 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-mobile-lg font-semibold text-foreground">Today's Schedule</h2>
+            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent"></div>
           </div>
+          <div className="space-y-3">
+            {meetings.map((meeting, index) => (
+              <div 
+                key={meeting.id} 
+                className="animate-slide-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <MeetingCard
+                  meeting={meeting}
+                  onPrepare={handlePrepare}
+                  onDebrief={handleDebrief}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Quick Actions at Bottom */}
+        <div className="pb-6">
+          <QuickActions
+            onVoiceNote={onVoiceNote}
+            onAskAI={onAskAI}
+            onReports={onReports}
+            onNewAction={onNewAction}
+            onIntelligence={onIntelligence}
+          />
         </div>
       </div>
 
-      {/* Floating Actions */}
-      <div className="fixed bottom-8 right-8">
-        <div className="flex flex-col gap-3">
-          <Button
-            onClick={onVoiceNote}
-            size="sm"
-            variant="outline"
-            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent"
-          >
-            <Bell className="h-5 w-5" />
-          </Button>
-          <Button
-            onClick={onAskAI}
-            className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg"
-          >
-            <Plus className="h-6 w-6" />
-          </Button>
-        </div>
+      {/* Mobile Floating Action Button */}
+      <div className="fixed bottom-6 right-4 z-50">
+        <Button
+          onClick={onNewAction}
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary shadow-mobile-fab hover:shadow-xl transform hover:scale-110 transition-all duration-300 touch-target animate-pulse-glow"
+        >
+          <Plus className="h-6 w-6" />
+        </Button>
       </div>
     </div>
   );
