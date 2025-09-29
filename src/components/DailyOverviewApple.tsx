@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, Plus, Calendar, Bell } from "lucide-react";
+import { Clock, MapPin, User, Plus, Calendar, Bell, Lightbulb } from "lucide-react";
 
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
@@ -87,9 +87,9 @@ const mockHCPData: Record<string, HCPData> = {
     segmentationStatus: "At risk",
     daysSinceLastInteraction: 34,
     importantPoints: [
-      "Discuss new study data on cardiovascular outcomes",
-      "Address recent patient adherence concerns",
-      "Follow up on formulary status changes"
+      "Present new study data on cardiovascular outcomes",
+      "Address patient adherence strategies and concerns", 
+      "Discuss formulary status updates and access"
     ]
   },
   "Dr. Michael Chen": {
@@ -206,7 +206,7 @@ export const DailyOverviewApple = ({
                     key={index}
                     className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg"
                   >
-                    <div className="w-2 h-2 rounded-full mt-2 bg-primary" />
+                    <Lightbulb className="w-4 h-4 mt-1 text-yellow-500" />
                     <p className="text-foreground">{point}</p>
                   </div>
                 ))}
