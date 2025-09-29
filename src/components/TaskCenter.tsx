@@ -150,21 +150,6 @@ export const TaskCenter = ({ onClose }: TaskCenterProps) => {
 
         {/* Content */}
         <div className="overflow-y-auto max-h-[calc(80vh-140px)]">
-          {/* Quick Queries */}
-          <div className="p-6 border-b border-border">
-            <h3 className="text-sm font-medium text-foreground mb-3">Quick Queries</h3>
-            <div className="grid grid-cols-1 gap-2">
-              <Button 
-                variant="outline" 
-                className="justify-start h-auto p-3 text-left"
-                onClick={() => {/* Handle quick query */}}
-              >
-                <Brain className="h-4 w-4 mr-2 text-primary" />
-                <span className="text-sm">Find best canvas targets near me</span>
-              </Button>
-            </div>
-          </div>
-
           {activeTasks.length === 0 ? (
             <div className="p-12 text-center">
               <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />

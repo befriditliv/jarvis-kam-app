@@ -26,21 +26,26 @@ interface AIResponse {
 const querySuggestions: QuerySuggestion[] = [
   {
     id: "1",
+    text: "Find best canvas targets near me",
+    category: "insights"
+  },
+  {
+    id: "2",
     text: "Show adoption trends in oncology at City Medical Center",
     category: "trends"
   },
   {
-    id: "2", 
+    id: "3", 
     text: "Compare our CV portfolio vs competitors this quarter",
     category: "competitive"
   },
   {
-    id: "3",
+    id: "4",
     text: "What clinical trials are relevant for Dr. Johnson?",
     category: "clinical"
   },
   {
-    id: "4",
+    id: "5",
     text: "Identify high-potential HCPs in cardiology",
     category: "insights"
   }
@@ -80,6 +85,9 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
   };
 
   const getAIResponse = (query: string): string => {
+    if (query.toLowerCase().includes("canvas targets")) {
+      return "Found 12 high-potential canvas targets within 25 miles. Top prospects: Dr. Amanda Foster (Endocrinology) - 0.8 miles, high access, no recent contact. Dr. Mark Stevens (Cardiology) - 3.2 miles, growing practice, downloaded recent study. Dr. Lisa Park (Oncology) - 5.1 miles, category A, 90+ days since last visit.";
+    }
     if (query.toLowerCase().includes("adoption trends")) {
       return "Oncology adoption at City Medical Center shows 23% increase in Q4. Key drivers: improved formulary access and positive physician feedback on efficacy. Dr. Chen and Dr. Martinez are top adopters with 45+ prescriptions each.";
     }
