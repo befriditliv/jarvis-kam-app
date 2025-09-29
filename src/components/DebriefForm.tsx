@@ -15,16 +15,18 @@ interface DebriefFormProps {
 interface DebriefData {
   outcome: number;
   objectivesAchieved: string[];
-  keyConcerns: string[];
+  keyConcerns: boolean;
   hasInizioFollowUp: boolean;
+  materialsShared: boolean;
   voiceNotes: string;
 }
 
 interface DebriefTemplate {
   outcome: number;
   objectives: string[];
-  concerns: string[];
+  keyConcerns: boolean;
   hasInizioFollowUp: boolean;
+  materialsShared: boolean;
 }
 
 interface Objective {
@@ -47,13 +49,6 @@ const outcomes = [
   { value: 5, label: "Excellent", color: "text-success", bgColor: "bg-success/10" }
 ];
 
-const suggestedConcerns = [
-  "Budget constraints mentioned",
-  "Competing priorities this quarter",
-  "Need more clinical evidence",
-  "Timeline concerns for implementation",
-  "Staff training requirements"
-];
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
   const [phase, setPhase] = useState<'template' | 'debrief'>('template');
@@ -61,8 +56,9 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [template, setTemplate] = useState<DebriefTemplate>({
     outcome: 3,
     objectives: [],
-    concerns: [],
-    hasInizioFollowUp: false
+    keyConcerns: false,
+    hasInizioFollowUp: false,
+    materialsShared: false
   });
   const [voiceNotes, setVoiceNotes] = useState("");
 
@@ -75,14 +71,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     }));
   };
 
-  const toggleConcern = (concern: string) => {
-    setTemplate(prev => ({
-      ...prev,
-      concerns: prev.concerns.includes(concern)
-        ? prev.concerns.filter(c => c !== concern)
-        : [...prev.concerns, concern]
-    }));
-  };
 
   const handleStartDebrief = () => {
     setPhase('debrief');
@@ -113,8 +101,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       prompt += `• For the objectives you marked (${template.objectives.join(', ')}), tell me more about how they were achieved.\n`;
     }
     
-    if (template.concerns.length > 0) {
-      prompt += `• Regarding the concerns (${template.concerns.join(', ')}), how did the client respond?\n`;
+    if (template.keyConcerns) {
+      prompt += "• What were the specific concerns voiced by the client?\n";
+    }
+    
+    if (template.materialsShared) {
+      prompt += "• Tell me about the materials you shared or presented during the meeting.\n";
     }
     
     if (template.hasInizioFollowUp) {
@@ -129,8 +121,9 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     const debriefData: DebriefData = {
       outcome: template.outcome,
       objectivesAchieved: template.objectives,
-      keyConcerns: template.concerns,
+      keyConcerns: template.keyConcerns,
       hasInizioFollowUp: template.hasInizioFollowUp,
+      materialsShared: template.materialsShared,
       voiceNotes
     };
     onSave(debriefData);
@@ -230,18 +223,47 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
           {/* Key Concerns */}
           <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Any Key Concerns?</h3>
-            <div className="flex flex-wrap gap-2">
-              {suggestedConcerns.map((concern) => (
-                <Badge
-                  key={concern}
-                  variant={template.concerns.includes(concern) ? "default" : "outline"}
-                  onClick={() => toggleConcern(concern)}
-                  className="cursor-pointer hover:scale-105 transition-transform duration-200"
-                >
-                  {concern}
-                </Badge>
-              ))}
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Any Key Concerns voiced?</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant={template.keyConcerns ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: true }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Yes
+              </Button>
+              <Button
+                variant={!template.keyConcerns ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: false }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <XCircle className="h-5 w-5 mr-2" />
+                No
+              </Button>
+            </div>
+          </Card>
+
+          {/* Materials Shared */}
+          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Materials shared or presented?</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant={template.materialsShared ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Yes
+              </Button>
+              <Button
+                variant={!template.materialsShared ? "default" : "outline"}
+                onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
+                className="h-16 rounded-xl text-lg"
+              >
+                <XCircle className="h-5 w-5 mr-2" />
+                No
+              </Button>
             </div>
           </Card>
 
@@ -324,7 +346,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           <div className="text-xs space-y-1 text-muted-foreground">
             <div>Outcome: {outcomes.find(o => o.value === template.outcome)?.label} ({template.outcome}/5)</div>
             <div>Objectives: {template.objectives.length} selected</div>
-            <div>Concerns: {template.concerns.length} identified</div>
+            <div>Key Concerns: {template.keyConcerns ? 'Yes' : 'No'}</div>
+            <div>Materials Shared: {template.materialsShared ? 'Yes' : 'No'}</div>
             <div>Inizio Follow-up: {template.hasInizioFollowUp ? 'Required' : 'Not needed'}</div>
           </div>
         </Card>

@@ -20,8 +20,9 @@ interface VoiceRecording {
 interface DebriefData {
   outcome: number;
   objectivesAchieved: string[];
-  keyConcerns: string[];
+  keyConcerns: boolean;
   hasInizioFollowUp: boolean;
+  materialsShared: boolean;
   voiceNotes: string;
 }
 
