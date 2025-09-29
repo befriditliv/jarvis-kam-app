@@ -85,7 +85,7 @@ const mockHCPData: Record<string, HCPData> = {
     accessLevel: "High",
     consentStatus: "OPT IN",
     segmentationStatus: "At risk",
-    daysSinceLastInteraction: 14,
+    daysSinceLastInteraction: 34,
     importantPoints: [
       "Discuss new study data on cardiovascular outcomes",
       "Address recent patient adherence concerns",
@@ -237,7 +237,7 @@ export const DailyOverviewApple = ({
                   <span className="text-sm font-medium text-foreground">
                     Segmentation: 
                     <span className={`ml-1 ${
-                      nextHCPData.segmentationStatus === "At risk" ? "text-destructive" :
+                      nextHCPData.segmentationStatus === "At risk" ? "text-yellow-500" :
                       nextHCPData.segmentationStatus === "Growing" ? "text-primary" :
                       "text-warning"
                     }`}>
@@ -247,7 +247,7 @@ export const DailyOverviewApple = ({
                 </div>
                 <div className="px-3 py-2 bg-accent rounded-lg">
                   <span className="text-sm font-medium text-foreground">
-                    Days since last interaction: <span className="text-muted-foreground">{nextHCPData.daysSinceLastInteraction}</span>
+                    Days since Engagement: <span className="text-blue-500">{nextHCPData.daysSinceLastInteraction}</span>
                   </span>
                 </div>
               </div>
