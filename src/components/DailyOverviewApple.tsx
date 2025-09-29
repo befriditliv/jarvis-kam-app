@@ -157,89 +157,56 @@ export const DailyOverviewApple = ({
       <div className="px-6 pb-24">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Important for Next Meeting */}
-          {nextHCPData && <div className="bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-2xl p-6 shadow-lg relative overflow-hidden">
-              {/* Background decoration */}
+          {nextHCPData && <div className="bg-card border border-primary rounded-xl p-6 shadow-sm relative">
               
+              <h2 className="text-lg font-medium text-foreground mb-4">
+                Next call with <span className="underline text-primary">{nextHCPData.name}</span> at {nextMeeting.time}
+              </h2>
               
-              {/* Header */}
-              <div className="relative mb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-foreground">{nextHCPData.name}</h2>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="w-4 h-4" />
-                      <span className="font-medium">{nextMeeting.time}</span>
-                      <span>•</span>
-                      <span>{nextMeeting.duration}</span>
-                    </div>
-                  </div>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border/50">
+                <div className="w-6 h-6 bg-yellow-500/10 rounded-full flex items-center justify-center">
+                  <Lightbulb className="w-3 h-3 text-yellow-500" />
                 </div>
-                
-                {/* Quick stats row */}
-                <div className="grid grid-cols-3 gap-3 mt-4">
-                  <div className="text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Access Level</div>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${nextHCPData.accessLevel === "High" ? "bg-green-100 text-green-700" : nextHCPData.accessLevel === "Medium" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"}`}>
-                      {nextHCPData.accessLevel}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Consent Status</div>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${nextHCPData.consentStatus === "OPT IN" ? "bg-green-100 text-green-700" : nextHCPData.consentStatus === "OPT OUT" ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-700"}`}>
-                      {nextHCPData.consentStatus}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs text-muted-foreground mb-1">Last Contact</div>
-                    <div className="text-xs font-medium text-foreground bg-secondary/50 px-3 py-1 rounded-full">
-                      {nextHCPData.daysSinceLastInteraction} days ago
-                    </div>
-                  </div>
-                </div>
+                <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">Jarvis Suggestions</h3>
               </div>
               
-              {/* Jarvis Suggestions */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-7 h-7 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg flex items-center justify-center">
-                    <Lightbulb className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-foreground">Key Discussion Points</h3>
-                </div>
-                
-                <div className="space-y-3">
-                  {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-4 bg-white/50 border border-white/60 rounded-xl backdrop-blur-sm">
-                      <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-semibold text-primary">{index + 1}</span>
-                      </div>
-                      <p className="text-sm text-foreground leading-relaxed">{point}</p>
-                    </div>)}
-                </div>
+              <div className="space-y-2 mb-4">
+                {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
+                    <Lightbulb className="w-4 h-4 mt-1 text-yellow-500" />
+                    <p className="text-foreground">{point}</p>
+                  </div>)}
               </div>
               
-              {/* Status indicators */}
-              <div className="grid grid-cols-1 gap-3">
-                <div className="flex items-center justify-between p-4 bg-white/40 border border-white/60 rounded-xl backdrop-blur-sm">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${nextHCPData.segmentationStatus === "At risk" ? "bg-red-400" : nextHCPData.segmentationStatus === "Growing" ? "bg-green-400" : "bg-yellow-400"}`} />
-                    <span className="font-medium text-foreground">Relationship Status</span>
-                  </div>
-                  <span className={`font-semibold ${nextHCPData.segmentationStatus === "At risk" ? "text-red-600" : nextHCPData.segmentationStatus === "Growing" ? "text-green-600" : "text-yellow-600"}`}>
-                    {nextHCPData.segmentationStatus}
+              {/* Access Level and Consent Status */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Access Level: <span className="text-primary">{nextHCPData.accessLevel}</span>
                   </span>
                 </div>
-                
-                {nextHCPData.consentStatus === "OPT OUT" && <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-bold text-red-600">!</span>
-                      </div>
-                      <span className="text-sm font-medium text-red-700">Priority: Regain consent during this call</span>
-                    </div>
-                  </div>}
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Consent Status: 
+                    <span className={`ml-1 ${nextHCPData.consentStatus === "OPT IN" ? "text-primary" : nextHCPData.consentStatus === "OPT OUT" ? "text-destructive" : "text-warning"}`}>
+                      {nextHCPData.consentStatus}
+                      {nextHCPData.consentStatus === "OPT OUT" && " - Get consent back"}
+                      {nextHCPData.consentStatus === "Blank" && " - Get consent if possible"}
+                    </span>
+                  </span>
+                </div>
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Segmentation: 
+                    <span className={`ml-1 ${nextHCPData.segmentationStatus === "At risk" ? "text-yellow-500" : nextHCPData.segmentationStatus === "Growing" ? "text-primary" : "text-warning"}`}>
+                      {nextHCPData.segmentationStatus}
+                    </span>
+                  </span>
+                </div>
+                <div className="px-3 py-2 bg-accent rounded-lg">
+                  <span className="text-sm font-medium text-foreground">
+                    Days since Engagement: <span className="text-blue-500">{nextHCPData.daysSinceLastInteraction}</span>
+                  </span>
+                </div>
               </div>
             </div>}
 
