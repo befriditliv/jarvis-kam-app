@@ -119,14 +119,8 @@ export const DailyOverviewApple = ({
       {/* Header */}
       <div className="px-6 pt-12 pb-8">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex flex-col gap-2">
-              <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10" />
-              <div>
-                <h1 className="text-3xl font-light text-foreground mb-1">Today</h1>
-                <p className="text-muted-foreground">{todayDate}</p>
-              </div>
-            </div>
+          <div className="flex items-center justify-between mb-6">
+            <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12" />
             <div className="flex items-center gap-3">
               <Button onClick={onNewAction} className="rounded-xl bg-primary hover:bg-primary/90 px-6">
                 <MessageCircle className="h-4 w-4 mr-2" />
@@ -135,19 +129,25 @@ export const DailyOverviewApple = ({
             </div>
           </div>
 
-          {/* Summary Stats */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="text-center">
-              <div className="text-2xl font-light text-foreground">{meetings.length}</div>
-              <div className="text-sm text-muted-foreground">Total meetings</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-primary">{upcomingCount}</div>
-              <div className="text-sm text-muted-foreground">Upcoming</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-light text-destructive">{debriefCount}</div>
-              <div className="text-sm text-muted-foreground">Need debrief</div>
+          {/* Today Overview */}
+          <div className="mb-8">
+            <h1 className="text-2xl font-light text-foreground mb-1">Today</h1>
+            <p className="text-sm text-muted-foreground mb-4">{todayDate}</p>
+            
+            {/* Summary Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-lg font-light text-foreground">{meetings.length}</div>
+                <div className="text-xs text-muted-foreground">Total meetings</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-light text-primary">{upcomingCount}</div>
+                <div className="text-xs text-muted-foreground">Upcoming</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-light text-destructive">{debriefCount}</div>
+                <div className="text-xs text-muted-foreground">Need debrief</div>
+              </div>
             </div>
           </div>
         </div>
