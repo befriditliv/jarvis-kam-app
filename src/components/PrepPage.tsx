@@ -3,114 +3,89 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Clock, User, MapPin, Calendar, Play, FileText, TrendingUp, Globe, History } from "lucide-react";
-
 interface PrepPageProps {
   meetingId: string;
   onBack: () => void;
   onStartMeeting: () => void;
 }
-
 interface PrepSection {
   id: string;
   title: string;
   icon: any;
   items: PrepItem[];
 }
-
 interface PrepItem {
   id: string;
   title: string;
   subtitle: string;
   status?: "completed" | "pending";
 }
-
-const prepSections: PrepSection[] = [
-  {
-    id: "overview",
-    title: "Overview",
-    icon: FileText,
-    items: [
-      {
-        id: "1",
-        title: "Review client history",
-        subtitle: "Last interaction 2 weeks ago"
-      },
-      {
-        id: "2",
-        title: "Access Level Analysis",
-        subtitle: "High access • Cardiology specialist"
-      }
-    ]
-  },
-  {
-    id: "recent",
-    title: "Recent Meetings",
-    icon: History,
-    items: [
-      {
-        id: "3",
-        title: "Q4 Review Meeting",
-        subtitle: "Discussed patient adherence strategies"
-      },
-      {
-        id: "4",
-        title: "Protocol Update Session",
-        subtitle: "Positive feedback on new guidelines"
-      }
-    ]
-  },
-  {
-    id: "actions",
-    title: "Next Best Actions",
-    icon: TrendingUp,
-    items: [
-      {
-        id: "5",
-        title: "Prepare key messages",
-        subtitle: "CV protocol & adherence focus"
-      },
-      {
-        id: "6",
-        title: "Review clinical data",
-        subtitle: "Latest trial results available"
-      }
-    ]
-  },
-  {
-    id: "digital",
-    title: "Digital Engagements",
-    icon: Globe,
-    items: [
-      {
-        id: "7",
-        title: "Check formulary status",
-        subtitle: "Metro Health preferred access"
-      },
-      {
-        id: "8",
-        title: "Portal Activity Review",
-        subtitle: "Downloaded 3 studies this month"
-      }
-    ]
-  }
-];
-
-export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) => {
+const prepSections: PrepSection[] = [{
+  id: "overview",
+  title: "Overview",
+  icon: FileText,
+  items: [{
+    id: "1",
+    title: "Review client history",
+    subtitle: "Last interaction 2 weeks ago"
+  }, {
+    id: "2",
+    title: "Access Level Analysis",
+    subtitle: "High access • Cardiology specialist"
+  }]
+}, {
+  id: "recent",
+  title: "Recent Meetings",
+  icon: History,
+  items: [{
+    id: "3",
+    title: "Q4 Review Meeting",
+    subtitle: "Discussed patient adherence strategies"
+  }, {
+    id: "4",
+    title: "Protocol Update Session",
+    subtitle: "Positive feedback on new guidelines"
+  }]
+}, {
+  id: "actions",
+  title: "Next Best Actions",
+  icon: TrendingUp,
+  items: [{
+    id: "5",
+    title: "Prepare key messages",
+    subtitle: "CV protocol & adherence focus"
+  }, {
+    id: "6",
+    title: "Review clinical data",
+    subtitle: "Latest trial results available"
+  }]
+}, {
+  id: "digital",
+  title: "Digital Engagements",
+  icon: Globe,
+  items: [{
+    id: "7",
+    title: "Check formulary status",
+    subtitle: "Metro Health preferred access"
+  }, {
+    id: "8",
+    title: "Portal Activity Review",
+    subtitle: "Downloaded 3 studies this month"
+  }]
+}];
+export const PrepPage = ({
+  meetingId,
+  onBack,
+  onStartMeeting
+}: PrepPageProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onBack}
-                className="rounded-full p-2 hover:bg-accent"
-              >
+              <Button variant="ghost" size="sm" onClick={onBack} className="rounded-full p-2 hover:bg-accent">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
@@ -118,10 +93,7 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
                 <p className="text-sm text-muted-foreground">Dr. Sarah Johnson</p>
               </div>
             </div>
-            <Button 
-              onClick={onStartMeeting}
-              className="rounded-xl px-6 bg-primary hover:bg-primary/90"
-            >
+            <Button onClick={onStartMeeting} className="rounded-xl px-6 bg-primary hover:bg-primary/90">
               Start Meeting
             </Button>
           </div>
@@ -156,10 +128,9 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
 
         {/* Preparation Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {prepSections.map((section) => {
-            const IconComponent = section.icon;
-            return (
-              <Card key={section.id} className="p-6 hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+          {prepSections.map(section => {
+          const IconComponent = section.icon;
+          return <Card key={section.id} className="p-6 hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <IconComponent className="h-5 w-5 text-primary" />
@@ -168,16 +139,13 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
                 </div>
                 
                 <div className="space-y-3">
-                  {section.items.map((item) => (
-                    <div key={item.id} className="p-3 bg-secondary/30 rounded-lg">
+                  {section.items.map(item => <div key={item.id} className="p-3 bg-secondary/30 rounded-lg">
                       <h4 className="font-medium text-foreground text-sm">{item.title}</h4>
                       <p className="text-xs text-muted-foreground mt-1">{item.subtitle}</p>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
-              </Card>
-            );
-          })}
+              </Card>;
+        })}
         </div>
 
         {/* Audio Presentation */}
@@ -192,19 +160,13 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
                 <p className="text-sm text-muted-foreground">Listen to detailed client insights</p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsPlaying(!isPlaying)}
-              className={`rounded-xl ${isPlaying ? "bg-primary text-primary-foreground" : ""}`}
-            >
+            <Button variant="outline" size="sm" onClick={() => setIsPlaying(!isPlaying)} className={`rounded-xl ${isPlaying ? "bg-primary text-primary-foreground" : ""}`}>
               <Play className={`h-4 w-4 mr-2 ${isPlaying ? "animate-pulse" : ""}`} />
               {isPlaying ? "Pause" : "Play"}
             </Button>
           </div>
           
-          {isPlaying && (
-            <div className="mb-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
+          {isPlaying && <div className="mb-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                 <span className="text-sm text-primary">Playing client overview...</span>
@@ -212,18 +174,11 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
               <div className="mt-2 h-1 bg-primary/20 rounded-full overflow-hidden">
                 <div className="h-full bg-primary rounded-full w-1/3 animate-pulse" />
               </div>
-            </div>
-          )}
+            </div>}
           
           <div className="space-y-3">
-            <div className="p-3 bg-accent rounded-lg">
-              <h4 className="text-sm font-medium mb-1">Dr. Sarah Johnson - Client Profile</h4>
-              <p className="text-xs text-muted-foreground">Detailed insights on prescribing patterns, recent interactions, and key discussion points for your upcoming meeting.</p>
-            </div>
-            <div className="p-3 bg-accent rounded-lg">
-              <h4 className="text-sm font-medium mb-1">Recent Engagement Analysis</h4>
-              <p className="text-xs text-muted-foreground">Analysis of digital touchpoints and formulary updates that create conversation opportunities.</p>
-            </div>
+            
+            
           </div>
         </Card>
 
@@ -237,6 +192,5 @@ export const PrepPage = ({ meetingId, onBack, onStartMeeting }: PrepPageProps) =
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
