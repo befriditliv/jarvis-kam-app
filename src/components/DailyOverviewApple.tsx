@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
+import { TaskCenter } from "./TaskCenter";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -104,6 +105,7 @@ export const DailyOverviewApple = ({
   onIntelligence
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
+  const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
   const todayDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -265,7 +267,12 @@ export const DailyOverviewApple = ({
       {/* Floating Actions */}
       <div className="fixed bottom-8 right-8">
         <div className="flex flex-col gap-3">
-          <Button onClick={onVoiceNote} size="sm" variant="outline" className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent">
+          <Button 
+            onClick={() => setIsTaskCenterOpen(true)} 
+            size="sm" 
+            variant="outline" 
+            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent"
+          >
             <Bell className="h-5 w-5" />
           </Button>
           <Button onClick={onAskAI} className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg">
@@ -273,5 +280,10 @@ export const DailyOverviewApple = ({
           </Button>
         </div>
       </div>
+
+      {/* Task Center Modal */}
+      {isTaskCenterOpen && (
+        <TaskCenter onClose={() => setIsTaskCenterOpen(false)} />
+      )}
     </div>;
 };
