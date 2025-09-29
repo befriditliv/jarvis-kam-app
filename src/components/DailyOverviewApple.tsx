@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, Plus, Calendar, Bell, Lightbulb } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb } from "lucide-react";
 
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
@@ -167,8 +167,8 @@ export const DailyOverviewApple = ({
                 onClick={onNewAction}
                 className="rounded-xl bg-primary hover:bg-primary/90 px-6"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                New
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Ask Jarvis
               </Button>
             </div>
           </div>
@@ -334,7 +334,7 @@ export const DailyOverviewApple = ({
             onClick={onAskAI}
             className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg"
           >
-            <Plus className="h-6 w-6" />
+            <MessageCircle className="h-6 w-6" />
           </Button>
         </div>
       </div>
