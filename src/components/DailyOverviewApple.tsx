@@ -244,12 +244,7 @@ export const DailyOverviewApple = ({
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-medium text-foreground">AI Recommendations</h2>
-              <Button 
-                onClick={() => setIsTaskCenterOpen(true)} 
-                variant="outline" 
-                size="sm" 
-                className="rounded-xl"
-              >
+              <Button onClick={() => setIsTaskCenterOpen(true)} variant="outline" size="sm" className="rounded-xl">
                 <Target className="h-4 w-4 mr-2" />
                 View All
               </Button>
@@ -310,23 +305,12 @@ export const DailyOverviewApple = ({
       {/* Floating Actions */}
       <div className="fixed bottom-8 right-8">
         <div className="flex flex-col gap-3">
-          <Button 
-            onClick={() => setIsTaskCenterOpen(true)} 
-            size="sm" 
-            variant="outline" 
-            className="rounded-full w-12 h-12 p-0 shadow-lg hover:bg-accent group"
-          >
-            <Target className="h-5 w-5 group-hover:text-primary transition-colors" />
-          </Button>
-          <Button onClick={onAskAI} className="rounded-full w-14 h-14 p-0 bg-primary hover:bg-primary/90 shadow-lg">
-            <MessageCircle className="h-6 w-6" />
-          </Button>
+          
+          
         </div>
       </div>
 
       {/* Task Center Modal */}
-      {isTaskCenterOpen && (
-        <TaskCenter onClose={() => setIsTaskCenterOpen(false)} />
-      )}
+      {isTaskCenterOpen && <TaskCenter onClose={() => setIsTaskCenterOpen(false)} />}
     </div>;
 };
