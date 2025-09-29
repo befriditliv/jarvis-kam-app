@@ -198,7 +198,7 @@ export const DailyOverviewApple = ({
           {nextHCPData && (
             <div>
               <h2 className="text-lg font-medium text-foreground mb-4">
-                Important for your call with {nextHCPData.name}
+                Next call with <span className="underline">{nextHCPData.name}</span>
               </h2>
               <div className="space-y-3 mb-4">
                 {nextHCPData.importantPoints.map((point, index) => (
