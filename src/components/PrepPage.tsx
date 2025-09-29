@@ -74,7 +74,6 @@ const prepSections: PrepSection[] = [{
     subtitle: "Downloaded 3 studies this month"
   }]
 }];
-
 const sectionDescriptions = {
   overview: "General client information including employee count, HCP network, and organizational structure to help you understand the healthcare landscape.",
   recent: "Summary of the last couple of engagements with this client, including key discussion points, outcomes, and follow-up items from previous meetings.",
@@ -137,9 +136,8 @@ export const PrepPage = ({
         {/* Preparation Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {prepSections.map(section => {
-            const IconComponent = section.icon;
-            return (
-              <Sheet key={section.id}>
+          const IconComponent = section.icon;
+          return <Sheet key={section.id}>
                 <SheetTrigger asChild>
                   <Card className="p-0 border-0 bg-card/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300 cursor-pointer group">
                     <div className="p-6 flex items-center justify-between">
@@ -168,18 +166,12 @@ export const PrepPage = ({
                   <div className="mt-6">
                     <p className="text-muted-foreground mb-6">{sectionDescriptions[section.id as keyof typeof sectionDescriptions]}</p>
                     <div className="space-y-4">
-                      {section.items.map(item => (
-                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg border border-border/50">
-                          <h4 className="font-medium text-foreground mb-2">{item.title}</h4>
-                          <p className="text-sm text-muted-foreground">{item.subtitle}</p>
-                        </div>
-                      ))}
+                      {section.items.map(item => {})}
                     </div>
                   </div>
                 </SheetContent>
-              </Sheet>
-            );
-          })}
+              </Sheet>;
+        })}
         </div>
 
         {/* Audio Presentation */}
