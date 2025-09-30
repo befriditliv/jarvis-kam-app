@@ -119,7 +119,7 @@ export const PrepPage = ({
       {/* Content */}
       <div className="px-6 py-8 max-w-4xl mx-auto">
         {/* Meeting Info */}
-        <div className="mb-8 p-6 bg-secondary/30 rounded-xl">
+        <div className="mb-6 p-6 bg-secondary/30 rounded-xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
               <User className="h-6 w-6 text-primary-foreground" />
