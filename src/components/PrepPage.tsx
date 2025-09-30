@@ -131,20 +131,14 @@ export const PrepPage = ({
           </div>
           
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>9:00 AM • 45 minutes</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span>Conference Room B</span>
-            </div>
+            
+            
           </div>
         </div>
 
         {/* Smart Insights */}
         <div className="mb-8 p-6 bg-primary-light rounded-xl border border-primary/10">
-          <h3 className="font-medium text-primary mb-3">AI Insights</h3>
+          <h3 className="font-medium text-primary mb-3">Jarvis AI summary</h3>
           <div className="space-y-3 text-sm">
             <p>Dr. Johnson has shown strong interest in patient adherence solutions based on previous interactions.</p>
             <p>Metro Medical Center recently updated their formulary - excellent opportunity to discuss expanded access.</p>
@@ -154,7 +148,7 @@ export const PrepPage = ({
 
         {/* Periscope Regional Insights */}
         <div className="mb-8 p-6 bg-secondary/40 rounded-xl border border-border/40">
-          <h3 className="font-medium text-foreground mb-4">Periscope Regional Insights - Metro Medical Center Area</h3>
+          <h3 className="font-medium text-foreground mb-4">Jarvis Periscope - Metro Medical Center Area</h3>
           
           <Tabs defaultValue="physicians" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -211,12 +205,10 @@ export const PrepPage = ({
                   <div className="mt-6">
                     <p className="text-muted-foreground mb-6">{sectionDescriptions[section.id as keyof typeof sectionDescriptions]}</p>
                     <div className="space-y-4">
-                      {section.items.map(item => (
-                        <div key={item.id} className="p-4 bg-secondary/30 rounded-lg border border-border/50">
+                      {section.items.map(item => <div key={item.id} className="p-4 bg-secondary/30 rounded-lg border border-border/50">
                           <h4 className="font-medium text-foreground mb-2">{item.title}</h4>
                           <p className="text-sm text-muted-foreground">{item.subtitle}</p>
-                        </div>
-                      ))}
+                        </div>)}
                     </div>
                   </div>
                 </SheetContent>
