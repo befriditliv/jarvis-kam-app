@@ -140,7 +140,12 @@ export const DailyOverviewApple = ({
           {nextHCPData && <div className="bg-card border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
               
               <h2 className="text-lg font-semibold text-foreground mb-4">
-                Next call with <span className="text-primary">{nextHCPData.name}</span> at {nextMeeting.time}
+                Next call with <button 
+                  onClick={() => onPrepare(nextMeeting.id)}
+                  className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer"
+                >
+                  {nextHCPData.name}
+                </button> at {nextMeeting.time}
               </h2>
               
               <div className="mb-4 pb-4 border-b border-border/30">
