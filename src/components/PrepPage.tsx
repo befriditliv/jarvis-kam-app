@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ArrowLeft, Clock, User, MapPin, Calendar, Play, FileText, TrendingUp, Globe, History, ChevronRight } from "lucide-react";
 interface PrepPageProps {
@@ -153,12 +154,28 @@ export const PrepPage = ({
 
         {/* Periscope Regional Insights */}
         <div className="mb-8 p-6 bg-secondary/40 rounded-xl border border-border/40">
-          <h3 className="font-medium text-foreground mb-3">Periscope Regional Insights</h3>
-          <div className="space-y-3 text-sm text-muted-foreground">
-            <p>Local physicians show strong interest in GLP-1 therapies but cite concerns around side effects, costs, and supply issues.</p>
-            <p>Semaglutide vs tirzepatide debate centers on weight loss efficacy vs cardiovascular benefits.</p>
-            <p>Regional discussions focus on reimbursement policies and equitable patient access.</p>
-          </div>
+          <h3 className="font-medium text-foreground mb-4">Periscope Regional Insights - Metro Medical Center Area</h3>
+          
+          <Tabs defaultValue="physicians" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsTrigger value="physicians">Local Physicians</TabsTrigger>
+              <TabsTrigger value="patients">Patient Voices</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="physicians" className="space-y-3 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">Insights from cardiologists in Dr. Johnson's region:</p>
+              <p>Local physicians show strong interest in GLP-1 therapies but cite concerns around side effects, costs, and supply issues.</p>
+              <p>Semaglutide vs tirzepatide debate centers on weight loss efficacy vs cardiovascular benefits.</p>
+              <p>Regional discussions focus on reimbursement policies and equitable patient access.</p>
+            </TabsContent>
+            
+            <TabsContent value="patients" className="space-y-3 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground">What patients in the region are experiencing:</p>
+              <p>Patients report significant weight loss results but struggle with nausea, fatigue, and high costs.</p>
+              <p>Common concerns include treatment duration uncertainty and periodic medication shortages.</p>
+              <p>Strong demand for better insurance coverage and more affordable access to GLP-1 medications.</p>
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* Preparation Sections */}
