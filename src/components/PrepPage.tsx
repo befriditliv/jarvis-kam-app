@@ -109,7 +109,7 @@ export const PrepPage = ({
               </div>
             </div>
             <Button onClick={onStartMeeting} className="rounded-xl px-6 bg-primary hover:bg-primary/90">
-              Start Meeting
+              Debrief
             </Button>
           </div>
         </div>
