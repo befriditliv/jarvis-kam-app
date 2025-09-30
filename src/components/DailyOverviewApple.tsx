@@ -122,7 +122,7 @@ export const DailyOverviewApple = ({
       <div className="px-6 pt-8 pb-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12" />
+            <img src={jarvisLogo} alt="Jarvis" className="h-16 w-16" />
             <div className="flex items-center gap-3">
               <Button onClick={onAskAI} className="rounded-xl bg-primary hover:bg-primary/90 px-6 text-sm font-medium">
                 <MessageCircle className="h-4 w-4 mr-2" />
