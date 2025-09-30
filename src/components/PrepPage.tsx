@@ -141,6 +141,16 @@ export const PrepPage = ({
           </div>
         </div>
 
+        {/* Smart Insights */}
+        <div className="mb-8 p-6 bg-primary-light rounded-xl border border-primary/10">
+          <h3 className="font-medium text-primary mb-3">AI Insights</h3>
+          <div className="space-y-3 text-sm">
+            <p>Dr. Johnson has shown strong interest in patient adherence solutions based on previous interactions.</p>
+            <p>Metro Medical Center recently updated their formulary - excellent opportunity to discuss expanded access.</p>
+            <p>Consider mentioning the CARDIAC-ADVANCE trial results that were just published.</p>
+          </div>
+        </div>
+
         {/* Preparation Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {prepSections.map(section => {
@@ -221,15 +231,6 @@ export const PrepPage = ({
           </div>
         </Card>
 
-        {/* Smart Insights */}
-        <div className="mt-8 p-6 bg-primary-light rounded-xl border border-primary/10">
-          <h3 className="font-medium text-primary mb-3">AI Insights</h3>
-          <div className="space-y-3 text-sm">
-            <p>Dr. Johnson has shown strong interest in patient adherence solutions based on previous interactions.</p>
-            <p>Metro Medical Center recently updated their formulary - excellent opportunity to discuss expanded access.</p>
-            <p>Consider mentioning the CARDIAC-ADVANCE trial results that were just published.</p>
-          </div>
-        </div>
       </div>
     </div>;
 };
