@@ -151,6 +151,16 @@ export const PrepPage = ({
           </div>
         </div>
 
+        {/* Periscope Regional Insights */}
+        <div className="mb-8 p-6 bg-secondary/40 rounded-xl border border-border/40">
+          <h3 className="font-medium text-foreground mb-3">Periscope Regional Insights</h3>
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <p>Local physicians show strong interest in GLP-1 therapies but cite concerns around side effects, costs, and supply issues.</p>
+            <p>Semaglutide vs tirzepatide debate centers on weight loss efficacy vs cardiovascular benefits.</p>
+            <p>Regional discussions focus on reimbursement policies and equitable patient access.</p>
+          </div>
+        </div>
+
         {/* Preparation Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {prepSections.map(section => {
