@@ -237,65 +237,6 @@ export const DailyOverviewApple = ({
             </div>
           </div>
 
-          {/* Task Center Preview */}
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Jarvis AI Recommendations</h2>
-              <Button onClick={() => setIsTaskCenterOpen(true)} variant="outline" size="sm" className="rounded-xl text-xs font-medium">
-                <Target className="h-4 w-4 mr-2" />
-                View All
-              </Button>
-            </div>
-            
-            <div className="space-y-3">
-              {/* High Priority Task Preview */}
-              <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-300 bg-card/50 backdrop-blur-sm hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Calendar className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-foreground text-sm">Schedule Meeting with Category A Client</h3>
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                        High Priority
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Dr. Patricia Williams (Cardiology) - Last interaction 89 days ago</p>
-                  </div>
-                  <Button size="sm" variant="outline" className="rounded-xl flex-shrink-0 text-xs font-medium">
-                    Schedule
-                  </Button>
-                </div>
-              </div>
-
-              {/* Medium Priority Task Preview */}
-              <div className="border border-border/50 rounded-xl p-4 hover:border-primary/30 transition-all duration-300 bg-card/50 backdrop-blur-sm hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="h-5 w-5 text-blue-500" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-foreground text-sm">Follow-up on Study Download</h3>
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                        High Priority
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Dr. James Martinez downloaded cardiovascular study yesterday</p>
-                  </div>
-                  <Button size="sm" variant="outline" className="rounded-xl flex-shrink-0 text-xs font-medium">
-                    Follow-up
-                  </Button>
-                </div>
-              </div>
-              
-              {/* View more indicator */}
-              <div className="text-center pt-2">
-                <p className="text-xs text-muted-foreground">+ 3 more AI-generated tasks</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
