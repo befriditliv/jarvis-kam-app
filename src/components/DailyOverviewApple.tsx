@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 interface DailyOverviewProps {
@@ -106,6 +106,7 @@ export const DailyOverviewApple = ({
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
   const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
+  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>("1");
   const todayDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -136,103 +137,120 @@ export const DailyOverviewApple = ({
       {/* Content */}
       <div className="px-6 pb-16">
         <div className="max-w-4xl mx-auto space-y-6">
-          {/* Important for Next Meeting */}
-          {nextHCPData && <div className="bg-card border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-              
-              <h2 className="text-lg font-semibold text-foreground mb-4">
-                Next call with <button 
-                  onClick={() => onPrepare(nextMeeting.id)}
-                  className="text-primary hover:text-primary/80 underline transition-colors cursor-pointer"
-                >
-                  {nextHCPData.name}
-                </button> at {nextMeeting.time}
-              </h2>
-              
-              <div className="mb-4 pb-4 border-b border-border/30">
-                <h3 className="text-sm font-medium text-foreground mb-1 flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-primary" />
-                  Jarvis Recommended Actions
-                </h3>
-                <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
-              </div>
-              
-              <div className="space-y-3 mb-6">
-                {nextHCPData.importantPoints.map((point, index) => <div key={index} className="flex items-start gap-3 p-3 bg-secondary/20 rounded-lg border border-border/20">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                    <p className="text-sm text-foreground">{point}</p>
-                  </div>)}
-              </div>
-              
-              {/* Access Level and Consent Status */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                  <span className="text-xs font-medium text-muted-foreground">Access Level</span>
-                  <div className="text-sm font-semibold text-foreground">{nextHCPData.accessLevel}</div>
-                </div>
-                <div className="px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                  <span className="text-xs font-medium text-muted-foreground">Consent Status</span>
-                  <div className={`text-sm font-semibold ${nextHCPData.consentStatus === "OPT IN" ? "text-primary" : nextHCPData.consentStatus === "OPT OUT" ? "text-destructive" : "text-warning"}`}>
-                    {nextHCPData.consentStatus}
-                  </div>
-                </div>
-                <div className="px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                  <span className="text-xs font-medium text-muted-foreground">Segmentation</span>
-                  <div className={`text-sm font-semibold ${nextHCPData.segmentationStatus === "At risk" ? "text-yellow-500" : nextHCPData.segmentationStatus === "Growing" ? "text-primary" : "text-warning"}`}>
-                    {nextHCPData.segmentationStatus}
-                  </div>
-                </div>
-                <div className="px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                  <span className="text-xs font-medium text-muted-foreground">Days since Engagement</span>
-                  <div className="text-sm font-semibold text-primary">{nextHCPData.daysSinceLastInteraction}</div>
-                </div>
-              </div>
-            </div>}
-
           {/* Today's Schedule */}
           <div className="relative">
             <h2 className="text-lg font-semibold text-foreground mb-4">Schedule</h2>
             <div className="space-y-3">
               {meetings.map((meeting, index) => {
               const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
-              return <div key={meeting.id} className={`flex items-center justify-between p-5 border rounded-xl hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50"}`}>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right min-w-[80px]">
-                      <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
-                      <div className="text-xs text-muted-foreground">{meeting.duration}</div>
-                    </div>
-                    
-                    <div className="w-px h-10 bg-border/50" />
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                        <User className="h-5 w-5 text-primary" />
+              const hcpData = mockHCPData[meeting.hcpName];
+              const isExpanded = expandedMeetingId === meeting.id;
+              
+              return (
+                <div key={meeting.id}>
+                  <div className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 border rounded-xl hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50"}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="text-left sm:text-right min-w-[70px] sm:min-w-[80px]">
+                          <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
+                          <div className="text-xs text-muted-foreground">{meeting.duration}</div>
+                        </div>
+                        
+                        <div className="hidden sm:block w-px h-10 bg-border/50" />
+                        
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                            <User className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground text-sm">{meeting.hcpName}</h3>
+                            <p className="text-xs text-muted-foreground">{meeting.specialty}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground text-sm">{meeting.hcpName}</h3>
-                        <p className="text-xs text-muted-foreground">{meeting.specialty}</p>
+                      
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground ml-0 sm:ml-4 pl-0 sm:pl-0">
+                        <MapPin className="h-4 w-4" />
+                        <span className="line-clamp-1">{meeting.location}</span>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground ml-4">
-                      <MapPin className="h-4 w-4" />
-                      <span>{meeting.location}</span>
+
+                    <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 justify-between sm:justify-end">
+                      <div className={`text-xs font-medium px-2 py-1 rounded-lg ${isNextUpcoming ? "bg-primary/10 text-primary" : statusStyles[meeting.status]}`}>
+                        {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
+                      </div>
+                      
+                      {meeting.status === "upcoming" && (
+                        <div className="flex items-center gap-2">
+                          <Button onClick={() => onPrepare(meeting.id)} variant="outline" size="sm" className="rounded-xl text-xs font-medium">
+                            Prepare
+                          </Button>
+                          {hcpData && (
+                            <Button 
+                              onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
+                              variant="ghost" 
+                              size="sm" 
+                              className="rounded-xl p-2"
+                            >
+                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                      
+                      {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium">
+                          Debrief
+                        </Button>}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className={`text-xs font-medium px-2 py-1 rounded-lg ${isNextUpcoming ? "bg-primary/10 text-primary" : statusStyles[meeting.status]}`}>
-                      {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
+                  
+                  {/* Expanded Details */}
+                  {isExpanded && hcpData && (
+                    <div className="mt-3 p-4 sm:p-5 bg-card border border-border/50 rounded-xl ml-0 sm:ml-4">
+                      <div className="mb-4 pb-3 border-b border-border/30">
+                        <h3 className="text-sm font-medium text-foreground mb-1 flex items-center gap-2">
+                          <Lightbulb className="w-4 h-4 text-primary" />
+                          Jarvis Recommended Actions
+                        </h3>
+                        <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
+                      </div>
+                      
+                      <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
+                        {hcpData.importantPoints.map((point, idx) => (
+                          <div key={idx} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-secondary/20 rounded-lg border border-border/20">
+                            <div className="w-2 h-2 rounded-full bg-primary mt-1.5 sm:mt-2 flex-shrink-0" />
+                            <p className="text-xs sm:text-sm text-foreground">{point}</p>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Access Level and Consent Status */}
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
+                          <span className="text-xs font-medium text-muted-foreground">Access Level</span>
+                          <div className="text-sm font-semibold text-foreground">{hcpData.accessLevel}</div>
+                        </div>
+                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
+                          <span className="text-xs font-medium text-muted-foreground">Consent Status</span>
+                          <div className={`text-sm font-semibold ${hcpData.consentStatus === "OPT IN" ? "text-primary" : hcpData.consentStatus === "OPT OUT" ? "text-destructive" : "text-warning"}`}>
+                            {hcpData.consentStatus}
+                          </div>
+                        </div>
+                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
+                          <span className="text-xs font-medium text-muted-foreground">Segmentation</span>
+                          <div className={`text-sm font-semibold ${hcpData.segmentationStatus === "At risk" ? "text-yellow-500" : hcpData.segmentationStatus === "Growing" ? "text-primary" : "text-warning"}`}>
+                            {hcpData.segmentationStatus}
+                          </div>
+                        </div>
+                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
+                          <span className="text-xs font-medium text-muted-foreground">Days since Engagement</span>
+                          <div className="text-sm font-semibold text-primary">{hcpData.daysSinceLastInteraction}</div>
+                        </div>
+                      </div>
                     </div>
-                    
-                    {meeting.status === "upcoming" && <Button onClick={() => onPrepare(meeting.id)} variant="outline" size="sm" className="rounded-xl text-xs font-medium">
-                        Prepare
-                      </Button>}
-                    
-                    {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium">
-                        Debrief
-                      </Button>}
-                   </div>
-                 </div>;
+                  )}
+                </div>
+              );
             })}
             </div>
           </div>
