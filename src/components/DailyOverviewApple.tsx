@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
+import { HCPAssistant } from "./HCPAssistant";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -107,6 +108,8 @@ export const DailyOverviewApple = ({
   const [meetings] = useState<Meeting[]>(mockMeetings);
   const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
   const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>("1");
+  const [hcpAssistantOpen, setHcpAssistantOpen] = useState(false);
+  const [selectedHCP, setSelectedHCP] = useState<string>("");
   const todayDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -182,7 +185,14 @@ export const DailyOverviewApple = ({
                       
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
-                          <Button onClick={onAskAI} size="sm" className="rounded-xl p-2 bg-primary/10 text-primary hover:bg-primary/20">
+                          <Button 
+                            onClick={() => {
+                              setSelectedHCP(meeting.hcpName);
+                              setHcpAssistantOpen(true);
+                            }} 
+                            size="sm" 
+                            className="rounded-xl p-2 bg-primary/10 text-primary hover:bg-primary/20"
+                          >
                             <MessageCircle className="h-4 w-4" />
                           </Button>
                           {hcpData && (
@@ -268,5 +278,14 @@ export const DailyOverviewApple = ({
 
       {/* Task Center Modal */}
       {isTaskCenterOpen && <TaskCenter onClose={() => setIsTaskCenterOpen(false)} />}
+      
+      {/* HCP Assistant Modal */}
+      {hcpAssistantOpen && (
+        <HCPAssistant 
+          isOpen={hcpAssistantOpen} 
+          onClose={() => setHcpAssistantOpen(false)} 
+          hcpName={selectedHCP}
+        />
+      )}
     </div>;
 };
