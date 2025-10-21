@@ -182,17 +182,13 @@ export const DailyOverviewApple = ({
                       
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
-                          <Button onClick={onAskAI} size="sm" className="rounded-xl p-2">
-                            <MessageCircle className="h-4 w-4" />
-                          </Button>
                           {hcpData && (
                             <Button 
                               onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
-                              variant="ghost" 
                               size="sm" 
                               className="rounded-xl p-2"
                             >
-                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                              <MessageCircle className="h-4 w-4" />
                             </Button>
                           )}
                         </div>
@@ -208,9 +204,8 @@ export const DailyOverviewApple = ({
                   {isExpanded && hcpData && (
                     <div className="mt-3 p-4 sm:p-5 bg-card border border-border/50 rounded-xl ml-0 sm:ml-4">
                       <div className="mb-4 pb-3 border-b border-border/30">
-                        <h3 className="text-sm font-medium text-foreground mb-1 flex items-center gap-2">
-                          <Lightbulb className="w-4 h-4 text-primary" />
-                          Jarvis Recommended Actions
+                        <h3 className="text-base font-semibold text-foreground mb-1">
+                          Ask Jarvis about {meeting.hcpName}
                         </h3>
                         <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
                       </div>
