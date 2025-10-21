@@ -183,7 +183,7 @@ export const DailyOverviewApple = ({
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
                           <Button onClick={onAskAI} size="sm" className="rounded-xl text-xs font-medium">
-                            <Mic className="h-3 w-3 mr-1" />
+                            <MessageCircle className="h-3 w-3 mr-1" />
                             Ask
                           </Button>
                           {hcpData && (
