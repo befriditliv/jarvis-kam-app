@@ -182,9 +182,8 @@ export const DailyOverviewApple = ({
                       
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
-                          <Button onClick={onAskAI} size="sm" className="rounded-xl text-xs font-medium">
-                            <MessageCircle className="h-3 w-3 mr-1" />
-                            Ask
+                          <Button onClick={onAskAI} size="sm" className="rounded-xl p-2">
+                            <MessageCircle className="h-4 w-4" />
                           </Button>
                           {hcpData && (
                             <Button 
