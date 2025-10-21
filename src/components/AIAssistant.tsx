@@ -25,7 +25,7 @@ const querySuggestions: QuerySuggestion[] = [{
   category: "insights"
 }, {
   id: "2",
-  text: "Show adoption trends in oncology",
+  text: "Show regional sales data",
   category: "trends"
 }, {
   id: "3",
