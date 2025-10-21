@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 interface DailyOverviewProps {
@@ -183,6 +183,7 @@ export const DailyOverviewApple = ({
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
                           <Button onClick={onAskAI} size="sm" className="rounded-xl text-xs font-medium">
+                            <Mic className="h-3 w-3 mr-1" />
                             Ask
                           </Button>
                           {hcpData && (
