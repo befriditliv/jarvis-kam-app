@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
@@ -131,6 +131,9 @@ export const DailyOverviewApple = ({
               <Button onClick={onAskAI} className="rounded-xl bg-primary hover:bg-primary/90 px-6 text-sm font-medium">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask Jarvis
+              </Button>
+              <Button variant="ghost" size="icon" className="rounded-xl">
+                <Menu className="h-5 w-5" />
               </Button>
             </div>
           </div>
