@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, CheckCircle, XCircle, Star, Mic, Save, Send, Play, Settings } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
+import { SyncStatus } from "./SyncStatus";
 
 interface DebriefFormProps {
   meetingId: string;
@@ -157,19 +158,22 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         {/* Header */}
         <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/50">
           <div className="px-6 py-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onBack}
-                className="rounded-full p-2 hover:bg-secondary/80"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">Quick Debrief Setup</h1>
-                <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Set your template first</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onBack}
+                  className="rounded-full p-2 hover:bg-secondary/80"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-semibold text-foreground">Quick Debrief Setup</h1>
+                  <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Set your template first</p>
+                </div>
               </div>
+              <SyncStatus />
             </div>
           </div>
         </div>
