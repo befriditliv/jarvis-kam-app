@@ -60,7 +60,7 @@ const quickDebriefOptions = [
 
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
-  const [phase, setPhase] = useState<'template' | 'debrief'>('template');
+  const [phase, setPhase] = useState<'template' | 'debrief' | 'preview'>('template');
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
@@ -128,6 +128,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   };
 
   const handleSave = () => {
+    setPhase('preview');
+  };
+
+  const handleFinalSubmit = () => {
     const debriefData: DebriefData = {
       quickDebrief: template.quickDebrief,
       outcome: template.outcome,
@@ -459,4 +463,103 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       </div>
     </div>
   );
+
+  // Preview Phase
+  if (phase === 'preview') {
+    return (
+      <div className="min-h-screen bg-gradient-surface animate-fade-in">
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/50">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onBack}
+                  className="rounded-full p-2 hover:bg-secondary/80"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <div>
+                  <h1 className="text-xl font-semibold text-foreground">Debrief Preview</h1>
+                  <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Review before submitting</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 py-6 space-y-6">
+          {/* Notes Preview Card */}
+          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Meeting Notes</h3>
+            
+            {/* Meeting Summary */}
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-xs">
+                  Outcome: {outcomes.find(o => o.value === template.outcome)?.label || 'Not rated'}
+                </Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {template.objectives.length} objectives achieved
+                </Badge>
+              </div>
+            </div>
+
+            {/* Detailed Notes */}
+            <div className="prose prose-sm max-w-none">
+              <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
+                <p className="text-foreground mb-3">
+                  Meeting went very well with Dr. Sarah Johnson. We had a productive discussion about the new cardiovascular protocol updates and their potential impact on patient adherence rates in her practice.
+                </p>
+                <p className="text-foreground mb-3">
+                  Dr. Johnson expressed strong interest in implementing the updated CV protocol, particularly the simplified dosing schedule which she believes will significantly improve patient compliance. She mentioned that approximately 40% of her current CV patients struggle with the current regimen complexity.
+                </p>
+                <p className="text-foreground mb-3">
+                  Key discussion points included the recent clinical trial data showing 23% improvement in adherence rates, the new patient education materials, and the digital monitoring tools that integrate with her existing EHR system.
+                </p>
+                <p className="text-foreground mb-3">
+                  Dr. Johnson raised concerns about reimbursement pathways for the new monitoring devices but was satisfied with the coverage information provided. She requested additional materials for her nursing staff and agreed to a pilot implementation with 20 patients starting next month.
+                </p>
+                <p className="text-foreground">
+                  Follow-up scheduled for 6 weeks to review initial patient feedback and discuss expansion to her full CV patient panel of approximately 150 patients.
+                </p>
+              </div>
+            </div>
+
+            {/* Voice Notes if any */}
+            {voiceNotes && (
+              <div className="mt-6">
+                <h4 className="text-sm font-semibold text-card-foreground mb-2">Voice Debrief Notes</h4>
+                <div className="bg-muted/30 rounded-lg p-4 border border-border/50 text-sm text-muted-foreground whitespace-pre-wrap">
+                  {voiceNotes}
+                </div>
+              </div>
+            )}
+          </Card>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 justify-center pb-6">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setPhase('debrief')}
+              className="rounded-xl px-8"
+            >
+              Edit Notes
+            </Button>
+            <Button
+              size="lg"
+              onClick={handleFinalSubmit}
+              className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl px-8"
+            >
+              <Send className="h-5 w-5 mr-2" />
+              Submit to IOengage
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
