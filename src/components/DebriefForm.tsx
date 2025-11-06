@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, CheckCircle, XCircle, Star, Mic, Save, Send, Play, Settings } from "lucide-react";
+import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 
 interface DebriefFormProps {
   meetingId: string;
@@ -60,6 +61,7 @@ const quickDebriefOptions = [
 
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
+  const { addToQueue } = useDebriefQueue();
   const [phase, setPhase] = useState<'template' | 'debrief' | 'preview'>('template');
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
@@ -141,6 +143,11 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       materialsShared: template.materialsShared || false,
       voiceNotes
     };
+    
+    // Add to queue for syncing
+    addToQueue(meetingId, debriefData);
+    
+    // Call onSave callback
     onSave(debriefData);
   };
 

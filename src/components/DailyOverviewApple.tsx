@@ -5,6 +5,7 @@ import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, 
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
+import { SyncStatus } from "./SyncStatus";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -128,6 +129,7 @@ export const DailyOverviewApple = ({
           <div className="flex items-center justify-between mb-6">
             <img src={jarvisLogo} alt="Jarvis" className="h-16 w-16" />
             <div className="flex items-center gap-3">
+              <SyncStatus />
               <Button onClick={onAskAI} className="rounded-xl bg-primary hover:bg-primary/90 px-6 text-sm font-medium">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask Jarvis
