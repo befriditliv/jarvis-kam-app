@@ -437,9 +437,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               Edit Notes
             </Button>
             <Button
+              variant="default"
               size="lg"
               onClick={handleFinalSubmit}
-              className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl px-8"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-8 shadow-lg"
             >
               <Send className="h-5 w-5 mr-2" />
               Submit to IOengage
