@@ -485,18 +485,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       </div>
 
       <div className="px-6 py-6 space-y-6">
-        {/* Template Summary */}
-        <Card className="p-4 bg-gradient-subtle border-primary/20 border">
-          <h4 className="font-semibold text-sm mb-2 text-primary">Your Template Setup:</h4>
-          <div className="text-xs space-y-1 text-muted-foreground">
-            <div>Quick Debrief: {template.quickDebrief ? quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label : 'None selected'}</div>
-            <div>Outcome: {template.outcome > 0 ? `${outcomes.find(o => o.value === template.outcome)?.label} (${template.outcome}/5)` : 'Not selected'}</div>
-            <div>Objectives: {template.objectives.length} selected</div>
-            <div>Key Concerns: {template.keyConcerns === undefined ? 'Not selected' : template.keyConcerns ? 'Yes' : 'No'}</div>
-            <div>Materials Shared: {template.materialsShared === undefined ? 'Not selected' : template.materialsShared ? 'Yes' : 'No'}</div>
-            <div>Inizio Follow-up: {template.hasInizioFollowUp === undefined ? 'Not selected' : template.hasInizioFollowUp ? 'Required' : 'Not needed'}</div>
-          </div>
-        </Card>
 
         {/* Voice Recording */}
         <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
