@@ -424,15 +424,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               </div>
             </div>
 
-            {/* Voice Notes if any */}
-            {voiceNotes && (
-              <div className="mt-6">
-                <h4 className="text-sm font-semibold text-card-foreground mb-2">Voice Debrief Notes</h4>
-                <div className="bg-muted/30 rounded-lg p-4 border border-border/50 text-sm text-muted-foreground whitespace-pre-wrap">
-                  {voiceNotes}
-                </div>
-              </div>
-            )}
           </Card>
 
           {/* Action Buttons */}
