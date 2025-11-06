@@ -381,18 +381,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           {/* Notes Preview Card */}
           <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-card-foreground mb-4">Meeting Notes</h3>
-            
-            {/* Meeting Summary */}
-            <div className="space-y-4 mb-6">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs">
-                  Outcome: {outcomes.find(o => o.value === template.outcome)?.label || 'Not rated'}
-                </Badge>
-                <Badge variant="secondary" className="text-xs">
-                  {template.objectives.length} objectives achieved
-                </Badge>
-              </div>
-            </div>
 
             {/* Detailed Notes */}
             <div className="prose prose-sm max-w-none">
