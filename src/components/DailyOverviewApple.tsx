@@ -181,29 +181,42 @@ export const DailyOverviewApple = ({
                         </div>
                       </div>
                       
-                      <div className="flex flex-col gap-1.5 ml-0 sm:ml-4 pl-0 sm:pl-0 text-xs">
-                        <div className="flex items-center gap-2 text-muted-foreground">
+                      <div className="flex flex-col gap-2 ml-0 sm:ml-4 pl-0 sm:pl-0">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                           <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
                           <span className="font-medium">{meeting.location}</span>
                         </div>
-                        {meeting.address && (
-                          <a 
-                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-muted-foreground/80 hover:text-primary transition-colors ml-5 line-clamp-1 hover:underline decoration-primary/30"
-                          >
-                            {meeting.address}
-                          </a>
-                        )}
-                        {meeting.phone && (
-                          <a 
-                            href={`tel:${meeting.phone}`}
-                            className="flex items-center gap-1.5 text-muted-foreground/80 hover:text-primary transition-colors ml-5 w-fit group"
-                          >
-                            <Phone className="h-3.5 w-3.5" />
-                            <span className="group-hover:underline decoration-primary/30">{meeting.phone}</span>
-                          </a>
+                        {(meeting.address || meeting.phone) && (
+                          <div className="flex items-center gap-2 ml-5">
+                            {meeting.address && (
+                              <a 
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-7 text-xs rounded-lg px-3"
+                                >
+                                  <MapPin className="h-3 w-3 mr-1.5" />
+                                  Get Directions
+                                </Button>
+                              </a>
+                            )}
+                            {meeting.phone && (
+                              <a href={`tel:${meeting.phone}`}>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-7 text-xs rounded-lg px-3"
+                                >
+                                  <Phone className="h-3 w-3 mr-1.5" />
+                                  Call Clinic
+                                </Button>
+                              </a>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
