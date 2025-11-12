@@ -189,27 +189,19 @@ export const DailyOverviewApple = ({
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="text-xs font-medium px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5"
                               >
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="h-7 text-xs rounded-lg px-3"
-                                >
-                                  <MapPin className="h-3 w-3 mr-1.5" />
-                                  Get Directions
-                                </Button>
+                                <MapPin className="h-3 w-3" />
+                                Get Directions
                               </a>
                             )}
                             {meeting.phone && (
-                              <a href={`tel:${meeting.phone}`}>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
-                                  className="h-7 text-xs rounded-lg px-3"
-                                >
-                                  <Phone className="h-3 w-3 mr-1.5" />
-                                  Call Clinic
-                                </Button>
+                              <a 
+                                href={`tel:${meeting.phone}`}
+                                className="text-xs font-medium px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5"
+                              >
+                                <Phone className="h-3 w-3" />
+                                Call Clinic
                               </a>
                             )}
                           </div>
