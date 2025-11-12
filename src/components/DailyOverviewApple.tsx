@@ -181,17 +181,17 @@ export const DailyOverviewApple = ({
                         </div>
                       </div>
                       
-                      <div className="flex flex-col gap-1.5 ml-0 sm:ml-4 pl-0 sm:pl-0">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="flex flex-col gap-1.5 ml-0 sm:ml-4 pl-0 sm:pl-0 text-xs">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                          <span className="line-clamp-1">{meeting.location}</span>
+                          <span className="font-medium">{meeting.location}</span>
                         </div>
                         {meeting.address && (
                           <a 
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-primary hover:underline ml-5 line-clamp-1"
+                            className="text-muted-foreground/80 hover:text-primary transition-colors ml-5 line-clamp-1 hover:underline decoration-primary/30"
                           >
                             {meeting.address}
                           </a>
@@ -199,10 +199,10 @@ export const DailyOverviewApple = ({
                         {meeting.phone && (
                           <a 
                             href={`tel:${meeting.phone}`}
-                            className="flex items-center gap-1.5 text-xs text-primary hover:underline ml-5"
+                            className="flex items-center gap-1.5 text-muted-foreground/80 hover:text-primary transition-colors ml-5 w-fit group"
                           >
                             <Phone className="h-3.5 w-3.5" />
-                            <span>{meeting.phone}</span>
+                            <span className="group-hover:underline decoration-primary/30">{meeting.phone}</span>
                           </a>
                         )}
                       </div>
