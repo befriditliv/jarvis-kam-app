@@ -210,7 +210,7 @@ export const DailyOverviewApple = ({
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 justify-between sm:justify-end">
-                      <div className={`text-xs font-medium px-2 py-1 rounded-lg ${isNextUpcoming ? "bg-primary/10 text-primary" : statusStyles[meeting.status]}`}>
+                      <div className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
                         {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
                       </div>
                       
