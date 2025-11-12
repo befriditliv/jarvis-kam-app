@@ -21,7 +21,7 @@ interface AIResponse {
 }
 const querySuggestions: QuerySuggestion[] = [{
   id: "1",
-  text: "Find best canvas targets near me",
+  text: "Find Canvas targets near me",
   category: "insights"
 }, {
   id: "2",
@@ -29,12 +29,8 @@ const querySuggestions: QuerySuggestion[] = [{
   category: "trends"
 }, {
   id: "3",
-  text: "Compare our portfolio vs competitors",
-  category: "competitive"
-}, {
-  id: "4",
-  text: "What clinical trials are relevant?",
-  category: "clinical"
+  text: "Help me prepare",
+  category: "insights"
 }];
 const categoryConfig = {
   insights: {
