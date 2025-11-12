@@ -26,38 +26,15 @@ interface DebriefData {
 
 interface DebriefTemplate {
   quickDebrief?: string;
-  outcome: number;
-  objectives: string[];
-  keyConcerns: boolean | undefined;
-  hasInizioFollowUp: boolean | undefined;
+  hasObjections: boolean | undefined;
   materialsShared: boolean | undefined;
+  hasFollowUpTasks: boolean | undefined;
+  newMeetingScheduled: boolean | undefined;
 }
-
-interface Objective {
-  id: string;
-  title: string;
-  achieved: boolean;
-}
-
-const mockObjectives: Objective[] = [
-  { id: "1", title: "Introduce CV Protocol Update", achieved: false },
-  { id: "2", title: "Discuss Adherence Solutions", achieved: false },
-  { id: "3", title: "Schedule Follow-up", achieved: false }
-];
-
-const outcomes = [
-  { value: 1, label: "Poor", color: "text-destructive", bgColor: "bg-destructive/10" },
-  { value: 2, label: "Below Expected", color: "text-warning", bgColor: "bg-warning/10" },
-  { value: 3, label: "Good", color: "text-info", bgColor: "bg-info/10" },
-  { value: 4, label: "Very Good", color: "text-accent", bgColor: "bg-accent/10" },
-  { value: 5, label: "Excellent", color: "text-success", bgColor: "bg-success/10" }
-];
 
 const quickDebriefOptions = [
   { value: "meeting-cancelled", label: "Meeting Cancelled" },
-  { value: "material-handover", label: "Material handover" },
-  { value: "agreed-call-3", label: "Agreed to call in 3 months" },
-  { value: "agreed-call-6", label: "Agreed to call in 6 months" }
+  { value: "material-handover", label: "Material handover" }
 ];
 
 
@@ -67,22 +44,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
-    outcome: 0,
-    objectives: [],
-    keyConcerns: undefined,
-    hasInizioFollowUp: undefined,
-    materialsShared: undefined
+    hasObjections: undefined,
+    materialsShared: undefined,
+    hasFollowUpTasks: undefined,
+    newMeetingScheduled: undefined
   });
   const [voiceNotes, setVoiceNotes] = useState("");
-
-  const toggleObjective = (objectiveTitle: string) => {
-    setTemplate(prev => ({
-      ...prev,
-      objectives: prev.objectives.includes(objectiveTitle)
-        ? prev.objectives.filter(obj => obj !== objectiveTitle)
-        : [...prev.objectives, objectiveTitle]
-    }));
-  };
 
 
   const handleStartDebrief = () => {
@@ -104,26 +71,20 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const generateAdaptivePrompt = (template: DebriefTemplate) => {
     let prompt = `AI: Based on your template, I have some targeted questions:\n\n`;
     
-    if (template.outcome <= 2) {
-      prompt += "• What specific challenges led to the lower outcome rating?\n";
-    } else if (template.outcome >= 4) {
-      prompt += "• What went particularly well that contributed to this excellent outcome?\n";
-    }
-    
-    if (template.objectives.length > 0) {
-      prompt += `• For the objectives you marked (${template.objectives.join(', ')}), tell me more about how they were achieved.\n`;
-    }
-    
-    if (template.keyConcerns) {
-      prompt += "• What were the specific concerns voiced by the client?\n";
+    if (template.hasObjections) {
+      prompt += "• What were the specific objections raised by the client?\n";
     }
     
     if (template.materialsShared) {
       prompt += "• Tell me about the materials you shared or presented during the meeting.\n";
     }
     
-    if (template.hasInizioFollowUp) {
-      prompt += "• What specific follow-up actions need Inizio's involvement?\n";
+    if (template.hasFollowUpTasks) {
+      prompt += "• What specific follow-up tasks were identified?\n";
+    }
+    
+    if (template.newMeetingScheduled) {
+      prompt += "• When is the new meeting scheduled and what's the agenda?\n";
     }
     
     prompt += "\nNow, please share your detailed thoughts about the meeting...";
@@ -137,10 +98,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const handleFinalSubmit = () => {
     const debriefData: DebriefData = {
       quickDebrief: template.quickDebrief,
-      outcome: template.outcome,
-      objectivesAchieved: template.objectives,
-      keyConcerns: template.keyConcerns || false,
-      hasInizioFollowUp: template.hasInizioFollowUp || false,
+      outcome: 0, // Not used anymore but keeping for compatibility
+      objectivesAchieved: [],
+      keyConcerns: template.hasObjections || false,
+      hasInizioFollowUp: template.hasFollowUpTasks || false,
       materialsShared: template.materialsShared || false,
       voiceNotes
     };
@@ -180,15 +141,16 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
         <div className="px-6 py-4 space-y-4">
           {/* Quick Debrief Options */}
-          <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-base font-semibold text-card-foreground mb-3">Quick Debrief Option</h3>
-            <div className="grid grid-cols-2 gap-3">
+          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold text-card-foreground mb-4">Quick Debrief Option</h3>
+            <p className="text-sm text-muted-foreground mb-4">Select one if applicable, or continue with detailed debrief</p>
+            <div className="grid grid-cols-2 gap-4">
               {quickDebriefOptions.map((option) => (
                 <Button
                   key={option.value}
                   variant={template.quickDebrief === option.value ? "default" : "outline"}
                   onClick={() => setTemplate(prev => ({ ...prev, quickDebrief: option.value }))}
-                  className="h-12 rounded-lg text-sm"
+                  className="h-16 rounded-xl text-base font-medium"
                 >
                   {option.label}
                 </Button>
@@ -198,17 +160,18 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
           {/* Conditional rendering based on quick debrief selection */}
           {template.quickDebrief ? (
-            <div className="text-center space-y-4">
+            <div className="space-y-4">
               <Card className="p-6 bg-gradient-subtle border-primary/20 border">
                 <div className="text-center">
+                  <CheckCircle className="h-12 w-12 text-primary mx-auto mb-3" />
                   <h4 className="font-semibold text-lg mb-2 text-primary">Quick Debrief Selected</h4>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-muted-foreground mb-6">
                     {quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label}
                   </p>
                   <Button 
                     onClick={handleSave}
                     size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-lg px-8 py-3 text-base font-semibold"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-3 text-base font-semibold"
                   >
                     <Send className="h-5 w-5 mr-3" />
                     Submit Debrief
@@ -218,138 +181,106 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           ) : (
             <>
-              {/* Meeting Outcome */}
-              <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <h3 className="text-base font-semibold text-card-foreground mb-3">Meeting Outcome</h3>
-                <div className="grid grid-cols-5 gap-2">
-                  {outcomes.map((outcome) => (
-                    <div
-                      key={outcome.value}
-                      onClick={() => setTemplate(prev => ({ ...prev, outcome: outcome.value }))}
-                      className={`p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                        template.outcome === outcome.value 
-                          ? `border-primary ${outcome.bgColor} scale-105 shadow-lg` 
-                          : "border-border/50 hover:border-border"
-                      }`}
-                    >
-                      <div className="text-center">
-                        <div className={`text-xl font-bold mb-1 ${outcome.color}`}>
-                          {outcome.value}
-                        </div>
-                        <div className="text-xs font-medium text-muted-foreground">
-                          {outcome.label}
-                        </div>
-                      </div>
+              {/* Yes/No Questions - Grid Layout */}
+              <div className="grid grid-cols-1 gap-4">
+                {/* Any Objections? */}
+                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-card-foreground">Any Objections?</h3>
+                    <div className="flex gap-3">
+                      <Button
+                        variant={template.hasObjections === true ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, hasObjections: true }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant={template.hasObjections === false ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, hasObjections: false }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        No
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </Card>
+                  </div>
+                </Card>
 
-              {/* Objectives */}
-              <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <h3 className="text-base font-semibold text-card-foreground mb-3">Select Achieved Objectives</h3>
-                <div className="space-y-2">
-                  {mockObjectives.map((objective) => (
-                    <div
-                      key={objective.id}
-                      onClick={() => toggleObjective(objective.title)}
-                      className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
-                        template.objectives.includes(objective.title)
-                          ? "border-success/50 bg-success/5 hover:bg-success/10" 
-                          : "border-border/50 hover:bg-secondary/20"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        {template.objectives.includes(objective.title) ? (
-                          <CheckCircle className="h-5 w-5 text-success animate-scale-in" />
-                        ) : (
-                          <XCircle className="h-5 w-5 text-muted-foreground" />
-                        )}
-                        <span className={`font-medium ${
-                          template.objectives.includes(objective.title) ? "text-success" : "text-card-foreground"
-                        }`}>
-                          {objective.title}
-                        </span>
-                      </div>
+                {/* Any Materials shared or presented? */}
+                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-card-foreground">Any Materials shared or presented?</h3>
+                    <div className="flex gap-3">
+                      <Button
+                        variant={template.materialsShared === true ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant={template.materialsShared === false ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        No
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </Card>
+                  </div>
+                </Card>
 
-              {/* Key Concerns */}
-              <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <h3 className="text-base font-semibold text-card-foreground mb-3">Any Key Concerns voiced?</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant={template.keyConcerns === true ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: true }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Yes
-                  </Button>
-                  <Button
-                    variant={template.keyConcerns === false ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, keyConcerns: false }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <XCircle className="h-5 w-5 mr-2" />
-                    No
-                  </Button>
-                </div>
-              </Card>
+                {/* Any Follow up tasks? */}
+                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-card-foreground">Any Follow up tasks?</h3>
+                    <div className="flex gap-3">
+                      <Button
+                        variant={template.hasFollowUpTasks === true ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, hasFollowUpTasks: true }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant={template.hasFollowUpTasks === false ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, hasFollowUpTasks: false }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        No
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
 
-              {/* Materials Shared */}
-              <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <h3 className="text-base font-semibold text-card-foreground mb-3">Materials shared or presented?</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant={template.materialsShared === true ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Yes
-                  </Button>
-                  <Button
-                    variant={template.materialsShared === false ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <XCircle className="h-5 w-5 mr-2" />
-                    No
-                  </Button>
-                </div>
-              </Card>
+                {/* New meeting scheduled? */}
+                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-card-foreground">New meeting scheduled?</h3>
+                    <div className="flex gap-3">
+                      <Button
+                        variant={template.newMeetingScheduled === true ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, newMeetingScheduled: true }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant={template.newMeetingScheduled === false ? "default" : "outline"}
+                        onClick={() => setTemplate(prev => ({ ...prev, newMeetingScheduled: false }))}
+                        className="h-11 w-20 rounded-lg text-base font-medium"
+                      >
+                        No
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              </div>
 
-              {/* Inizio Follow-up */}
-              <Card className="p-4 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                <h3 className="text-base font-semibold text-card-foreground mb-3">Follow-up Task for Inizio?</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant={template.hasInizioFollowUp === true ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: true }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Yes
-                  </Button>
-                  <Button
-                    variant={template.hasInizioFollowUp === false ? "default" : "outline"}
-                    onClick={() => setTemplate(prev => ({ ...prev, hasInizioFollowUp: false }))}
-                    className="h-12 rounded-lg text-base"
-                  >
-                    <XCircle className="h-5 w-5 mr-2" />
-                    No
-                  </Button>
-                </div>
-              </Card>
-
-              <div className="text-center">
+              <div className="text-center pt-2">
                 <Button 
                   onClick={handleStartDebrief}
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-lg px-6 py-3 text-base font-semibold"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-3 text-base font-semibold"
                 >
                   <Mic className="h-5 w-5 mr-3" />
                   Start Voice Debrief
