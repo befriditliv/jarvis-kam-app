@@ -51,7 +51,7 @@ export const BurgerMenu = ({
                   <User className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <p className="text-base font-semibold text-foreground">Britt Ketels</p>
+                  <p className="text-base font-semibold text-foreground">John Doe</p>
                   <p className="text-sm text-muted-foreground">bket@novonordisk.com</p>
                 </div>
               </div>
