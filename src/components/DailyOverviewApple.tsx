@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
@@ -22,6 +22,8 @@ interface Meeting {
   hcpName: string;
   specialty: string;
   location: string;
+  address?: string;
+  phone?: string;
   status: "upcoming" | "in-progress" | "debrief-needed" | "done";
 }
 interface Nudge {
@@ -36,6 +38,8 @@ const mockMeetings: Meeting[] = [{
   hcpName: "Dr. Sarah Johnson",
   specialty: "Cardiology",
   location: "Metro Medical Center",
+  address: "1234 Healthcare Blvd, Suite 200, New York, NY 10001",
+  phone: "+1 (212) 555-0123",
   status: "upcoming"
 }, {
   id: "2",
@@ -177,9 +181,30 @@ export const DailyOverviewApple = ({
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground ml-0 sm:ml-4 pl-0 sm:pl-0">
-                        <MapPin className="h-4 w-4" />
-                        <span className="line-clamp-1">{meeting.location}</span>
+                      <div className="flex flex-col gap-1.5 ml-0 sm:ml-4 pl-0 sm:pl-0">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                          <span className="line-clamp-1">{meeting.location}</span>
+                        </div>
+                        {meeting.address && (
+                          <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary hover:underline ml-5 line-clamp-1"
+                          >
+                            {meeting.address}
+                          </a>
+                        )}
+                        {meeting.phone && (
+                          <a 
+                            href={`tel:${meeting.phone}`}
+                            className="flex items-center gap-1.5 text-xs text-primary hover:underline ml-5"
+                          >
+                            <Phone className="h-3.5 w-3.5" />
+                            <span>{meeting.phone}</span>
+                          </a>
+                        )}
                       </div>
                     </div>
 
