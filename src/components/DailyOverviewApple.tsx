@@ -160,34 +160,39 @@ export const DailyOverviewApple = ({
               
               return (
                 <div key={meeting.id}>
-                  <div className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 border rounded-xl hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50"}`}>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1">
-                      <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="text-left sm:text-right min-w-[70px] sm:min-w-[80px]">
+                  <div className={`p-4 sm:p-5 border rounded-xl hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50"}`}>
+                    {/* Main Content Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+                      {/* Left Section: Time + Doctor Info */}
+                      <div className="flex items-start gap-3 sm:gap-4 flex-1">
+                        {/* Time */}
+                        <div className="text-left sm:text-right min-w-[70px] sm:min-w-[80px] pt-0.5">
                           <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
                           <div className="text-xs text-muted-foreground">{meeting.duration}</div>
                         </div>
                         
-                        <div className="hidden sm:block w-px h-10 bg-border/50" />
+                        <div className="hidden sm:block w-px h-14 bg-border/50 self-stretch" />
                         
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                        {/* Doctor Info */}
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
                             <User className="h-5 w-5 text-primary" />
                           </div>
-                          <div>
-                            <h3 className="font-semibold text-foreground text-sm">{meeting.hcpName}</h3>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-foreground text-sm mb-0.5">{meeting.hcpName}</h3>
                             <p className="text-xs text-muted-foreground">{meeting.specialty}</p>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col gap-2 ml-0 sm:ml-4 pl-0 sm:pl-0">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                      {/* Middle Section: Location + Actions */}
+                      <div className="flex flex-col gap-2 sm:min-w-[280px] ml-0 sm:ml-0">
+                        <div className="flex items-center gap-2 text-sm text-foreground">
+                          <MapPin className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
                           <span className="font-medium">{meeting.location}</span>
                         </div>
                         {(meeting.address || meeting.phone) && (
-                          <div className="flex items-center gap-2 ml-5">
+                          <div className="flex flex-wrap items-center gap-2">
                             {meeting.address && (
                               <a 
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
@@ -197,9 +202,9 @@ export const DailyOverviewApple = ({
                                 <Button 
                                   variant="outline" 
                                   size="sm" 
-                                  className="h-7 text-xs rounded-lg px-3"
+                                  className="h-8 text-xs rounded-lg px-3 font-medium"
                                 >
-                                  <MapPin className="h-3 w-3 mr-1.5" />
+                                  <MapPin className="h-3.5 w-3.5 mr-1.5" />
                                   Get Directions
                                 </Button>
                               </a>
@@ -209,9 +214,9 @@ export const DailyOverviewApple = ({
                                 <Button 
                                   variant="outline" 
                                   size="sm" 
-                                  className="h-7 text-xs rounded-lg px-3"
+                                  className="h-8 text-xs rounded-lg px-3 font-medium"
                                 >
-                                  <Phone className="h-3 w-3 mr-1.5" />
+                                  <Phone className="h-3.5 w-3.5 mr-1.5" />
                                   Call Clinic
                                 </Button>
                               </a>
@@ -219,41 +224,44 @@ export const DailyOverviewApple = ({
                           </div>
                         )}
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 justify-between sm:justify-end">
-                      <div className={`text-xs font-medium px-2 py-1 rounded-lg ${isNextUpcoming ? "bg-primary/10 text-primary" : statusStyles[meeting.status]}`}>
-                        {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
-                      </div>
-                      
-                      {meeting.status === "upcoming" && (
-                        <div className="flex items-center gap-2">
-                          <Button 
-                            onClick={() => {
-                              setSelectedHCP(meeting.hcpName);
-                              setHcpAssistantOpen(true);
-                            }} 
-                            size="sm" 
-                            className="rounded-xl p-2 bg-primary/10 text-primary hover:bg-primary/20"
-                          >
-                            <MessageCircle className="h-4 w-4" />
-                          </Button>
-                          {hcpData && (
-                            <Button 
-                              onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
-                              variant="ghost" 
-                              size="sm" 
-                              className="rounded-xl p-2"
-                            >
-                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            </Button>
-                          )}
+                      {/* Right Section: Status + Actions */}
+                      <div className="flex items-center gap-2 sm:gap-3 justify-between sm:justify-end sm:self-start">
+                        <div className={`text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap ${isNextUpcoming ? "bg-primary/10 text-primary" : statusStyles[meeting.status]}`}>
+                          {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
                         </div>
-                      )}
-                      
-                      {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium">
-                          Debrief
-                        </Button>}
+                        
+                        {meeting.status === "upcoming" && (
+                          <div className="flex items-center gap-2">
+                            <Button 
+                              onClick={() => {
+                                setSelectedHCP(meeting.hcpName);
+                                setHcpAssistantOpen(true);
+                              }} 
+                              size="sm" 
+                              className="rounded-xl p-2 bg-primary/10 text-primary hover:bg-primary/20"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </Button>
+                            {hcpData && (
+                              <Button 
+                                onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
+                                variant="ghost" 
+                                size="sm" 
+                                className="rounded-xl p-2"
+                              >
+                                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                        
+                        {meeting.status === "debrief-needed" && (
+                          <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium">
+                            Debrief
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
