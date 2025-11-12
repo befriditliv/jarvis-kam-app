@@ -6,6 +6,7 @@ import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
 import { SyncStatus } from "./SyncStatus";
+import { BurgerMenu } from "./BurgerMenu";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -138,9 +139,13 @@ export const DailyOverviewApple = ({
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask Jarvis
               </Button>
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <Menu className="h-5 w-5" />
-              </Button>
+              <BurgerMenu 
+                trigger={
+                  <Button variant="ghost" size="icon" className="rounded-xl">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                }
+              />
             </div>
           </div>
         </div>
