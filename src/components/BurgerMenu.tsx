@@ -1,4 +1,4 @@
-import { Calendar, Users, GraduationCap, HelpCircle, Settings, LogOut, User } from "lucide-react";
+import { ExternalLink, Users, GraduationCap, HelpCircle, Settings, LogOut, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -22,7 +22,7 @@ export const BurgerMenu = ({
           {/* Menu Items */}
           <div className="flex-1 px-6 space-y-1">
             <button className="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors text-left">
-              <Calendar className="h-5 w-5 text-foreground" />
+              <ExternalLink className="h-5 w-5 text-foreground" />
               <span className="text-base text-foreground">Go to Webplatform</span>
             </button>
 
