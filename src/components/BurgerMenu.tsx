@@ -39,7 +39,7 @@ export const BurgerMenu = ({
 
             <button className="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors text-left">
               <Settings className="h-5 w-5 text-foreground" />
-              <span className="text-base text-foreground">Indstillinger</span>
+              <span className="text-base text-foreground">Settings</span>
             </button>
           </div>
 
