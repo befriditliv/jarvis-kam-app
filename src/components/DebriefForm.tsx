@@ -34,7 +34,7 @@ interface DebriefTemplate {
 
 const quickDebriefOptions = [
   { value: "meeting-cancelled", label: "Meeting Cancelled" },
-  { value: "material-handover", label: "Material handover" }
+  { value: "material-handover", label: "Debrief Not Relevant" }
 ];
 
 
