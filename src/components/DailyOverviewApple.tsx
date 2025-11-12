@@ -176,16 +176,12 @@ export const DailyOverviewApple = ({
                           </div>
                           <div>
                             <h3 className="font-semibold text-foreground text-sm">{meeting.hcpName}</h3>
-                            <p className="text-xs text-muted-foreground">{meeting.specialty}</p>
+                            <p className="text-xs text-muted-foreground">{meeting.location}</p>
                           </div>
                         </div>
                       </div>
                       
                       <div className="flex flex-col gap-2 ml-0 sm:ml-4 pl-0 sm:pl-0">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                          <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                          <span className="font-medium">{meeting.location}</span>
-                        </div>
                         {(meeting.address || meeting.phone) && (
                           <div className="flex items-center gap-2 ml-5">
                             {meeting.address && (
