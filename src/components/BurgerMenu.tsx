@@ -52,7 +52,7 @@ export const BurgerMenu = ({
                 </div>
                 <div>
                   <p className="text-base font-semibold text-foreground">John Doe</p>
-                  <p className="text-sm text-muted-foreground">bket@novonordisk.com</p>
+                  <p className="text-sm text-muted-foreground">jdoe@novonordisk.com</p>
                 </div>
               </div>
               <Button variant="ghost" size="icon" className="rounded-xl border border-border">
