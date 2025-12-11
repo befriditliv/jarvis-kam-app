@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, CheckCircle, XCircle, Star, Mic, Save, Send, Play, Settings } from "lucide-react";
+import { ArrowLeft, CheckCircle, XCircle, Star, Mic, Save, Send, Play, Settings, Lightbulb } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 import { SyncStatus } from "./SyncStatus";
 
@@ -140,23 +140,23 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         </div>
 
         <div className="px-6 py-4 space-y-4">
-          {/* Quick Debrief Options */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Quick Debrief Option</h3>
-            <p className="text-sm text-muted-foreground mb-4">Select one if applicable, or continue with detailed debrief</p>
-            <div className="grid grid-cols-2 gap-4">
+          {/* Quick Debrief Options - Less Prominent */}
+          <div className="p-4 bg-muted/30 rounded-lg border border-border/30">
+            <p className="text-sm text-muted-foreground mb-3">Quick option (if applicable)</p>
+            <div className="flex gap-3">
               {quickDebriefOptions.map((option) => (
                 <Button
                   key={option.value}
-                  variant={template.quickDebrief === option.value ? "default" : "outline"}
+                  variant={template.quickDebrief === option.value ? "secondary" : "ghost"}
+                  size="sm"
                   onClick={() => setTemplate(prev => ({ ...prev, quickDebrief: option.value }))}
-                  className="h-16 rounded-xl text-base font-medium"
+                  className="rounded-lg text-sm font-medium"
                 >
                   {option.label}
                 </Button>
               ))}
             </div>
-          </Card>
+          </div>
 
           {/* Conditional rendering based on quick debrief selection */}
           {template.quickDebrief ? (
@@ -181,100 +181,39 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           ) : (
             <>
-              {/* Yes/No Questions - Grid Layout */}
-              <div className="grid grid-cols-1 gap-4">
-                {/* Any Objections? */}
-                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-semibold text-card-foreground">Any Objections?</h3>
-                    <div className="flex gap-3">
-                      <Button
-                        variant={template.hasObjections === true ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, hasObjections: true }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        variant={template.hasObjections === false ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, hasObjections: false }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        No
-                      </Button>
-                    </div>
+              {/* Tips & Best Practices Info Box */}
+              <Card className="p-6 shadow-card border-0 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Lightbulb className="h-5 w-5 text-primary" />
                   </div>
-                </Card>
-
-                {/* Any Materials shared or presented? */}
-                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-semibold text-card-foreground">Any Materials shared or presented?</h3>
-                    <div className="flex gap-3">
-                      <Button
-                        variant={template.materialsShared === true ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, materialsShared: true }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        variant={template.materialsShared === false ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, materialsShared: false }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        No
-                      </Button>
-                    </div>
+                  <div className="flex-1">
+                    <h3 className="text-base font-semibold text-card-foreground mb-3">Tips for a Great Debrief</h3>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>Be specific about key discussion points and outcomes</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>Note any objections or concerns raised during the meeting</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>Capture action items and follow-up commitments</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>Record any materials shared or requested</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>Include relevant context for future reference</span>
+                      </li>
+                    </ul>
                   </div>
-                </Card>
-
-                {/* Any Follow up tasks? */}
-                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-semibold text-card-foreground">Any Follow up tasks?</h3>
-                    <div className="flex gap-3">
-                      <Button
-                        variant={template.hasFollowUpTasks === true ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, hasFollowUpTasks: true }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        variant={template.hasFollowUpTasks === false ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, hasFollowUpTasks: false }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        No
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* New meeting scheduled? */}
-                <Card className="p-5 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-semibold text-card-foreground">New meeting scheduled?</h3>
-                    <div className="flex gap-3">
-                      <Button
-                        variant={template.newMeetingScheduled === true ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, newMeetingScheduled: true }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        variant={template.newMeetingScheduled === false ? "default" : "outline"}
-                        onClick={() => setTemplate(prev => ({ ...prev, newMeetingScheduled: false }))}
-                        className="h-11 w-20 rounded-lg text-base font-medium"
-                      >
-                        No
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+                </div>
+              </Card>
 
               <div className="text-center pt-2">
                 <Button 
