@@ -58,6 +58,16 @@ const mockMeetings: Meeting[] = [{
   specialty: "Endocrinology",
   location: "University Health System",
   status: "upcoming"
+}, {
+  id: "4",
+  time: "4:30 PM",
+  duration: "30 min",
+  hcpName: "Dr. James Wilson",
+  specialty: "Neurology",
+  location: "Central Neuroscience Clinic",
+  address: "890 Brain Way, Suite 500, New York, NY 10003",
+  phone: "+1 (212) 555-0456",
+  status: "upcoming"
 }];
 
 // HCP data with access level and consent status
