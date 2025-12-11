@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone, Loader2, CheckCircle2, WifiOff, CloudUpload } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
@@ -25,7 +25,7 @@ interface Meeting {
   location: string;
   address?: string;
   phone?: string;
-  status: "upcoming" | "in-progress" | "debrief-needed" | "done";
+  status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "done";
 }
 interface Nudge {
   id: string;
@@ -41,7 +41,7 @@ const mockMeetings: Meeting[] = [{
   location: "Metro Medical Center",
   address: "1234 Healthcare Blvd, Suite 200, New York, NY 10001",
   phone: "+1 (212) 555-0123",
-  status: "upcoming"
+  status: "debrief-processing"
 }, {
   id: "2",
   time: "11:30 AM",
@@ -104,12 +104,18 @@ const statusStyles = {
   upcoming: "text-primary",
   "in-progress": "text-warning",
   "debrief-needed": "text-destructive",
+  "debrief-submitting": "text-muted-foreground",
+  "debrief-processing": "text-primary",
+  "debrief-ready": "text-green-600",
   done: "text-muted-foreground"
 };
 const statusLabels = {
   upcoming: "Upcoming",
   "in-progress": "In Progress",
   "debrief-needed": "Needs Debrief",
+  "debrief-submitting": "Syncing...",
+  "debrief-processing": "Processing",
+  "debrief-ready": "Ready for Review",
   done: "Complete"
 };
 export const DailyOverviewApple = ({
@@ -225,9 +231,36 @@ export const DailyOverviewApple = ({
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 justify-between sm:justify-end">
-                      <div className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
-                        {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
-                      </div>
+                      {/* Status indicator with icon for processing states */}
+                      {meeting.status === "debrief-submitting" && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg">
+                          <WifiOff className="h-3 w-3 text-muted-foreground animate-pulse" />
+                          <span className="text-xs font-medium text-muted-foreground">Waiting to sync...</span>
+                        </div>
+                      )}
+                      
+                      {meeting.status === "debrief-processing" && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg">
+                          <Loader2 className="h-3 w-3 text-primary animate-spin" />
+                          <span className="text-xs font-medium text-primary">Processing debrief...</span>
+                        </div>
+                      )}
+                      
+                      {meeting.status === "debrief-ready" && (
+                        <Button 
+                          onClick={() => console.log('Approve debrief for', meeting.id)} 
+                          className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-medium"
+                        >
+                          <CheckCircle2 className="h-3 w-3 mr-1.5" />
+                          Approve Debrief
+                        </Button>
+                      )}
+                      
+                      {!["debrief-submitting", "debrief-processing", "debrief-ready"].includes(meeting.status) && (
+                        <div className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
+                          {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
+                        </div>
+                      )}
                       
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
