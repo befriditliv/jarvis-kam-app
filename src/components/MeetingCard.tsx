@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Clock, MapPin, User, ChevronDown } from "lucide-react";
+import { Clock, MapPin, User, ChevronDown, Loader2, CheckCircle2, WifiOff, CloudUpload } from "lucide-react";
 
 interface Meeting {
   id: string;
@@ -11,13 +11,14 @@ interface Meeting {
   hcpName: string;
   specialty: string;
   location: string;
-  status: "upcoming" | "in-progress" | "debrief-needed" | "done";
+  status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "done";
 }
 
 interface MeetingCardProps {
   meeting: Meeting;
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
+  onApproveDebrief?: (id: string) => void;
   onQuickAction?: (id: string, action: string) => void;
 }
 
@@ -37,6 +38,21 @@ const statusConfig = {
     variant: "destructive" as const,
     actionLabel: "Debrief"
   },
+  "debrief-submitting": { 
+    label: "Submitting...", 
+    variant: "secondary" as const,
+    actionLabel: "Submitting"
+  },
+  "debrief-processing": { 
+    label: "Processing", 
+    variant: "secondary" as const,
+    actionLabel: "Processing"
+  },
+  "debrief-ready": { 
+    label: "Ready for Review", 
+    variant: "success" as const,
+    actionLabel: "Approve"
+  },
   done: { 
     label: "Done", 
     variant: "success" as const,
@@ -44,7 +60,7 @@ const statusConfig = {
   }
 };
 
-export const MeetingCard = ({ meeting, onPrepare, onDebrief, onQuickAction }: MeetingCardProps) => {
+export const MeetingCard = ({ meeting, onPrepare, onDebrief, onApproveDebrief, onQuickAction }: MeetingCardProps) => {
   const config = statusConfig[meeting.status];
   
   const handleAction = () => {
@@ -52,7 +68,49 @@ export const MeetingCard = ({ meeting, onPrepare, onDebrief, onQuickAction }: Me
       onDebrief(meeting.id);
     } else if (meeting.status === "upcoming") {
       onPrepare(meeting.id);
+    } else if (meeting.status === "debrief-ready") {
+      onApproveDebrief?.(meeting.id);
     }
+  };
+
+  const renderStatusIndicator = () => {
+    if (meeting.status === "debrief-submitting") {
+      return (
+        <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg">
+          <WifiOff className="h-4 w-4 text-muted-foreground animate-pulse" />
+          <div className="text-sm">
+            <span className="text-muted-foreground">Waiting to sync...</span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (meeting.status === "debrief-processing") {
+      return (
+        <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-lg">
+          <Loader2 className="h-4 w-4 text-primary animate-spin" />
+          <div className="text-sm">
+            <span className="text-primary font-medium">Processing debrief...</span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (meeting.status === "debrief-ready") {
+      return (
+        <Button 
+          variant="default"
+          size="sm"
+          onClick={handleAction}
+          className="min-w-[120px] bg-green-600 hover:bg-green-700 text-white"
+        >
+          <CheckCircle2 className="h-4 w-4 mr-2" />
+          Approve Debrief
+        </Button>
+      );
+    }
+    
+    return null;
   };
 
   return (
@@ -65,7 +123,9 @@ export const MeetingCard = ({ meeting, onPrepare, onDebrief, onQuickAction }: Me
               <span className="font-medium">{meeting.time}</span>
               <span className="text-sm">({meeting.duration})</span>
             </div>
-            <Badge variant={config.variant}>
+            <Badge variant={config.variant} className="flex items-center gap-1">
+              {meeting.status === "debrief-processing" && <Loader2 className="h-3 w-3 animate-spin" />}
+              {meeting.status === "debrief-submitting" && <CloudUpload className="h-3 w-3" />}
               {config.label}
             </Badge>
           </div>
@@ -84,7 +144,9 @@ export const MeetingCard = ({ meeting, onPrepare, onDebrief, onQuickAction }: Me
         </div>
         
         <div className="ml-4">
-          {meeting.status === "debrief-needed" ? (
+          {(meeting.status === "debrief-submitting" || meeting.status === "debrief-processing" || meeting.status === "debrief-ready") ? (
+            renderStatusIndicator()
+          ) : meeting.status === "debrief-needed" ? (
             <div className="flex gap-2">
               <Button 
                 variant="destructive"
