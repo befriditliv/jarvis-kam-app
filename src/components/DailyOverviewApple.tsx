@@ -143,36 +143,72 @@ export const DailyOverviewApple = ({
   // Get next upcoming meeting
   const nextMeeting = meetings.find(m => m.status === "upcoming");
   const nextHCPData = nextMeeting ? mockHCPData[nextMeeting.hcpName] : null;
+  const greeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  };
+
   return <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="px-6 pt-8 pb-6">
+      <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <img src={jarvisLogo} alt="Jarvis" className="h-16 w-16" />
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10 sm:h-12 sm:w-12" />
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-semibold text-foreground">{greeting()}</h1>
+                <p className="text-sm text-muted-foreground">{todayDate}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
               <SyncStatus />
-              <Button onClick={onAskAI} className="rounded-xl bg-primary hover:bg-primary/90 px-6 text-sm font-medium">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Ask Jarvis
+              <Button onClick={onAskAI} size="sm" className="rounded-xl bg-primary hover:bg-primary/90 px-3 sm:px-4 text-xs sm:text-sm font-medium">
+                <MessageCircle className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Ask Jarvis</span>
               </Button>
               <BurgerMenu 
                 trigger={
-                  <Button variant="ghost" size="icon" className="rounded-xl">
+                  <Button variant="ghost" size="icon" className="rounded-xl h-9 w-9">
                     <Menu className="h-5 w-5" />
                   </Button>
                 }
               />
             </div>
           </div>
+          
+          {/* Mobile greeting - shows below header on small screens */}
+          <div className="sm:hidden mt-4">
+            <h1 className="text-xl font-semibold text-foreground">{greeting()}</h1>
+            <p className="text-sm text-muted-foreground">{todayDate}</p>
+          </div>
+          
+          {/* Quick stats for mobile */}
+          <div className="flex items-center gap-4 mt-4 sm:mt-0 sm:hidden">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
+              <Calendar className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-medium text-primary">{meetings.length} meetings</span>
+            </div>
+            {debriefCount > 0 && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full">
+                <Bell className="h-3.5 w-3.5 text-destructive" />
+                <span className="text-xs font-medium text-destructive">{debriefCount} pending</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-6 pb-16">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="px-4 sm:px-6 py-5 sm:py-6 pb-20 sm:pb-16">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Today's Schedule */}
           <div className="relative">
-            <h2 className="text-lg font-semibold text-foreground mb-4">Schedule</h2>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h2 className="text-base sm:text-lg font-semibold text-foreground">Today's Schedule</h2>
+              <span className="text-xs text-muted-foreground hidden sm:block">{meetings.length} meetings</span>
+            </div>
             <div className="space-y-3">
               {meetings.map((meeting, index) => {
               const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
@@ -181,115 +217,123 @@ export const DailyOverviewApple = ({
               
               return (
                 <div key={meeting.id}>
-                  <div className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 border rounded-xl hover:shadow-md transition-all duration-300 bg-card/50 backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50"}`}>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1">
-                      <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="text-left sm:text-right min-w-[70px] sm:min-w-[80px]">
-                          <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
-                          <div className="text-xs text-muted-foreground">{meeting.duration}</div>
-                        </div>
-                        
-                        <div className="hidden sm:block w-px h-10 bg-border/50" />
-                        
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                            <User className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-foreground text-sm">{meeting.hcpName}</h3>
-                            <p className="text-xs text-muted-foreground">{meeting.location}</p>
-                          </div>
-                        </div>
+                  <div className={`p-3.5 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
+                    {/* Main content row */}
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      {/* Time column */}
+                      <div className="text-center min-w-[52px] sm:min-w-[70px] pt-1">
+                        <div className="font-semibold text-foreground text-sm sm:text-base">{meeting.time}</div>
+                        <div className="text-[10px] sm:text-xs text-muted-foreground">{meeting.duration}</div>
                       </div>
                       
-                      <div className="flex flex-col gap-2 ml-0 sm:ml-4 pl-0 sm:pl-0">
+                      {/* Avatar and info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-semibold text-foreground text-sm truncate">{meeting.hcpName}</h3>
+                            <p className="text-xs text-muted-foreground truncate">{meeting.location}</p>
+                          </div>
+                        </div>
+                        
+                        {/* Quick actions - show inline on mobile */}
                         {(meeting.address || meeting.phone) && (
-                          <div className="flex items-center gap-2 ml-5">
+                          <div className="flex items-center gap-2 mt-2.5 ml-11 sm:ml-13">
                             {meeting.address && (
                               <a 
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs font-medium px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5"
+                                className="text-[11px] sm:text-xs font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
                               >
                                 <MapPin className="h-3 w-3" />
-                                Get Directions
+                                Directions
                               </a>
                             )}
                             {meeting.phone && (
                               <a 
                                 href={`tel:${meeting.phone}`}
-                                className="text-xs font-medium px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5"
+                                className="text-[11px] sm:text-xs font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
                               >
                                 <Phone className="h-3 w-3" />
-                                Call Clinic
+                                Call
                               </a>
                             )}
                           </div>
                         )}
                       </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 justify-between sm:justify-end">
-                      {/* Status indicator with icon for processing states */}
-                      {meeting.status === "debrief-submitting" && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg">
-                          <WifiOff className="h-3 w-3 text-muted-foreground animate-pulse" />
-                          <span className="text-xs font-medium text-muted-foreground">Waiting to sync...</span>
-                        </div>
-                      )}
                       
-                      {meeting.status === "debrief-processing" && (
-                        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg">
-                          <Loader2 className="h-3 w-3 text-primary animate-spin" />
-                          <span className="text-xs font-medium text-primary">Processing debrief...</span>
-                        </div>
-                      )}
-                      
-                      {meeting.status === "debrief-ready" && (
-                        <Button 
-                          onClick={() => console.log('Approve debrief for', meeting.id)} 
-                          className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-medium"
-                        >
-                          <CheckCircle2 className="h-3 w-3 mr-1.5" />
-                          Approve Debrief
-                        </Button>
-                      )}
-                      
-                      {!["debrief-submitting", "debrief-processing", "debrief-ready"].includes(meeting.status) && (
-                        <div className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
-                          {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
-                        </div>
-                      )}
-                      
-                      {meeting.status === "upcoming" && (
-                        <div className="flex items-center gap-2">
+                      {/* Status and actions - right side */}
+                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                        {/* Status indicator with icon for processing states */}
+                        {meeting.status === "debrief-submitting" && (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg">
+                            <WifiOff className="h-3 w-3 text-muted-foreground animate-pulse" />
+                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Syncing...</span>
+                          </div>
+                        )}
+                        
+                        {meeting.status === "debrief-processing" && (
+                          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 rounded-lg">
+                            <Loader2 className="h-3 w-3 text-primary animate-spin" />
+                            <span className="text-[10px] sm:text-xs font-medium text-primary">Processing...</span>
+                          </div>
+                        )}
+                        
+                        {meeting.status === "debrief-ready" && (
                           <Button 
-                            onClick={() => {
-                              setSelectedHCP(meeting.hcpName);
-                              setHcpAssistantOpen(true);
-                            }} 
-                            size="sm" 
-                            className="rounded-xl p-2 bg-primary/10 text-primary hover:bg-primary/20"
+                            onClick={() => console.log('Approve debrief for', meeting.id)} 
+                            size="sm"
+                            className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-xs font-medium px-2.5 py-1.5 h-auto"
                           >
-                            <MessageCircle className="h-4 w-4" />
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Approve
                           </Button>
-                          {hcpData && (
+                        )}
+                        
+                        {!["debrief-submitting", "debrief-processing", "debrief-ready"].includes(meeting.status) && (
+                          <span className={`text-[10px] sm:text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
+                            {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
+                          </span>
+                        )}
+                        
+                        {meeting.status === "upcoming" && (
+                          <div className="flex items-center gap-1.5">
                             <Button 
-                              onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
-                              variant="ghost" 
+                              onClick={() => {
+                                setSelectedHCP(meeting.hcpName);
+                                setHcpAssistantOpen(true);
+                              }} 
                               size="sm" 
-                              className="rounded-xl p-2"
+                              className="rounded-xl h-8 w-8 p-0 bg-primary/10 text-primary hover:bg-primary/20"
                             >
-                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                              <MessageCircle className="h-3.5 w-3.5" />
                             </Button>
-                          )}
-                        </div>
-                      )}
-                      
-                      {meeting.status === "debrief-needed" && <Button onClick={() => onDebrief(meeting.id)} className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium">
-                          Debrief
-                        </Button>}
+                            {hcpData && (
+                              <Button 
+                                onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
+                                variant="ghost" 
+                                size="sm" 
+                                className="rounded-xl h-8 w-8 p-0"
+                              >
+                                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                        
+                        {meeting.status === "debrief-needed" && (
+                          <Button 
+                            onClick={() => onDebrief(meeting.id)} 
+                            size="sm"
+                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-[10px] sm:text-xs font-medium px-3 py-1.5 h-auto"
+                          >
+                            Debrief
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
