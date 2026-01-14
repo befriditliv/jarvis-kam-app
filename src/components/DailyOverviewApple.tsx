@@ -221,7 +221,7 @@ export const DailyOverviewApple = ({
             {debriefCount > 0 && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full">
                 <Bell className="h-3.5 w-3.5 text-destructive" />
-                <span className="text-xs font-medium text-destructive">{debriefCount} pending</span>
+                <span className="text-xs font-medium text-destructive">{debriefCount} missing debrief{debriefCount !== 1 ? 's' : ''}</span>
               </div>
             )}
           </div>
