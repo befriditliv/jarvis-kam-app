@@ -160,7 +160,7 @@ export const DailyOverviewApple = ({
 
   return <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+      <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-border/40 bg-background sticky top-0 z-40 shadow-sm">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
