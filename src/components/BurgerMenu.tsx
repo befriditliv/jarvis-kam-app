@@ -30,10 +30,7 @@ export const BurgerMenu = ({
 
             
 
-            <button className="w-full flex items-center gap-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors text-left">
-              <HelpCircle className="h-5 w-5 text-foreground" />
-              <span className="text-base text-foreground">Support</span>
-            </button>
+            
 
             <Separator className="my-4" />
 
