@@ -16,6 +16,11 @@ interface DailyOverviewProps {
   onNewAction: () => void;
   onIntelligence: () => void;
 }
+interface Participant {
+  name: string;
+  specialty: string;
+}
+
 interface Meeting {
   id: string;
   time: string;
@@ -26,6 +31,7 @@ interface Meeting {
   address?: string;
   phone?: string;
   status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "done";
+  participants?: Participant[];
 }
 interface Nudge {
   id: string;
@@ -57,7 +63,12 @@ const mockMeetings: Meeting[] = [{
   hcpName: "Dr. Emily Rodriguez",
   specialty: "Endocrinology",
   location: "University Health System",
-  status: "upcoming"
+  status: "upcoming",
+  participants: [
+    { name: "Dr. Emily Rodriguez", specialty: "Endocrinology" },
+    { name: "Dr. Thomas Baker", specialty: "Diabetology" },
+    { name: "Nurse Patricia Hall", specialty: "Diabetes Care" }
+  ]
 }, {
   id: "4",
   time: "4:30 PM",
@@ -106,6 +117,15 @@ const mockHCPData: Record<string, HCPData> = {
     segmentationStatus: "Stable",
     daysSinceLastInteraction: 21,
     importantPoints: ["Schedule overdue follow-up appointments", "Review recent treatment protocols"]
+  },
+  "Dr. Emily Rodriguez": {
+    id: "3",
+    name: "Dr. Emily Rodriguez",
+    accessLevel: "High",
+    consentStatus: "OPT IN",
+    segmentationStatus: "Growing",
+    daysSinceLastInteraction: 14,
+    importantPoints: ["Discuss multi-disciplinary approach with team", "Review diabetes management protocols", "Address coordination between specialists"]
   }
 };
 const statusStyles = {
@@ -137,7 +157,7 @@ export const DailyOverviewApple = ({
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
   const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
-  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>("1");
+  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>("3");
   const [hcpAssistantOpen, setHcpAssistantOpen] = useState(false);
   const [selectedHCP, setSelectedHCP] = useState<string>("");
   const todayDate = new Date().toLocaleDateString("en-US", {
@@ -236,13 +256,21 @@ export const DailyOverviewApple = ({
                       
                       {/* Avatar and info - takes full width on mobile */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-3">
-                          <div className="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <User className="h-5 w-5 text-primary" />
+                        <div className="flex items-center gap-2.5">
+                          {/* Smaller avatar with participant count */}
+                          <div className="relative flex-shrink-0">
+                            <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <User className="h-4 w-4 text-primary" />
+                            </div>
+                            {meeting.participants && meeting.participants.length > 1 && (
+                              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-semibold shadow-sm">
+                                +{meeting.participants.length - 1}
+                              </div>
+                            )}
                           </div>
-                          <div className="min-w-0 flex-1 pt-0.5">
-                            <h3 className="font-semibold text-foreground text-base leading-snug">{meeting.hcpName}</h3>
-                            <p className="text-sm text-muted-foreground mt-0.5">{meeting.location}</p>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-semibold text-foreground text-sm leading-snug">{meeting.hcpName}</h3>
+                            <p className="text-xs text-muted-foreground mt-0.5">{meeting.location}</p>
                           </div>
                         </div>
                       </div>
@@ -368,6 +396,29 @@ export const DailyOverviewApple = ({
                   {/* Expanded Details */}
                   {isExpanded && hcpData && (
                     <div className="mt-3 p-4 sm:p-5 bg-card border border-border/50 rounded-xl ml-0 sm:ml-4">
+                      {/* Participants section - if multiple */}
+                      {meeting.participants && meeting.participants.length > 1 && (
+                        <div className="mb-4 pb-3 border-b border-border/30">
+                          <h3 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                            <User className="w-4 h-4 text-primary" />
+                            Meeting Participants ({meeting.participants.length})
+                          </h3>
+                          <div className="space-y-2">
+                            {meeting.participants.map((participant, idx) => (
+                              <div key={idx} className="flex items-center gap-2 p-2 bg-secondary/20 rounded-lg">
+                                <div className="w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <User className="h-3.5 w-3.5 text-primary" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-sm font-medium text-foreground truncate">{participant.name}</p>
+                                  <p className="text-xs text-muted-foreground">{participant.specialty}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       <div className="mb-4 pb-3 border-b border-border/30">
                         <h3 className="text-sm font-medium text-foreground mb-1 flex items-center gap-2">
                           <Lightbulb className="w-4 h-4 text-primary" />
