@@ -217,124 +217,133 @@ export const DailyOverviewApple = ({
               
               return (
                 <div key={meeting.id}>
-                  <div className={`p-3.5 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
-                    {/* Top row: Time + Name + Status */}
-                    <div className="flex items-start gap-3">
+                  <div className={`p-4 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
+                    {/* Main content */}
+                    <div className="flex items-start gap-4">
                       {/* Time column */}
-                      <div className="text-center min-w-[48px] pt-0.5">
-                        <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
-                        <div className="text-[10px] text-muted-foreground">{meeting.duration}</div>
+                      <div className="text-center min-w-[56px]">
+                        <div className="font-semibold text-foreground text-base">{meeting.time}</div>
+                        <div className="text-xs text-muted-foreground">{meeting.duration}</div>
                       </div>
                       
-                      {/* Avatar and info */}
+                      {/* Avatar and info - takes full width on mobile */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <User className="h-4 w-4 text-primary" />
+                        <div className="flex items-start gap-3">
+                          <div className="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <User className="h-5 w-5 text-primary" />
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-semibold text-foreground text-sm leading-tight">{meeting.hcpName}</h3>
-                            <p className="text-xs text-muted-foreground truncate">{meeting.location}</p>
+                          <div className="min-w-0 flex-1 pt-0.5">
+                            <h3 className="font-semibold text-foreground text-base leading-snug">{meeting.hcpName}</h3>
+                            <p className="text-sm text-muted-foreground mt-0.5">{meeting.location}</p>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* Status badge - right side */}
-                      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                        {/* Status indicator with icon for processing states */}
+                    </div>
+                    
+                    {/* Bottom row: Status + Actions */}
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/30">
+                      {/* Status indicator */}
+                      <div className="flex items-center gap-2">
                         {meeting.status === "debrief-submitting" && (
-                          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg">
-                            <WifiOff className="h-3 w-3 text-muted-foreground animate-pulse" />
-                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Syncing...</span>
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg">
+                            <WifiOff className="h-3.5 w-3.5 text-muted-foreground animate-pulse" />
+                            <span className="text-xs font-medium text-muted-foreground">Syncing...</span>
                           </div>
                         )}
                         
                         {meeting.status === "debrief-processing" && (
-                          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 rounded-lg">
-                            <Loader2 className="h-3 w-3 text-primary animate-spin" />
-                            <span className="text-[10px] sm:text-xs font-medium text-primary">Processing...</span>
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg">
+                            <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
+                            <span className="text-xs font-medium text-primary">Processing...</span>
                           </div>
                         )}
                         
-                        {meeting.status === "debrief-ready" && (
-                          <Button 
-                            onClick={() => console.log('Approve debrief for', meeting.id)} 
-                            size="sm"
-                            className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-xs font-medium px-2.5 py-1.5 h-auto"
-                          >
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Approve
-                          </Button>
-                        )}
-                        
-                        {!["debrief-submitting", "debrief-processing", "debrief-ready"].includes(meeting.status) && (
-                          <span className={`text-[10px] sm:text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
+                        {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed"].includes(meeting.status) && (
+                          <span className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
                             {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
                           </span>
                         )}
                         
+                        {meeting.status === "debrief-needed" && (
+                          <span className="text-xs font-medium text-destructive">Needs Debrief</span>
+                        )}
+                        
+                        {/* Quick actions */}
+                        {(meeting.address || meeting.phone) && (
+                          <div className="flex items-center gap-2 ml-2">
+                            {meeting.address && (
+                              <a 
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
+                              >
+                                <MapPin className="h-3.5 w-3.5" />
+                                Directions
+                              </a>
+                            )}
+                            {meeting.phone && (
+                              <a 
+                                href={`tel:${meeting.phone}`}
+                                className="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
+                              >
+                                <Phone className="h-3.5 w-3.5" />
+                                Call
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-2">
+                        {meeting.status === "debrief-ready" && (
+                          <Button 
+                            onClick={() => console.log('Approve debrief for', meeting.id)} 
+                            size="sm"
+                            className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 h-auto"
+                          >
+                            <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                            Approve
+                          </Button>
+                        )}
+                        
                         {meeting.status === "upcoming" && (
-                          <div className="flex items-center gap-1.5">
+                          <>
                             <Button 
                               onClick={() => {
                                 setSelectedHCP(meeting.hcpName);
                                 setHcpAssistantOpen(true);
                               }} 
                               size="sm" 
-                              className="rounded-xl h-8 w-8 p-0 bg-primary/10 text-primary hover:bg-primary/20"
+                              className="rounded-xl h-9 w-9 p-0 bg-primary/10 text-primary hover:bg-primary/20"
                             >
-                              <MessageCircle className="h-3.5 w-3.5" />
+                              <MessageCircle className="h-4 w-4" />
                             </Button>
                             {hcpData && (
                               <Button 
                                 onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
                                 variant="ghost" 
                                 size="sm" 
-                                className="rounded-xl h-8 w-8 p-0"
+                                className="rounded-xl h-9 w-9 p-0"
                               >
                                 {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                               </Button>
                             )}
-                          </div>
+                          </>
                         )}
                         
                         {meeting.status === "debrief-needed" && (
                           <Button 
                             onClick={() => onDebrief(meeting.id)} 
                             size="sm"
-                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-[10px] sm:text-xs font-medium px-3 py-1.5 h-auto"
+                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium px-4 py-2 h-auto"
                           >
                             Debrief
                           </Button>
                         )}
                       </div>
                     </div>
-                    
-                    {/* Quick actions row - below main content */}
-                    {(meeting.address || meeting.phone) && (
-                      <div className="flex items-center gap-2 mt-3 ml-[60px]">
-                        {meeting.address && (
-                          <a 
-                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                          >
-                            <MapPin className="h-3 w-3" />
-                            Directions
-                          </a>
-                        )}
-                        {meeting.phone && (
-                          <a 
-                            href={`tel:${meeting.phone}`}
-                            className="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                          >
-                            <Phone className="h-3 w-3" />
-                            Call
-                          </a>
-                        )}
-                      </div>
-                    )}
                   </div>
                   
                   {/* Expanded Details */}
