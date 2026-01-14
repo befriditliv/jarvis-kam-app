@@ -218,55 +218,29 @@ export const DailyOverviewApple = ({
               return (
                 <div key={meeting.id}>
                   <div className={`p-3.5 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
-                    {/* Main content row */}
-                    <div className="flex items-start gap-3 sm:gap-4">
+                    {/* Top row: Time + Name + Status */}
+                    <div className="flex items-start gap-3">
                       {/* Time column */}
-                      <div className="text-center min-w-[52px] sm:min-w-[70px] pt-1">
-                        <div className="font-semibold text-foreground text-sm sm:text-base">{meeting.time}</div>
-                        <div className="text-[10px] sm:text-xs text-muted-foreground">{meeting.duration}</div>
+                      <div className="text-center min-w-[48px] pt-0.5">
+                        <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
+                        <div className="text-[10px] text-muted-foreground">{meeting.duration}</div>
                       </div>
                       
                       {/* Avatar and info */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2.5 sm:gap-3">
-                          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <User className="h-4 w-4 text-primary" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h3 className="font-semibold text-foreground text-sm truncate">{meeting.hcpName}</h3>
+                            <h3 className="font-semibold text-foreground text-sm leading-tight">{meeting.hcpName}</h3>
                             <p className="text-xs text-muted-foreground truncate">{meeting.location}</p>
                           </div>
                         </div>
-                        
-                        {/* Quick actions - show inline on mobile */}
-                        {(meeting.address || meeting.phone) && (
-                          <div className="flex items-center gap-2 mt-2.5 ml-11 sm:ml-13">
-                            {meeting.address && (
-                              <a 
-                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[11px] sm:text-xs font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                              >
-                                <MapPin className="h-3 w-3" />
-                                Directions
-                              </a>
-                            )}
-                            {meeting.phone && (
-                              <a 
-                                href={`tel:${meeting.phone}`}
-                                className="text-[11px] sm:text-xs font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                              >
-                                <Phone className="h-3 w-3" />
-                                Call
-                              </a>
-                            )}
-                          </div>
-                        )}
                       </div>
                       
-                      {/* Status and actions - right side */}
-                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                      {/* Status badge - right side */}
+                      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                         {/* Status indicator with icon for processing states */}
                         {meeting.status === "debrief-submitting" && (
                           <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/50 rounded-lg">
@@ -335,6 +309,32 @@ export const DailyOverviewApple = ({
                         )}
                       </div>
                     </div>
+                    
+                    {/* Quick actions row - below main content */}
+                    {(meeting.address || meeting.phone) && (
+                      <div className="flex items-center gap-2 mt-3 ml-[60px]">
+                        {meeting.address && (
+                          <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
+                          >
+                            <MapPin className="h-3 w-3" />
+                            Directions
+                          </a>
+                        )}
+                        {meeting.phone && (
+                          <a 
+                            href={`tel:${meeting.phone}`}
+                            className="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
+                          >
+                            <Phone className="h-3 w-3" />
+                            Call
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                   
                   {/* Expanded Details */}

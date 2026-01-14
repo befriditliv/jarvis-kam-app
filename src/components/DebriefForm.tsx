@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { ArrowLeft, CheckCircle, XCircle, Star, Mic, Save, Send, Play, Settings, Lightbulb } from "lucide-react";
+import { ArrowLeft, CheckCircle, Mic, Send, Lightbulb } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 import { SyncStatus } from "./SyncStatus";
 
@@ -311,95 +308,99 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     );
   }
 
-  // Debrief Phase
+  // Debrief Phase - Simplified flow
   return (
-    <div className="min-h-screen bg-gradient-surface animate-fade-in">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/50">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setPhase('template')}
-                className="rounded-full p-2 hover:bg-secondary/80"
-              >
-                <Settings className="h-5 w-5" />
-              </Button>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">Voice Debrief</h1>
-                <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Adaptive interview mode</p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline"
-                onClick={handleSave}
-                className="rounded-xl"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Save Draft
-              </Button>
-              <Button 
-                onClick={handleSave}
-                className="bg-gradient-primary hover:shadow-lg transition-all duration-300 rounded-xl"
-              >
-                <Send className="h-4 w-4 mr-2" />
-                Submit
-              </Button>
-            </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Minimal Header */}
+      <div className="px-4 sm:px-6 py-4 border-b border-border/30">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setPhase('template')}
+            className="rounded-xl p-2 h-9 w-9"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold text-foreground truncate">Voice Debrief</h1>
+            <p className="text-xs text-muted-foreground truncate">Dr. Sarah Johnson</p>
           </div>
         </div>
       </div>
 
-      <div className="px-6 py-6 space-y-6">
-
-        {/* Voice Recording */}
-        <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-          <div className="text-center space-y-6">
-            <div>
-              <h3 className="text-2xl font-semibold text-card-foreground mb-2">Adaptive Voice Debrief</h3>
-              <p className="text-muted-foreground">The AI will ask targeted questions based on your template</p>
+      {/* Main Content - Centered */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
+        {!isRecording ? (
+          // Start state
+          <div className="text-center space-y-8 max-w-sm mx-auto">
+            <div className="space-y-3">
+              <h2 className="text-2xl font-semibold text-foreground">Ready to Debrief</h2>
+              <p className="text-muted-foreground text-sm">
+                Tap the button below to start recording. Jarvis will guide you through the debrief.
+              </p>
             </div>
             
-            <Button
-              variant={isRecording ? "destructive" : "default"}
-              size="lg"
+            <button
               onClick={handleVoiceRecording}
-              className={`h-20 w-20 rounded-full text-lg transition-all duration-300 ${
-                isRecording ? "animate-pulse-glow scale-110" : "hover:scale-105"
-              }`}
+              className="w-28 h-28 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 active:scale-95"
             >
-              <Mic className="h-8 w-8" />
-            </Button>
+              <Mic className="h-10 w-10" />
+            </button>
             
-            <div className="text-sm text-muted-foreground">
-              {isRecording ? "Recording active - AI generating questions..." : "Tap to start your adaptive debrief"}
-            </div>
+            <p className="text-xs text-muted-foreground">Tap to start recording</p>
           </div>
-          
-          {isRecording && (
-            <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-              <div className="flex items-center gap-3 justify-center">
-                <div className="w-3 h-3 bg-destructive rounded-full animate-bounce-gentle"></div>
-                <span className="text-sm text-primary font-medium">AI preparing adaptive questions based on your template...</span>
+        ) : (
+          // Recording state
+          <div className="text-center space-y-8 max-w-sm mx-auto w-full">
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2">
+                <span className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
+                <h2 className="text-xl font-semibold text-foreground">Recording...</h2>
               </div>
+              <p className="text-muted-foreground text-sm">
+                Speak naturally about your meeting. Tap below when finished.
+              </p>
             </div>
-          )}
 
-          {voiceNotes && (
-            <div className="mt-6">
-              <Label className="text-sm font-medium mb-2 block">Conversation & Notes</Label>
-              <Textarea
-                value={voiceNotes}
-                onChange={(e) => setVoiceNotes(e.target.value)}
-                placeholder="Your adaptive debrief conversation will appear here..."
-                className="min-h-[200px] resize-none border-border/50 focus:border-primary transition-colors"
-              />
+            {/* Recording visualization */}
+            <div className="flex items-center justify-center gap-1 h-16">
+              {[...Array(7)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1.5 bg-primary rounded-full animate-pulse"
+                  style={{
+                    height: `${20 + Math.random() * 40}px`,
+                    animationDelay: `${i * 0.1}s`,
+                    animationDuration: `${0.5 + Math.random() * 0.5}s`
+                  }}
+                />
+              ))}
             </div>
-          )}
-        </Card>
+            
+            {/* Finish button - Primary action */}
+            <button
+              onClick={() => {
+                setIsRecording(false);
+                // Generate notes and go to preview
+                const adaptivePrompt = generateAdaptivePrompt(template);
+                setVoiceNotes(prev => prev + (prev ? "\n\n" : "") + adaptivePrompt);
+                setPhase('preview');
+              }}
+              className="w-full py-4 px-6 rounded-2xl bg-primary text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3"
+            >
+              <CheckCircle className="h-5 w-5" />
+              Finish Debrief
+            </button>
+            
+            <button
+              onClick={() => setIsRecording(false)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
