@@ -136,21 +136,26 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </div>
         </div>
 
-        <div className="px-6 py-4 space-y-4">
-          {/* Quick Debrief Options - Less Prominent */}
-          <div className="p-4 bg-muted/30 rounded-lg border border-border/30">
-            <p className="text-sm text-muted-foreground mb-3">Quick option (if applicable)</p>
-            <div className="flex gap-3">
+        <div className="px-4 sm:px-6 py-4 space-y-4">
+          {/* Quick Debrief Options */}
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Quick options</p>
+            <div className="flex flex-wrap gap-2">
               {quickDebriefOptions.map((option) => (
-                <Button
+                <button
                   key={option.value}
-                  variant={template.quickDebrief === option.value ? "secondary" : "ghost"}
-                  size="sm"
-                  onClick={() => setTemplate(prev => ({ ...prev, quickDebrief: option.value }))}
-                  className="rounded-lg text-sm font-medium"
+                  onClick={() => setTemplate(prev => ({ 
+                    ...prev, 
+                    quickDebrief: prev.quickDebrief === option.value ? undefined : option.value 
+                  }))}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    template.quickDebrief === option.value 
+                      ? "bg-primary text-primary-foreground shadow-sm" 
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                  }`}
                 >
                   {option.label}
-                </Button>
+                </button>
               ))}
             </div>
           </div>
@@ -283,13 +288,13 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
           </Card>
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 justify-center pb-6">
+          {/* Action Buttons - Mobile friendly */}
+          <div className="flex flex-col sm:flex-row gap-3 pb-6">
             <Button
               variant="outline"
               size="lg"
               onClick={() => setPhase('debrief')}
-              className="rounded-xl px-8"
+              className="rounded-xl flex-1 py-4 text-base"
             >
               Edit Notes
             </Button>
@@ -297,7 +302,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
               variant="default"
               size="lg"
               onClick={handleFinalSubmit}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-8 shadow-lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl flex-1 py-4 text-base shadow-lg"
             >
               <Send className="h-5 w-5 mr-2" />
               Submit to IOengage

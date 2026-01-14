@@ -68,6 +68,14 @@ const mockMeetings: Meeting[] = [{
   address: "890 Brain Way, Suite 500, New York, NY 10003",
   phone: "+1 (212) 555-0456",
   status: "upcoming"
+}, {
+  id: "5",
+  time: "Yesterday",
+  duration: "45 min",
+  hcpName: "Dr. Amanda Peters",
+  specialty: "Rheumatology",
+  location: "Wellness Medical Group",
+  status: "done"
 }];
 
 // HCP data with access level and consent status
@@ -116,7 +124,7 @@ const statusLabels = {
   "debrief-submitting": "Syncing...",
   "debrief-processing": "Processing",
   "debrief-ready": "Ready for Review",
-  done: "Complete"
+  done: "Debriefed"
 };
 export const DailyOverviewApple = ({
   onPrepare,
@@ -340,6 +348,17 @@ export const DailyOverviewApple = ({
                             className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium px-4 py-2 h-auto"
                           >
                             Debrief
+                          </Button>
+                        )}
+                        
+                        {meeting.status === "done" && (
+                          <Button 
+                            onClick={() => onDebrief(meeting.id)} 
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl text-xs font-medium px-4 py-2 h-auto"
+                          >
+                            Redo Debrief
                           </Button>
                         )}
                       </div>
