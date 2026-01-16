@@ -482,13 +482,22 @@ export const DailyOverviewApple = ({
                       </span>
                     </div>
 
-                    {/* Action button */}
-                    <Button
-                      onClick={() => onPrepare(meeting.id)}
-                      className="w-full mt-4 rounded-xl bg-primary hover:bg-primary/90 text-sm font-medium h-10"
-                    >
-                      Åbn forberedelse
-                    </Button>
+                    {/* Action buttons */}
+                    <div className="flex gap-2 mt-4">
+                      <Button
+                        onClick={() => onPrepare(meeting.id)}
+                        variant="outline"
+                        className="flex-1 rounded-xl text-sm font-medium h-10"
+                      >
+                        Mere info
+                      </Button>
+                      <Button
+                        onClick={() => onDebrief(meeting.id)}
+                        className="flex-1 rounded-xl bg-primary hover:bg-primary/90 text-sm font-medium h-10"
+                      >
+                        Debrief
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
