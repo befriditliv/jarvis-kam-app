@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Edit3, Send, User, Calendar, MapPin, FileText } from "lucide-react";
+import { ArrowLeft, CheckCircle, Edit3, Send, User, Calendar, MapPin, FileText, Loader2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface DebriefReviewProps {
   meetingId: string;
@@ -41,10 +42,20 @@ const mockDebriefData = {
 export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [notes, setNotes] = useState(mockDebriefData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleApprove = () => {
-    // Submit to IOengage
-    console.log("Submitting debrief to IOengage:", notes);
+  const handleApprove = async () => {
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    toast({
+      title: "Debrief sendt",
+      description: "Dit debrief er nu sendt til IOengage",
+    });
+    
+    setIsSubmitting(false);
     onApprove();
   };
 
@@ -154,11 +165,21 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
       <div className="px-6 pb-8 pt-4 space-y-3 bg-background border-t border-border/30">
         <Button 
           onClick={handleApprove}
+          disabled={isSubmitting}
           size="lg"
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-4 text-base font-semibold"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-4 text-base font-semibold disabled:opacity-70"
         >
-          <Send className="h-5 w-5 mr-2" />
-          Godkend & Send til IOengage
+          {isSubmitting ? (
+            <>
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              Sender...
+            </>
+          ) : (
+            <>
+              <Send className="h-5 w-5 mr-2" />
+              Godkend & Send til IOengage
+            </>
+          )}
         </Button>
         <Button 
           onClick={() => setIsEditing(true)}
