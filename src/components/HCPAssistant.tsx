@@ -222,12 +222,12 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
       >
         <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="px-4 pt-6 pb-4 border-b border-border">
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <div className="flex items-center gap-3">
-                <img src={jarvisLogo} alt="Jarvis" className="w-10 h-10 shrink-0" />
+          <div className="px-5 pt-8 pb-5 bg-gradient-to-b from-primary/[0.03] to-transparent">
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="flex items-center gap-4">
+                <img src={jarvisLogo} alt="Jarvis" className="w-11 h-11 shrink-0" />
                 <div>
-                  <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis</h2>
+                  <h2 className="text-lg font-semibold text-card-foreground tracking-tight">Spørg Jarvis</h2>
                   <p className="text-xs text-muted-foreground">{hcpName}</p>
                 </div>
               </div>
@@ -235,7 +235,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="h-9 w-9 p-0 rounded-full text-muted-foreground hover:text-foreground"
+                className="h-9 w-9 p-0 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 aria-label="Luk"
               >
                 <X className="h-5 w-5" />
