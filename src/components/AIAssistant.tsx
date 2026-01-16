@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Send, Loader2, TrendingUp, Users, Calendar, Building } from "lucide-react";
+import { Brain, Send, Loader2, TrendingUp, Users, Calendar, Building, X } from "lucide-react";
 interface AIAssistantProps {
   isOpen: boolean;
   onClose: () => void;
@@ -95,23 +95,29 @@ export const AIAssistant = ({
     return "Based on current data analysis, I recommend focusing on value-based care discussions and patient outcome improvements. The data shows strong correlation between engagement frequency and prescription growth.";
   };
   if (!isOpen) return null;
-  return <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-fade-in">
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card shadow-xl border-l border-border">
-        <div className="h-full flex flex-col">
+  return <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-card shadow-xl border-l border-border" onClick={(e) => e.stopPropagation()}>
+        <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="p-6 border-b border-border">
-            <div className="flex items-center justify-between">
+          <div className="px-4 pt-safe pb-4 border-b border-border">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                  <Brain className="h-5 w-5 text-primary-foreground" />
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                  <Brain className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-card-foreground">Ask Jarvis</h2>
-                  <p className="text-sm text-muted-foreground">Ask anything about your data</p>
+                  <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis</h2>
+                  <p className="text-xs text-muted-foreground">Spørg om hvad som helst</p>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full">
-                ×
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="h-9 w-9 p-0 rounded-full text-muted-foreground hover:text-foreground"
+                aria-label="Luk"
+              >
+                <X className="h-5 w-5" />
               </Button>
             </div>
           </div>
