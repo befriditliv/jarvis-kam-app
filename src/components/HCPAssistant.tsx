@@ -173,9 +173,12 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm animate-fade-in">
-      <div className="fixed right-0 top-0 z-[61] h-full w-full max-w-md bg-card shadow-xl border-l border-border">
-        <div className="h-full flex flex-col">
+    <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      <div 
+        className="fixed right-0 top-0 z-[61] h-full w-full max-w-md bg-card shadow-xl border-l border-border"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="h-full flex flex-col overflow-hidden">
           {/* Header */}
           <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
@@ -195,7 +198,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           </div>
 
           {/* Chat History */}
-          <div className="flex-1 overflow-y-auto p-4 pb-24">
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-24 -webkit-overflow-scrolling-touch">
             {responses.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <h3 className="text-lg font-medium text-card-foreground mb-2">Ask about {hcpName}</h3>
