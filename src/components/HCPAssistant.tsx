@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ interface HCPAssistantProps {
   isOpen: boolean;
   onClose: () => void;
   hcpName: string;
+  showBriefing?: boolean;
 }
 
 interface QuerySuggestion {
@@ -69,12 +70,48 @@ const categoryConfig = {
   }
 };
 
-export const HCPAssistant = ({ isOpen, onClose, hcpName }: HCPAssistantProps) => {
+export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }: HCPAssistantProps) => {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responses, setResponses] = useState<AIResponse[]>([]);
+  const [hasSentBriefing, setHasSentBriefing] = useState(false);
   
   const querySuggestions = getQuerySuggestions(hcpName);
+
+  // Auto-send briefing when opened with showBriefing
+  useEffect(() => {
+    if (showBriefing && isOpen && !hasSentBriefing && responses.length === 0) {
+      setHasSentBriefing(true);
+      setIsLoading(true);
+      setTimeout(() => {
+        const briefingResponse: AIResponse = {
+          query: "Giv mig en hurtig briefing",
+          response: getBriefingSummary(hcpName),
+          timestamp: new Date(),
+          category: "insights"
+        };
+        setResponses([briefingResponse]);
+        setIsLoading(false);
+      }, 1500);
+    }
+  }, [showBriefing, isOpen, hasSentBriefing, hcpName, responses.length]);
+
+  const getBriefingSummary = (name: string): string => {
+    return `Her er din briefing om ${name}:
+
+**Profil**
+${name} leder hjertesvigtklinikken ved Metro Medical Center med 800+ patienter årligt. Høj ordination af ACE-hæmmere og betablokkere med præference for evidensbaserede protokoller.
+
+**Seneste aktivitet**
+• Har vist stærk interesse i patient-adherence løsninger
+• Metro Medical Center har for nylig opdateret deres lægemiddelliste
+• Downloadet 3 whitepapers om SGLT2-hæmmere
+
+**Anbefaling**
+Overvej at nævne CARDIAC-ADVANCE forsøgsresultaterne og diskuter implementeringsstrategi for bedre patientudvælgelse.
+
+Er der andet du gerne vil vide før mødet?`;
+  };
 
   const handleSendQuery = async (queryText?: string) => {
     const finalQuery = queryText || query;

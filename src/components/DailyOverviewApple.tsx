@@ -179,6 +179,7 @@ export const DailyOverviewApple = ({
   const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>(null);
   const [hcpAssistantOpen, setHcpAssistantOpen] = useState(false);
   const [selectedHCP, setSelectedHCP] = useState<string>("");
+  const [showBriefing, setShowBriefing] = useState(false);
 
   const todayDate = new Date().toLocaleDateString("da-DK", {
     weekday: "long",
@@ -485,7 +486,11 @@ export const DailyOverviewApple = ({
                     {/* Action buttons */}
                     <div className="flex gap-2 mt-4">
                       <Button
-                        onClick={() => onPrepare(meeting.id)}
+                        onClick={() => {
+                          setSelectedHCP(meeting.hcpName);
+                          setShowBriefing(true);
+                          setHcpAssistantOpen(true);
+                        }}
                         variant="outline"
                         className="flex-1 rounded-xl text-sm font-medium h-10"
                       >
@@ -513,8 +518,12 @@ export const DailyOverviewApple = ({
       {hcpAssistantOpen && (
         <HCPAssistant 
           isOpen={hcpAssistantOpen} 
-          onClose={() => setHcpAssistantOpen(false)} 
+          onClose={() => {
+            setHcpAssistantOpen(false);
+            setShowBriefing(false);
+          }} 
           hcpName={selectedHCP}
+          showBriefing={showBriefing}
         />
       )}
     </div>
