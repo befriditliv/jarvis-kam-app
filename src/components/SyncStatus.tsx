@@ -1,5 +1,4 @@
-import { Cloud, CloudOff, Loader2, AlertCircle, CheckCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -11,123 +10,99 @@ import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 export const SyncStatus = () => {
   const { queue, pendingCount, isOnline, retryFailed } = useDebriefQueue();
 
+  // Don't show anything if queue is empty
   if (pendingCount === 0 && queue.length === 0) return null;
 
-  const getStatusIcon = () => {
-    if (!isOnline) {
-      return <CloudOff className="h-4 w-4 text-destructive" />;
-    }
-    
-    const hasSubmitting = queue.some(q => q.status === 'submitting');
-    const hasFailed = queue.some(q => q.status === 'failed');
-    
-    if (hasSubmitting) {
-      return <Loader2 className="h-4 w-4 animate-spin text-primary" />;
-    }
-    
-    if (hasFailed) {
-      return <AlertCircle className="h-4 w-4 text-warning" />;
-    }
-    
-    return <Cloud className="h-4 w-4 text-muted-foreground" />;
-  };
+  const hasSubmitting = queue.some(q => q.status === 'submitting');
+  const hasFailed = queue.some(q => q.status === 'failed');
+  const hasPending = queue.some(q => q.status === 'pending');
 
-  const getStatusText = () => {
-    if (!isOnline) return "Offline";
-    
-    const submitting = queue.filter(q => q.status === 'submitting').length;
-    const pending = queue.filter(q => q.status === 'pending').length;
-    const failed = queue.filter(q => q.status === 'failed').length;
-    
-    if (submitting > 0) return `Syncing ${submitting}...`;
-    if (failed > 0) return `${failed} failed`;
-    if (pending > 0) return `${pending} pending`;
-    
-    return "Synced";
+  // Determine indicator color and animation
+  const getIndicatorStyle = () => {
+    if (!isOnline) return "bg-muted-foreground";
+    if (hasFailed) return "bg-destructive";
+    if (hasSubmitting) return "bg-primary animate-pulse";
+    if (hasPending) return "bg-primary/60";
+    return "bg-green-500";
   };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 gap-2 px-3 rounded-full"
-        >
-          {getStatusIcon()}
-          <span className="text-xs font-medium">{getStatusText()}</span>
-          {pendingCount > 0 && (
-            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+        <button className="relative p-2 -mr-2 active:scale-95 transition-transform">
+          {/* Small dot indicator */}
+          <span className={`block w-2 h-2 rounded-full ${getIndicatorStyle()}`} />
+          {/* Badge count if multiple */}
+          {pendingCount > 1 && (
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
               {pendingCount}
-            </Badge>
+            </span>
           )}
-        </Button>
+        </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80" align="end">
-        <div className="space-y-4">
+      <PopoverContent className="w-72 p-0" align="end">
+        <div className="p-3 border-b border-border/50">
           <div className="flex items-center justify-between">
-            <h4 className="font-semibold text-sm">Sync Status</h4>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {isOnline ? (
-                <>
-                  <Cloud className="h-3 w-3" />
-                  Online
-                </>
-              ) : (
-                <>
-                  <CloudOff className="h-3 w-3" />
-                  Offline
-                </>
-              )}
+            <h4 className="font-semibold text-sm">Synkronisering</h4>
+            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${isOnline ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'}`}>
+              {isOnline ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        </div>
+
+        <div className="p-2 max-h-60 overflow-y-auto">
+          {queue.length === 0 ? (
+            <p className="text-xs text-muted-foreground text-center py-4">Ingen ventende</p>
+          ) : (
+            <div className="space-y-1">
+              {queue.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex-shrink-0">
+                    {item.status === 'submitting' && (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                    )}
+                    {item.status === 'pending' && (
+                      <div className="w-3.5 h-3.5 rounded-full border-2 border-primary/40" />
+                    )}
+                    {item.status === 'submitted' && (
+                      <CheckCircle className="h-3.5 w-3.5 text-green-600" />
+                    )}
+                    {item.status === 'failed' && (
+                      <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground truncate">
+                      Møde debrief
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {item.status === 'submitting' && 'Sender...'}
+                      {item.status === 'pending' && 'Venter'}
+                      {item.status === 'submitted' && 'Sendt'}
+                      {item.status === 'failed' && 'Fejlet'}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
+        </div>
 
-          <div className="space-y-2">
-            {queue.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-start gap-3 p-2 rounded-lg bg-muted/50"
-              >
-                <div className="mt-0.5">
-                  {item.status === 'submitting' && (
-                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  )}
-                  {item.status === 'pending' && (
-                    <Cloud className="h-4 w-4 text-muted-foreground" />
-                  )}
-                  {item.status === 'submitted' && (
-                    <CheckCircle className="h-4 w-4 text-success" />
-                  )}
-                  {item.status === 'failed' && (
-                    <AlertCircle className="h-4 w-4 text-destructive" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-foreground">
-                    Meeting Debrief
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.status === 'submitting' && 'Submitting to IOengage...'}
-                    {item.status === 'pending' && 'Waiting for connection'}
-                    {item.status === 'submitted' && 'Successfully synced'}
-                    {item.status === 'failed' && 'Failed to sync'}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {queue.some(q => q.status === 'failed') && (
+        {hasFailed && (
+          <div className="p-2 border-t border-border/50">
             <Button
               variant="outline"
               size="sm"
               onClick={retryFailed}
-              className="w-full"
+              className="w-full h-8 text-xs rounded-lg"
             >
-              Retry Failed
+              Prøv igen
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
