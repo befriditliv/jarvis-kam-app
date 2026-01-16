@@ -316,8 +316,8 @@ export const DailyOverviewApple = ({
                           <span className="text-xs font-medium text-destructive">Needs Debrief</span>
                         )}
                         
-                        {/* Quick actions */}
-                        {(meeting.address || meeting.phone) && (
+                        {/* Quick actions - hide for completed meetings */}
+                        {(meeting.address || meeting.phone) && !["debrief-ready", "done", "debrief-failed"].includes(meeting.status) && (
                           <div className="flex items-center gap-2 ml-2">
                             {meeting.address && (
                               <a 
