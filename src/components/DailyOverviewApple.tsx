@@ -176,10 +176,18 @@ export const DailyOverviewApple = ({
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
   const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
-  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>(null);
   const [hcpAssistantOpen, setHcpAssistantOpen] = useState(false);
   const [selectedHCP, setSelectedHCP] = useState<string>("");
   const [showBriefing, setShowBriefing] = useState(false);
+  const [showCompletedMeetings, setShowCompletedMeetings] = useState(false);
+
+  // Split meetings into active and completed
+  const activeMeetings = meetings.filter(m => m.status !== "done");
+  const completedMeetings = meetings.filter(m => m.status === "done");
+  
+  // Find next upcoming meeting to auto-expand
+  const nextUpcomingId = activeMeetings.find(m => m.status === "upcoming")?.id || null;
+  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>(nextUpcomingId);
 
   const todayDate = new Date().toLocaleDateString("da-DK", {
     weekday: "long",
@@ -197,10 +205,14 @@ export const DailyOverviewApple = ({
   };
 
   const scrollToFirstPending = () => {
-    const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
+    const firstPending = activeMeetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
     if (firstPending) {
       document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  };
+
+  const toggleExpand = (meetingId: string) => {
+    setExpandedMeetingId(prev => prev === meetingId ? null : meetingId);
   };
 
   return (
@@ -241,14 +253,20 @@ export const DailyOverviewApple = ({
         <div className="space-y-3">
           <h2 className="text-base font-semibold text-foreground">Dagens program</h2>
           
-          {meetings.map((meeting, index) => {
-            const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
+          {activeMeetings.map((meeting) => {
+            const isNextUpcoming = meeting.id === nextUpcomingId;
             const hcpData = mockHCPData[meeting.hcpName];
             const isExpanded = expandedMeetingId === meeting.id;
 
             return (
               <div key={meeting.id} id={`meeting-${meeting.id}`}>
-                <div className={`p-4 border rounded-2xl transition-all duration-300 bg-card ${isNextUpcoming ? "border-primary/30 bg-primary/5 ring-1 ring-primary/10" : "border-border/50"}`}>
+                <button
+                  type="button"
+                  onClick={() => toggleExpand(meeting.id)}
+                  className={`w-full text-left p-4 border rounded-2xl transition-all duration-300 bg-card active:scale-[0.99] ${
+                    isNextUpcoming ? "border-primary/30 bg-primary/5 ring-1 ring-primary/10" : "border-border/50"
+                  }`}
+                >
                   {/* Main content */}
                   <div className="flex items-start gap-3">
                     {/* Time column */}
@@ -276,11 +294,15 @@ export const DailyOverviewApple = ({
                         </div>
                       </div>
                     </div>
+
+                    {/* Expand indicator */}
+                    <div className="flex-shrink-0">
+                      {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                    </div>
                   </div>
                   
-                  {/* Bottom row: Status + Actions */}
+                  {/* Status row */}
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/30">
-                    {/* Status indicator */}
                     <div className="flex items-center gap-2">
                       {meeting.status === "debrief-submitting" && (
                         <div className="flex items-center gap-2 px-2.5 py-1 bg-muted/50 rounded-lg">
@@ -288,64 +310,33 @@ export const DailyOverviewApple = ({
                           <span className="text-[11px] font-medium text-muted-foreground">Synkroniserer...</span>
                         </div>
                       )}
-                      
                       {meeting.status === "debrief-processing" && (
                         <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 rounded-lg">
                           <Loader2 className="h-3 w-3 text-primary animate-spin" />
                           <span className="text-[11px] font-medium text-primary">Behandler...</span>
                         </div>
                       )}
-
                       {meeting.status === "debrief-failed" && (
                         <div className="flex items-center gap-2 px-2.5 py-1 bg-destructive/10 rounded-lg">
                           <AlertCircle className="h-3 w-3 text-destructive" />
                           <span className="text-[11px] font-medium text-destructive">Fejlet</span>
                         </div>
                       )}
-                      
-                      {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed", "debrief-failed"].includes(meeting.status) && (
-                        <span className={`text-[11px] font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
-                          {isNextUpcoming ? "Næste møde" : statusLabels[meeting.status]}
-                        </span>
-                      )}
-                      
                       {meeting.status === "debrief-needed" && (
                         <span className="text-[11px] font-medium text-destructive">Mangler debrief</span>
                       )}
-
                       {meeting.status === "debrief-ready" && (
                         <span className="text-[11px] font-medium text-primary">Klar til review</span>
                       )}
-                      
-                      {/* Quick actions - only for upcoming */}
-                      {(meeting.address || meeting.phone) && !["debrief-ready", "done", "debrief-failed"].includes(meeting.status) && (
-                        <div className="flex items-center gap-1.5 ml-2">
-                          {meeting.address && (
-                            <a 
-                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-primary/10 text-primary active:scale-95 transition-transform inline-flex items-center gap-1"
-                            >
-                              <MapPin className="h-3 w-3" />
-                              Rute
-                            </a>
-                          )}
-                          {meeting.phone && (
-                            <a 
-                              href={`tel:${meeting.phone}`}
-                              className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-primary/10 text-primary active:scale-95 transition-transform inline-flex items-center gap-1"
-                            >
-                              <Phone className="h-3 w-3" />
-                              Ring
-                            </a>
-                          )}
-                        </div>
+                      {meeting.status === "upcoming" && (
+                        <span className={`text-[11px] font-medium ${isNextUpcoming ? "text-primary" : "text-muted-foreground"}`}>
+                          {isNextUpcoming ? "Næste møde" : "Kommende"}
+                        </span>
                       )}
                     </div>
-                    
-                    {/* Action buttons */}
-                    <div className="flex items-center gap-2">
+
+                    {/* Quick actions */}
+                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                       {meeting.status === "debrief-ready" && (
                         <Button 
                           onClick={() => onDebriefReview(meeting.id)} 
@@ -356,32 +347,6 @@ export const DailyOverviewApple = ({
                           Gennemse
                         </Button>
                       )}
-                      
-                      {meeting.status === "upcoming" && (
-                        <>
-                          <Button 
-                            onClick={() => {
-                              setSelectedHCP(meeting.hcpName);
-                              setHcpAssistantOpen(true);
-                            }} 
-                            size="sm" 
-                            className="rounded-xl h-8 w-8 p-0 bg-primary/10 text-primary hover:bg-primary/20"
-                          >
-                            <MessageCircle className="h-3.5 w-3.5" />
-                          </Button>
-                          {hcpData && (
-                            <Button 
-                              onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
-                              variant="ghost" 
-                              size="sm" 
-                              className="rounded-xl h-8 w-8 p-0"
-                            >
-                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                            </Button>
-                          )}
-                        </>
-                      )}
-                      
                       {meeting.status === "debrief-needed" && (
                         <Button 
                           onClick={() => onDebrief(meeting.id)} 
@@ -391,18 +356,6 @@ export const DailyOverviewApple = ({
                           Debrief
                         </Button>
                       )}
-                      
-                      {meeting.status === "done" && (
-                        <Button 
-                          onClick={() => onDebrief(meeting.id)} 
-                          variant="outline"
-                          size="sm"
-                          className="rounded-xl text-xs font-medium px-3 py-1.5 h-8"
-                        >
-                          Redo
-                        </Button>
-                      )}
-                      
                       {meeting.status === "debrief-failed" && (
                         <Button 
                           onClick={() => onDebrief(meeting.id)} 
@@ -415,7 +368,7 @@ export const DailyOverviewApple = ({
                       )}
                     </div>
                   </div>
-                </div>
+                </button>
                 
                 {/* Expanded Details */}
                 {isExpanded && hcpData && (
@@ -509,6 +462,58 @@ export const DailyOverviewApple = ({
               </div>
             );
           })}
+
+          {/* Completed meetings accordion */}
+          {completedMeetings.length > 0 && (
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => setShowCompletedMeetings(!showCompletedMeetings)}
+                className="w-full flex items-center justify-between p-3 bg-muted/30 rounded-xl text-left active:scale-[0.99] transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Afsluttede møder ({completedMeetings.length})
+                  </span>
+                </div>
+                {showCompletedMeetings ? (
+                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
+
+              {showCompletedMeetings && (
+                <div className="mt-2 space-y-2 animate-fade-in">
+                  {completedMeetings.map((meeting) => (
+                    <div
+                      key={meeting.id}
+                      className="p-3 border border-border/30 rounded-xl bg-muted/20 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="text-center min-w-[40px]">
+                          <div className="font-medium text-muted-foreground text-xs">{meeting.time}</div>
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-muted-foreground text-sm">{meeting.hcpName}</h3>
+                          <p className="text-xs text-muted-foreground/70">{meeting.location}</p>
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => onDebrief(meeting.id)} 
+                        variant="ghost"
+                        size="sm"
+                        className="rounded-lg text-xs text-muted-foreground h-7 px-2"
+                      >
+                        Redo
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
