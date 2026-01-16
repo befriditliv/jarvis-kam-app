@@ -121,7 +121,7 @@ export const AppContainer = () => {
             >
               <ChevronLeft className="h-5 w-5 text-foreground" />
             </button>
-            <h1 className="text-xl font-semibold text-foreground tracking-tight">Profil</h1>
+            <h1 className="text-2xl font-semibold text-foreground tracking-tight">Profil</h1>
           </div>
           <div className="px-4 space-y-4">
             <div className="p-4 bg-card rounded-xl border border-border/40">

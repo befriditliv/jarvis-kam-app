@@ -256,9 +256,9 @@ export const DailyOverviewApple = ({
       <div className="px-5 pt-6 pb-4 bg-gradient-to-b from-primary/[0.03] to-background">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10" />
+            <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12" />
             <div>
-              <h1 className="text-xl font-semibold text-foreground tracking-tight">{greeting()}</h1>
+              <h1 className="text-2xl font-semibold text-foreground tracking-tight">{greeting()}</h1>
               <p className="text-sm text-muted-foreground">{todayDate}</p>
             </div>
           </div>

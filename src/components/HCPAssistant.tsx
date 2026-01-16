@@ -225,10 +225,10 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           <div className="px-5 pt-8 pb-5 bg-gradient-to-b from-primary/[0.03] to-transparent">
             <div className="flex items-center justify-between gap-3 mb-2">
               <div className="flex items-center gap-4">
-                <img src={jarvisLogo} alt="Jarvis" className="w-11 h-11 shrink-0" />
+                <img src={jarvisLogo} alt="Jarvis" className="w-12 h-12 shrink-0" />
                 <div>
-                  <h2 className="text-lg font-semibold text-card-foreground tracking-tight">Spørg Jarvis</h2>
-                  <p className="text-xs text-muted-foreground">{hcpName}</p>
+                  <h2 className="text-2xl font-semibold text-card-foreground tracking-tight">Spørg Jarvis</h2>
+                  <p className="text-sm text-muted-foreground">{hcpName}</p>
                 </div>
               </div>
               <Button
