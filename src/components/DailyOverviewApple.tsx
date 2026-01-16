@@ -492,9 +492,10 @@ export const DailyOverviewApple = ({
                           setHcpAssistantOpen(true);
                         }}
                         variant="outline"
-                        className="flex-1 rounded-xl text-sm font-medium h-10"
+                        className="flex-1 rounded-xl text-sm font-medium h-10 gap-1.5"
                       >
-                        Mere info
+                        <MessageCircle className="h-4 w-4" />
+                        Spørg Jarvis
                       </Button>
                       <Button
                         onClick={() => onDebrief(meeting.id)}
