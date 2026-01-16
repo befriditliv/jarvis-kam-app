@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Brain, Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp } from "lucide-react";
+import { Brain, Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp, RotateCcw } from "lucide-react";
 
 interface HCPAssistantProps {
   isOpen: boolean;
@@ -187,13 +187,29 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
                   <Brain className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-card-foreground">Ask Jarvis about {hcpName}</h2>
-                  <p className="text-sm text-muted-foreground">HCP-specific insights and recommendations</p>
+                  <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis om {hcpName}</h2>
+                  <p className="text-sm text-muted-foreground">HCP-specifikke indsigter</p>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full">
-                ×
-              </Button>
+              <div className="flex items-center gap-1">
+                {responses.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setResponses([]);
+                      setHasSentBriefing(false);
+                    }} 
+                    className="rounded-full h-8 w-8 p-0"
+                    title="Start forfra"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                )}
+                <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full h-8 w-8 p-0 text-lg">
+                  ×
+                </Button>
+              </div>
             </div>
           </div>
 
