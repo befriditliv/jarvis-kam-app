@@ -2,11 +2,12 @@ import { useState } from "react";
 import { DailyOverviewApple } from "./DailyOverviewApple";
 import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
+import { DebriefReview } from "./DebriefReview";
 import { AIAssistant } from "./AIAssistant";
 import { VoiceRecorder } from "./VoiceRecorder";
 import { MeetingIntelligence } from "./MeetingIntelligence";
 
-type AppView = "overview" | "prep" | "debrief" | "intelligence";
+type AppView = "overview" | "prep" | "debrief" | "debrief-review" | "intelligence";
 
 interface VoiceRecording {
   id: string;
@@ -40,6 +41,16 @@ export const AppContainer = () => {
   const handleDebrief = (meetingId: string) => {
     setSelectedMeetingId(meetingId);
     setCurrentView("debrief");
+  };
+
+  const handleDebriefReview = (meetingId: string) => {
+    setSelectedMeetingId(meetingId);
+    setCurrentView("debrief-review");
+  };
+
+  const handleApproveDebrief = () => {
+    console.log("Debrief approved and sent to IOengage");
+    handleBackToOverview();
   };
 
   const handleStartMeeting = () => {
@@ -107,6 +118,16 @@ export const AppContainer = () => {
     );
   }
 
+  if (currentView === "debrief-review" && selectedMeetingId) {
+    return (
+      <DebriefReview
+        meetingId={selectedMeetingId}
+        onBack={handleBackToOverview}
+        onApprove={handleApproveDebrief}
+      />
+    );
+  }
+
   if (currentView === "intelligence") {
     return <MeetingIntelligence />;
   }
@@ -116,6 +137,7 @@ export const AppContainer = () => {
       <DailyOverviewApple
         onPrepare={handlePrepare}
         onDebrief={handleDebrief}
+        onDebriefReview={handleDebriefReview}
         onVoiceNote={handleVoiceNote}
         onAskAI={handleAskAI}
         onReports={handleReports}
