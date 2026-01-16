@@ -122,11 +122,11 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
       </div>
 
       <div>
-        <p className="font-medium mb-1">Digitalt engagement</p>
+        <p className="font-medium mb-1">Seneste aktivitet</p>
         <ul className="text-muted-foreground space-y-0.5">
-          <li>• 3/12 HCP'er har marketingtilladelse</li>
           <li>• Åbnet 3 nyhedsbreve (SGLT2)</li>
           <li>• Downloadet 2 whitepapers</li>
+          <li>• Deltog i webinar om Wegovy SELECT (dec)</li>
         </ul>
       </div>
 
