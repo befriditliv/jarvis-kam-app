@@ -100,43 +100,42 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
 
   const BriefingContent = ({ name }: { name: string }) => (
     <div className="space-y-4">
-      <p className="text-sm text-card-foreground">Her er din briefing om {name}:</p>
-      
-      <div>
-        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Profil</h4>
-        <p className="text-sm text-card-foreground leading-relaxed">
-          {name} leder hjertesvigtklinikken ved Metro Medical Center med 800+ patienter årligt. 
-          Høj ordination af ACE-hæmmere og betablokkere med præference for evidensbaserede protokoller.
+      {/* Intro summary */}
+      <p className="text-sm text-card-foreground leading-relaxed">
+        Metro Medical Center er en kardiologisk klinik med 12 specialister. Seneste møde omhandlede Wegovy og SGLT2-hæmmere. 
+        Digitalt engagement er moderat – {name} har åbnet 3 nyhedsbreve den seneste måned.
+      </p>
+
+      {/* Last meeting */}
+      <div className="p-3 bg-muted/30 rounded-lg">
+        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Seneste møde</h4>
+        <p className="text-xs text-muted-foreground mb-1">7. jan 2026 • Telefonopkald</p>
+        <p className="text-sm text-card-foreground">
+          Diskuterede patient-adherence og Wegovy dosering. God dialog, men ingen endelige aftaler. 
+          Ønsker opfølgning på CARDIAC-ADVANCE resultater.
         </p>
       </div>
 
-      <div>
-        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Seneste aktivitet</h4>
-        <ul className="space-y-1.5">
-          <li className="text-sm text-card-foreground flex items-start gap-2">
-            <span className="text-primary mt-1">•</span>
-            Har vist stærk interesse i patient-adherence løsninger
-          </li>
-          <li className="text-sm text-card-foreground flex items-start gap-2">
-            <span className="text-primary mt-1">•</span>
-            Metro Medical Center har for nylig opdateret deres lægemiddelliste
-          </li>
-          <li className="text-sm text-card-foreground flex items-start gap-2">
-            <span className="text-primary mt-1">•</span>
-            Downloadet 3 whitepapers om SGLT2-hæmmere
-          </li>
-        </ul>
+      {/* Key people */}
+      <div className="p-3 bg-muted/30 rounded-lg">
+        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Nøglepersoner</h4>
+        <div className="space-y-1 text-sm text-card-foreground">
+          <p><span className="font-medium">{name}</span> – Leder af hjertesvigtklinikken</p>
+          <p><span className="text-muted-foreground">Dr. Hansen</span> – Diabetes-specialist, OPT IN</p>
+        </div>
       </div>
 
-      <div>
-        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Anbefaling</h4>
-        <p className="text-sm text-card-foreground leading-relaxed">
-          Overvej at nævne CARDIAC-ADVANCE forsøgsresultaterne og diskuter implementeringsstrategi for bedre patientudvælgelse.
+      {/* Digital engagement */}
+      <div className="p-3 bg-muted/30 rounded-lg">
+        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Digitalt engagement</h4>
+        <p className="text-sm text-card-foreground">
+          3 af 12 HCP'er har marketingtilladelse. {name} har åbnet nyhedsbreve om SGLT2 og downloadet 2 whitepapers.
         </p>
       </div>
 
-      <p className="text-sm text-muted-foreground italic pt-2 border-t border-border/30">
-        Er der andet du gerne vil vide før mødet?
+      {/* Follow-up prompt */}
+      <p className="text-sm text-muted-foreground italic">
+        Er der andet du vil vide?
       </p>
     </div>
   );
