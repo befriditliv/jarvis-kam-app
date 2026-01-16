@@ -1,12 +1,12 @@
-// Daily Overview Component for Apple-style interface
+// Daily Overview Component - Mobile-first design
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone, Loader2, CheckCircle2, WifiOff, CloudUpload, AlertCircle, RotateCcw } from "lucide-react";
+import { User, MessageCircle, Calendar, Bell, ChevronDown, ChevronUp, Phone, Loader2, CheckCircle2, WifiOff, AlertCircle, RotateCcw, MapPin, Lightbulb, Target, TrendingUp } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
 import { SyncStatus } from "./SyncStatus";
-import { BurgerMenu } from "./BurgerMenu";
+
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
@@ -17,6 +17,7 @@ interface DailyOverviewProps {
   onNewAction: () => void;
   onIntelligence: () => void;
 }
+
 interface Participant {
   name: string;
   specialty: string;
@@ -34,63 +35,64 @@ interface Meeting {
   status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "debrief-failed" | "done";
   participants?: Participant[];
 }
-interface Nudge {
-  id: string;
-  text: string;
-  priority: "high" | "medium";
-}
-const mockMeetings: Meeting[] = [{
-  id: "1",
-  time: "9:00 AM",
-  duration: "45 min",
-  hcpName: "Dr. Sarah Johnson",
-  specialty: "Cardiology",
-  location: "Metro Medical Center",
-  address: "1234 Healthcare Blvd, Suite 200, New York, NY 10001",
-  phone: "+1 (212) 555-0123",
-  status: "debrief-ready"
-}, {
-  id: "2",
-  time: "11:30 AM",
-  duration: "30 min",
-  hcpName: "Dr. Michael Chen",
-  specialty: "Oncology",
-  location: "City General Hospital",
-  status: "debrief-failed"
-}, {
-  id: "3",
-  time: "2:00 PM",
-  duration: "60 min",
-  hcpName: "Dr. Emily Rodriguez",
-  specialty: "Endocrinology",
-  location: "University Health System",
-  status: "upcoming",
-  participants: [
-    { name: "Dr. Emily Rodriguez", specialty: "Endocrinology" },
-    { name: "Dr. Thomas Baker", specialty: "Diabetology" },
-    { name: "Nurse Patricia Hall", specialty: "Diabetes Care" }
-  ]
-}, {
-  id: "4",
-  time: "4:30 PM",
-  duration: "30 min",
-  hcpName: "Dr. James Wilson",
-  specialty: "Neurology",
-  location: "Central Neuroscience Clinic",
-  address: "890 Brain Way, Suite 500, New York, NY 10003",
-  phone: "+1 (212) 555-0456",
-  status: "upcoming"
-}, {
-  id: "5",
-  time: "Yesterday",
-  duration: "45 min",
-  hcpName: "Dr. Amanda Peters",
-  specialty: "Rheumatology",
-  location: "Wellness Medical Group",
-  status: "done"
-}];
 
-// HCP data with access level and consent status
+const mockMeetings: Meeting[] = [
+  {
+    id: "1",
+    time: "9:00",
+    duration: "45 min",
+    hcpName: "Dr. Sarah Johnson",
+    specialty: "Kardiologi",
+    location: "Metro Medical Center",
+    address: "1234 Healthcare Blvd, Suite 200",
+    phone: "+45 12 34 56 78",
+    status: "debrief-ready"
+  },
+  {
+    id: "2",
+    time: "11:30",
+    duration: "30 min",
+    hcpName: "Dr. Michael Chen",
+    specialty: "Onkologi",
+    location: "City General Hospital",
+    status: "debrief-failed"
+  },
+  {
+    id: "3",
+    time: "14:00",
+    duration: "60 min",
+    hcpName: "Dr. Emily Rodriguez",
+    specialty: "Endokrinologi",
+    location: "University Health System",
+    status: "upcoming",
+    participants: [
+      { name: "Dr. Emily Rodriguez", specialty: "Endokrinologi" },
+      { name: "Dr. Thomas Baker", specialty: "Diabetologi" },
+      { name: "Sygeplejerske Patricia Hall", specialty: "Diabetespleje" }
+    ]
+  },
+  {
+    id: "4",
+    time: "16:30",
+    duration: "30 min",
+    hcpName: "Dr. James Wilson",
+    specialty: "Neurologi",
+    location: "Central Neuroscience Clinic",
+    address: "890 Brain Way, Suite 500",
+    phone: "+45 87 65 43 21",
+    status: "upcoming"
+  },
+  {
+    id: "5",
+    time: "I går",
+    duration: "45 min",
+    hcpName: "Dr. Amanda Peters",
+    specialty: "Reumatologi",
+    location: "Wellness Medical Group",
+    status: "done"
+  }
+];
+
 interface HCPData {
   id: string;
   name: string;
@@ -100,6 +102,7 @@ interface HCPData {
   daysSinceLastInteraction: number;
   importantPoints: string[];
 }
+
 const mockHCPData: Record<string, HCPData> = {
   "Dr. Sarah Johnson": {
     id: "1",
@@ -108,16 +111,7 @@ const mockHCPData: Record<string, HCPData> = {
     consentStatus: "OPT IN",
     segmentationStatus: "At risk",
     daysSinceLastInteraction: 34,
-    importantPoints: ["Present new study data on cardiovascular outcomes", "Address patient adherence strategies and concerns", "Discuss formulary status updates and access"]
-  },
-  "Dr. Michael Chen": {
-    id: "2",
-    name: "Dr. Michael Chen",
-    accessLevel: "Medium",
-    consentStatus: "OPT OUT",
-    segmentationStatus: "Stable",
-    daysSinceLastInteraction: 21,
-    importantPoints: ["Schedule overdue follow-up appointments", "Review recent treatment protocols"]
+    importantPoints: ["Præsenter nye studiedata om kardiovaskulære outcomes", "Adresser patient-adherence strategier"]
   },
   "Dr. Emily Rodriguez": {
     id: "3",
@@ -126,406 +120,361 @@ const mockHCPData: Record<string, HCPData> = {
     consentStatus: "OPT IN",
     segmentationStatus: "Growing",
     daysSinceLastInteraction: 14,
-    importantPoints: ["Discuss multi-disciplinary approach with team", "Review diabetes management protocols", "Address coordination between specialists"]
+    importantPoints: ["Diskuter multidisciplinær tilgang", "Gennemgå diabetes protokoller"]
   }
 };
-const statusStyles = {
+
+const statusStyles: Record<string, string> = {
   upcoming: "text-primary",
   "in-progress": "text-warning",
   "debrief-needed": "text-destructive",
   "debrief-submitting": "text-muted-foreground",
   "debrief-processing": "text-primary",
-  "debrief-ready": "text-green-600",
+  "debrief-ready": "text-primary",
   "debrief-failed": "text-destructive",
   done: "text-muted-foreground"
 };
-const statusLabels = {
-  upcoming: "Upcoming",
-  "in-progress": "In Progress",
-  "debrief-needed": "Needs Debrief",
-  "debrief-submitting": "Syncing...",
-  "debrief-processing": "Processing",
-  "debrief-ready": "Ready for Review",
+
+const statusLabels: Record<string, string> = {
+  upcoming: "Kommende",
+  "in-progress": "I gang",
+  "debrief-needed": "Mangler debrief",
+  "debrief-submitting": "Synkroniserer...",
+  "debrief-processing": "Behandler",
+  "debrief-ready": "Klar til review",
   "debrief-failed": "Fejlet",
-  done: "Debriefed"
+  done: "Afsluttet"
 };
+
 export const DailyOverviewApple = ({
   onPrepare,
   onDebrief,
   onDebriefReview,
   onVoiceNote,
   onAskAI,
-  onReports,
-  onNewAction,
-  onIntelligence
 }: DailyOverviewProps) => {
   const [meetings] = useState<Meeting[]>(mockMeetings);
   const [isTaskCenterOpen, setIsTaskCenterOpen] = useState(false);
-  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>("3");
+  const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>(null);
   const [hcpAssistantOpen, setHcpAssistantOpen] = useState(false);
   const [selectedHCP, setSelectedHCP] = useState<string>("");
-  const todayDate = new Date().toLocaleDateString("en-US", {
+
+  const todayDate = new Date().toLocaleDateString("da-DK", {
     weekday: "long",
-    month: "long",
-    day: "numeric"
+    day: "numeric",
+    month: "long"
   });
-  const upcomingCount = meetings.filter(m => m.status === "upcoming").length;
-  const debriefCount = meetings.filter(m => m.status === "debrief-needed").length;
+
   const pendingDebriefCount = meetings.filter(m => m.status === "debrief-needed" || m.status === "debrief-failed").length;
 
-  // Get next upcoming meeting
-  const nextMeeting = meetings.find(m => m.status === "upcoming");
-  const nextHCPData = nextMeeting ? mockHCPData[nextMeeting.hcpName] : null;
   const greeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 17) return "Good afternoon";
-    return "Good evening";
+    if (hour < 12) return "God morgen";
+    if (hour < 17) return "God eftermiddag";
+    return "God aften";
   };
 
-  return <div className="min-h-screen bg-background">
+  const scrollToFirstPending = () => {
+    const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
+    if (firstPending) {
+      document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className="px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 border-b border-border/40 bg-background sticky top-0 z-40 shadow-sm">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10 sm:h-12 sm:w-12" />
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-semibold text-foreground">{greeting()}</h1>
-                <p className="text-sm text-muted-foreground">{todayDate}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <SyncStatus />
-              <Button onClick={onAskAI} size="sm" className="rounded-xl bg-primary hover:bg-primary/90 px-3 sm:px-4 text-xs sm:text-sm font-medium">
-                <MessageCircle className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Ask Jarvis</span>
-              </Button>
-              <BurgerMenu 
-                trigger={
-                  <Button variant="ghost" size="icon" className="rounded-xl h-9 w-9">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                }
-              />
+      <div className="px-4 pt-4 pb-3 border-b border-border/40 bg-background sticky top-0 z-40 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={jarvisLogo} alt="Jarvis" className="h-9 w-9" />
+            <div>
+              <h1 className="text-lg font-semibold text-foreground">{greeting()}</h1>
+              <p className="text-xs text-muted-foreground">{todayDate}</p>
             </div>
           </div>
-          
-          {/* Mobile greeting - shows below header on small screens */}
-          <div className="sm:hidden mt-4">
-            <h1 className="text-xl font-semibold text-foreground">{greeting()}</h1>
-            <p className="text-sm text-muted-foreground">{todayDate}</p>
+          <div className="flex items-center gap-2">
+            <SyncStatus />
+            <Button onClick={onAskAI} size="sm" className="rounded-xl bg-primary hover:bg-primary/90 h-9 w-9 p-0">
+              <MessageCircle className="h-4 w-4" />
+            </Button>
           </div>
-          
-          {/* Quick stats for mobile */}
-          <div className="flex items-center gap-3 mt-4 sm:mt-0 sm:hidden">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
-              <Calendar className="h-3.5 w-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary">{meetings.length} meetings</span>
-            </div>
-            {pendingDebriefCount > 0 && (
-              <a 
-                href={`#meeting-${meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed")?.id}`}
-                className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full hover:bg-destructive/20 transition-colors"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
-                  if (firstPending) {
-                    document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  }
-                }}
-              >
-                <Bell className="h-3.5 w-3.5 text-destructive" />
-                <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
-              </a>
-            )}
+        </div>
+        
+        {/* Quick stats */}
+        <div className="flex items-center gap-3 mt-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
+            <Calendar className="h-3.5 w-3.5 text-primary" />
+            <span className="text-xs font-medium text-primary">{meetings.length} møder</span>
           </div>
+          {pendingDebriefCount > 0 && (
+            <button 
+              onClick={scrollToFirstPending}
+              className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full active:scale-95 transition-transform"
+            >
+              <Bell className="h-3.5 w-3.5 text-destructive" />
+              <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-4 sm:px-6 py-5 sm:py-6 pb-20 sm:pb-16">
-        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-          {/* Today's Schedule */}
-          <div className="relative">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-base sm:text-lg font-semibold text-foreground">Today's Schedule</h2>
-              <div className="hidden sm:flex items-center gap-3">
-                <span className="text-xs text-muted-foreground">{meetings.length} meetings</span>
-                {pendingDebriefCount > 0 && (
-                  <a 
-                    href={`#meeting-${meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed")?.id}`}
-                    className="text-xs text-destructive hover:underline cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
-                      if (firstPending) {
-                        document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      }
-                    }}
-                  >
-                    {pendingDebriefCount} mangler debrief
-                  </a>
-                )}
-              </div>
-            </div>
-            <div className="space-y-3">
-              {meetings.map((meeting, index) => {
-              const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
-              const hcpData = mockHCPData[meeting.hcpName];
-              const isExpanded = expandedMeetingId === meeting.id;
-              
-              return (
-                <div key={meeting.id} id={`meeting-${meeting.id}`}>
-                  <div className={`p-4 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
-                    {/* Main content */}
-                    <div className="flex items-start gap-4">
-                      {/* Time column */}
-                      <div className="text-center min-w-[56px]">
-                        <div className="font-semibold text-foreground text-base">{meeting.time}</div>
-                        <div className="text-xs text-muted-foreground">{meeting.duration}</div>
-                      </div>
-                      
-                      {/* Avatar and info - takes full width on mobile */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2.5">
-                          {/* Smaller avatar with participant count */}
-                          <div className="relative flex-shrink-0">
-                            <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center">
-                              <User className="h-4 w-4 text-primary" />
-                            </div>
-                            {meeting.participants && meeting.participants.length > 1 && (
-                              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-semibold shadow-sm">
-                                +{meeting.participants.length - 1}
-                              </div>
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-semibold text-foreground text-sm leading-snug">{meeting.hcpName}</h3>
-                            <p className="text-xs text-muted-foreground mt-0.5">{meeting.location}</p>
-                          </div>
-                        </div>
-                      </div>
+      <div className="px-4 py-4">
+        <div className="space-y-3">
+          <h2 className="text-base font-semibold text-foreground">Dagens program</h2>
+          
+          {meetings.map((meeting, index) => {
+            const isNextUpcoming = meeting.status === "upcoming" && index === meetings.findIndex(m => m.status === "upcoming");
+            const hcpData = mockHCPData[meeting.hcpName];
+            const isExpanded = expandedMeetingId === meeting.id;
+
+            return (
+              <div key={meeting.id} id={`meeting-${meeting.id}`}>
+                <div className={`p-4 border rounded-2xl transition-all duration-300 bg-card ${isNextUpcoming ? "border-primary/30 bg-primary/5 ring-1 ring-primary/10" : "border-border/50"}`}>
+                  {/* Main content */}
+                  <div className="flex items-start gap-3">
+                    {/* Time column */}
+                    <div className="text-center min-w-[48px]">
+                      <div className="font-semibold text-foreground text-sm">{meeting.time}</div>
+                      <div className="text-[10px] text-muted-foreground">{meeting.duration}</div>
                     </div>
                     
-                    {/* Bottom row: Status + Actions */}
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/30">
-                      {/* Status indicator */}
+                    {/* Avatar and info */}
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        {meeting.status === "debrief-submitting" && (
-                          <div className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-lg">
-                            <WifiOff className="h-3.5 w-3.5 text-muted-foreground animate-pulse" />
-                            <span className="text-xs font-medium text-muted-foreground">Syncing...</span>
+                        <div className="relative flex-shrink-0">
+                          <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center">
+                            <User className="h-4 w-4 text-primary" />
                           </div>
-                        )}
-                        
-                        {meeting.status === "debrief-processing" && (
-                          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg">
-                            <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
-                            <span className="text-xs font-medium text-primary">Processing...</span>
-                          </div>
-                        )}
-
-                        {/* Failed status */}
-                        {meeting.status === "debrief-failed" && (
-                          <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-lg">
-                            <AlertCircle className="h-3.5 w-3.5 text-destructive" />
-                            <span className="text-xs font-medium text-destructive">Fejlet</span>
-                          </div>
-                        )}
-                        
-                        {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed", "debrief-failed"].includes(meeting.status) && (
-                          <span className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
-                            {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
-                          </span>
-                        )}
-                        
-                        {meeting.status === "debrief-needed" && (
-                          <span className="text-xs font-medium text-destructive">Needs Debrief</span>
-                        )}
-                        
-                        {/* Quick actions - hide for completed meetings */}
-                        {(meeting.address || meeting.phone) && !["debrief-ready", "done", "debrief-failed"].includes(meeting.status) && (
-                          <div className="flex items-center gap-2 ml-2">
-                            {meeting.address && (
-                              <a 
-                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                              >
-                                <MapPin className="h-3.5 w-3.5" />
-                                Directions
-                              </a>
-                            )}
-                            {meeting.phone && (
-                              <a 
-                                href={`tel:${meeting.phone}`}
-                                className="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors inline-flex items-center gap-1.5 active:scale-95"
-                              >
-                                <Phone className="h-3.5 w-3.5" />
-                                Call
-                              </a>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Action buttons */}
-                      <div className="flex items-center gap-2">
-                        {meeting.status === "debrief-ready" && (
-                          <Button 
-                            onClick={() => onDebriefReview(meeting.id)} 
-                            size="sm"
-                            className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium px-4 py-2 h-auto"
-                          >
-                            <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                            Gennemse
-                          </Button>
-                        )}
-                        
-                        {meeting.status === "upcoming" && (
-                          <>
-                            <Button 
-                              onClick={() => {
-                                setSelectedHCP(meeting.hcpName);
-                                setHcpAssistantOpen(true);
-                              }} 
-                              size="sm" 
-                              className="rounded-xl h-9 w-9 p-0 bg-primary/10 text-primary hover:bg-primary/20"
-                            >
-                              <MessageCircle className="h-4 w-4" />
-                            </Button>
-                            {hcpData && (
-                              <Button 
-                                onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
-                                variant="ghost" 
-                                size="sm" 
-                                className="rounded-xl h-9 w-9 p-0"
-                              >
-                                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                              </Button>
-                            )}
-                          </>
-                        )}
-                        
-                        {meeting.status === "debrief-needed" && (
-                          <Button 
-                            onClick={() => onDebrief(meeting.id)} 
-                            size="sm"
-                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium px-4 py-2 h-auto"
-                          >
-                            Debrief
-                          </Button>
-                        )}
-                        
-                        {meeting.status === "done" && (
-                          <Button 
-                            onClick={() => onDebrief(meeting.id)} 
-                            variant="outline"
-                            size="sm"
-                            className="rounded-xl text-xs font-medium px-4 py-2 h-auto"
-                          >
-                            Redo Debrief
-                          </Button>
-                        )}
-                        
-                        {meeting.status === "debrief-failed" && (
-                          <Button 
-                            onClick={() => onDebrief(meeting.id)} 
-                            size="sm"
-                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-white text-xs font-medium px-4 py-2 h-auto"
-                          >
-                            <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
-                            Redo Debrief
-                          </Button>
-                        )}
+                          {meeting.participants && meeting.participants.length > 1 && (
+                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-[10px] font-semibold shadow-sm">
+                              +{meeting.participants.length - 1}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-semibold text-foreground text-sm leading-snug truncate">{meeting.hcpName}</h3>
+                          <p className="text-xs text-muted-foreground truncate">{meeting.location}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Expanded Details */}
-                  {isExpanded && hcpData && (
-                    <div className="mt-3 p-4 sm:p-5 bg-card border border-border/50 rounded-xl ml-0 sm:ml-4">
-                      {/* Participants section - if multiple */}
-                      {meeting.participants && meeting.participants.length > 1 && (
-                        <div className="mb-4 pb-3 border-b border-border/30">
-                          <h3 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
-                            <User className="w-4 h-4 text-primary" />
-                            Meeting Participants ({meeting.participants.length})
-                          </h3>
-                          <div className="space-y-2">
-                            {meeting.participants.map((participant, idx) => (
-                              <div key={idx} className="flex items-center gap-2 p-2 bg-secondary/20 rounded-lg">
-                                <div className="w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                  <User className="h-3.5 w-3.5 text-primary" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="text-sm font-medium text-foreground truncate">{participant.name}</p>
-                                  <p className="text-xs text-muted-foreground">{participant.specialty}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                  {/* Bottom row: Status + Actions */}
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/30">
+                    {/* Status indicator */}
+                    <div className="flex items-center gap-2">
+                      {meeting.status === "debrief-submitting" && (
+                        <div className="flex items-center gap-2 px-2.5 py-1 bg-muted/50 rounded-lg">
+                          <WifiOff className="h-3 w-3 text-muted-foreground animate-pulse" />
+                          <span className="text-[11px] font-medium text-muted-foreground">Synkroniserer...</span>
+                        </div>
+                      )}
+                      
+                      {meeting.status === "debrief-processing" && (
+                        <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 rounded-lg">
+                          <Loader2 className="h-3 w-3 text-primary animate-spin" />
+                          <span className="text-[11px] font-medium text-primary">Behandler...</span>
                         </div>
                       )}
 
-                      <div className="mb-4 pb-3 border-b border-border/30">
-                        <h3 className="text-sm font-medium text-foreground mb-1 flex items-center gap-2">
-                          <Lightbulb className="w-4 h-4 text-primary" />
-                          Jarvis Recommended Actions
-                        </h3>
-                        <p className="text-xs text-muted-foreground">Personalized recommendations for your upcoming call</p>
-                      </div>
+                      {meeting.status === "debrief-failed" && (
+                        <div className="flex items-center gap-2 px-2.5 py-1 bg-destructive/10 rounded-lg">
+                          <AlertCircle className="h-3 w-3 text-destructive" />
+                          <span className="text-[11px] font-medium text-destructive">Fejlet</span>
+                        </div>
+                      )}
                       
-                      <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
+                      {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed", "debrief-failed"].includes(meeting.status) && (
+                        <span className={`text-[11px] font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
+                          {isNextUpcoming ? "Næste møde" : statusLabels[meeting.status]}
+                        </span>
+                      )}
+                      
+                      {meeting.status === "debrief-needed" && (
+                        <span className="text-[11px] font-medium text-destructive">Mangler debrief</span>
+                      )}
+
+                      {meeting.status === "debrief-ready" && (
+                        <span className="text-[11px] font-medium text-primary">Klar til review</span>
+                      )}
+                      
+                      {/* Quick actions - only for upcoming */}
+                      {(meeting.address || meeting.phone) && !["debrief-ready", "done", "debrief-failed"].includes(meeting.status) && (
+                        <div className="flex items-center gap-1.5 ml-2">
+                          {meeting.address && (
+                            <a 
+                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-primary/10 text-primary active:scale-95 transition-transform inline-flex items-center gap-1"
+                            >
+                              <MapPin className="h-3 w-3" />
+                              Rute
+                            </a>
+                          )}
+                          {meeting.phone && (
+                            <a 
+                              href={`tel:${meeting.phone}`}
+                              className="text-[11px] font-medium px-2.5 py-1 rounded-lg bg-primary/10 text-primary active:scale-95 transition-transform inline-flex items-center gap-1"
+                            >
+                              <Phone className="h-3 w-3" />
+                              Ring
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-2">
+                      {meeting.status === "debrief-ready" && (
+                        <Button 
+                          onClick={() => onDebriefReview(meeting.id)} 
+                          size="sm"
+                          className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium px-3 py-1.5 h-8"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
+                          Gennemse
+                        </Button>
+                      )}
+                      
+                      {meeting.status === "upcoming" && (
+                        <>
+                          <Button 
+                            onClick={() => {
+                              setSelectedHCP(meeting.hcpName);
+                              setHcpAssistantOpen(true);
+                            }} 
+                            size="sm" 
+                            className="rounded-xl h-8 w-8 p-0 bg-primary/10 text-primary hover:bg-primary/20"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5" />
+                          </Button>
+                          {hcpData && (
+                            <Button 
+                              onClick={() => setExpandedMeetingId(isExpanded ? null : meeting.id)}
+                              variant="ghost" 
+                              size="sm" 
+                              className="rounded-xl h-8 w-8 p-0"
+                            >
+                              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                            </Button>
+                          )}
+                        </>
+                      )}
+                      
+                      {meeting.status === "debrief-needed" && (
+                        <Button 
+                          onClick={() => onDebrief(meeting.id)} 
+                          size="sm"
+                          className="rounded-xl bg-destructive hover:bg-destructive/90 text-xs font-medium px-3 py-1.5 h-8"
+                        >
+                          Debrief
+                        </Button>
+                      )}
+                      
+                      {meeting.status === "done" && (
+                        <Button 
+                          onClick={() => onDebrief(meeting.id)} 
+                          variant="outline"
+                          size="sm"
+                          className="rounded-xl text-xs font-medium px-3 py-1.5 h-8"
+                        >
+                          Redo
+                        </Button>
+                      )}
+                      
+                      {meeting.status === "debrief-failed" && (
+                        <Button 
+                          onClick={() => onDebrief(meeting.id)} 
+                          size="sm"
+                          className="rounded-xl bg-destructive hover:bg-destructive/90 text-white text-xs font-medium px-3 py-1.5 h-8"
+                        >
+                          <RotateCcw className="h-3 w-3 mr-1" />
+                          Redo
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Expanded Details */}
+                {isExpanded && hcpData && (
+                  <div className="mt-2 p-4 bg-card border border-border/50 rounded-xl animate-fade-in">
+                    {/* Participants section */}
+                    {meeting.participants && meeting.participants.length > 1 && (
+                      <div className="mb-4 pb-3 border-b border-border/30">
+                        <h3 className="text-xs font-medium text-foreground mb-2 flex items-center gap-2">
+                          <User className="w-3.5 h-3.5 text-primary" />
+                          Mødedeltagere ({meeting.participants.length})
+                        </h3>
+                        <div className="space-y-1.5">
+                          {meeting.participants.map((participant, idx) => (
+                            <div key={idx} className="flex items-center gap-2 p-2 bg-secondary/20 rounded-lg">
+                              <div className="w-7 h-7 bg-primary/10 rounded-md flex items-center justify-center">
+                                <User className="w-3.5 h-3.5 text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-foreground">{participant.name}</p>
+                                <p className="text-[10px] text-muted-foreground">{participant.specialty}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Jarvis Recommendations */}
+                    <div>
+                      <h3 className="text-xs font-medium text-foreground mb-2 flex items-center gap-2">
+                        <Lightbulb className="w-3.5 h-3.5 text-primary" />
+                        Jarvis anbefalinger
+                      </h3>
+                      <div className="space-y-1.5">
                         {hcpData.importantPoints.map((point, idx) => (
-                          <div key={idx} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-secondary/20 rounded-lg border border-border/20">
-                            <div className="w-2 h-2 rounded-full bg-primary mt-1.5 sm:mt-2 flex-shrink-0" />
-                            <p className="text-xs sm:text-sm text-foreground">{point}</p>
+                          <div key={idx} className="flex items-start gap-2 p-2 bg-primary/5 rounded-lg border border-primary/10">
+                            <Target className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
+                            <p className="text-xs text-foreground">{point}</p>
                           </div>
                         ))}
                       </div>
-                      
-                      {/* Access Level and Consent Status */}
-                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                          <span className="text-xs font-medium text-muted-foreground">Access Level</span>
-                          <div className="text-sm font-semibold text-foreground">{hcpData.accessLevel}</div>
-                        </div>
-                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                          <span className="text-xs font-medium text-muted-foreground">Consent Status</span>
-                          <div className={`text-sm font-semibold ${hcpData.consentStatus === "OPT IN" ? "text-primary" : hcpData.consentStatus === "OPT OUT" ? "text-destructive" : "text-warning"}`}>
-                            {hcpData.consentStatus}
-                          </div>
-                        </div>
-                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                          <span className="text-xs font-medium text-muted-foreground">Segmentation</span>
-                          <div className={`text-sm font-semibold ${hcpData.segmentationStatus === "At risk" ? "text-yellow-500" : hcpData.segmentationStatus === "Growing" ? "text-primary" : "text-warning"}`}>
-                            {hcpData.segmentationStatus}
-                          </div>
-                        </div>
-                        <div className="px-2 sm:px-3 py-2 bg-secondary/30 rounded-lg border border-border/20">
-                          <span className="text-xs font-medium text-muted-foreground">Days since Engagement</span>
-                          <div className="text-sm font-semibold text-primary">{hcpData.daysSinceLastInteraction}</div>
-                        </div>
-                      </div>
                     </div>
-                  )}
-                </div>
-              );
-            })}
-            </div>
-          </div>
 
-        </div>
-      </div>
+                    {/* Quick info badges */}
+                    <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-border/30">
+                      <span className={`text-[10px] font-medium px-2 py-1 rounded-md ${
+                        hcpData.accessLevel === "High" ? "bg-green-100 text-green-700" : 
+                        hcpData.accessLevel === "Medium" ? "bg-yellow-100 text-yellow-700" : 
+                        "bg-red-100 text-red-700"
+                      }`}>
+                        {hcpData.accessLevel} adgang
+                      </span>
+                      <span className={`text-[10px] font-medium px-2 py-1 rounded-md ${
+                        hcpData.consentStatus === "OPT IN" ? "bg-green-100 text-green-700" : 
+                        hcpData.consentStatus === "OPT OUT" ? "bg-red-100 text-red-700" : 
+                        "bg-gray-100 text-gray-700"
+                      }`}>
+                        {hcpData.consentStatus}
+                      </span>
+                      <span className="text-[10px] font-medium px-2 py-1 rounded-md bg-muted text-muted-foreground">
+                        {hcpData.daysSinceLastInteraction} dage siden sidst
+                      </span>
+                    </div>
 
-      {/* Floating Actions */}
-      <div className="fixed bottom-8 right-8">
-        <div className="flex flex-col gap-3">
-          
-          
+                    {/* Action button */}
+                    <Button
+                      onClick={() => onPrepare(meeting.id)}
+                      className="w-full mt-4 rounded-xl bg-primary hover:bg-primary/90 text-sm font-medium h-10"
+                    >
+                      Åbn forberedelse
+                    </Button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -540,5 +489,6 @@ export const DailyOverviewApple = ({
           hcpName={selectedHCP}
         />
       )}
-    </div>;
+    </div>
+  );
 };

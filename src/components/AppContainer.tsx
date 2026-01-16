@@ -5,9 +5,10 @@ import { DebriefForm } from "./DebriefForm";
 import { DebriefReview } from "./DebriefReview";
 import { AIAssistant } from "./AIAssistant";
 import { VoiceRecorder } from "./VoiceRecorder";
-import { MeetingIntelligence } from "./MeetingIntelligence";
+import { BottomNav } from "./BottomNav";
 
-type AppView = "overview" | "prep" | "debrief" | "debrief-review" | "intelligence";
+type AppView = "overview" | "prep" | "debrief" | "debrief-review" | "profile";
+type BottomTab = "home" | "meetings" | "profile";
 
 interface VoiceRecording {
   id: string;
@@ -29,6 +30,7 @@ interface DebriefData {
 
 export const AppContainer = () => {
   const [currentView, setCurrentView] = useState<AppView>("overview");
+  const [activeTab, setActiveTab] = useState<BottomTab>("home");
   const [selectedMeetingId, setSelectedMeetingId] = useState<string | null>(null);
   const [isAIOpen, setIsAIOpen] = useState(false);
   const [isVoiceRecorderOpen, setIsVoiceRecorderOpen] = useState(false);
@@ -54,10 +56,9 @@ export const AppContainer = () => {
   };
 
   const handleStartMeeting = () => {
-    // Simulate meeting in progress, then go to debrief
-    setTimeout(() => {
+    if (selectedMeetingId) {
       setCurrentView("debrief");
-    }, 1000);
+    }
   };
 
   const handleBackToOverview = () => {
@@ -67,13 +68,11 @@ export const AppContainer = () => {
 
   const handleSaveDebrief = (data: DebriefData) => {
     console.log("Debrief saved:", data);
-    // Here you would save to database/API
     handleBackToOverview();
   };
 
   const handleSaveVoiceRecording = (recording: VoiceRecording) => {
     console.log("Voice recording saved:", recording);
-    // Here you would save to database/API
   };
 
   const handleVoiceNote = () => {
@@ -84,19 +83,18 @@ export const AppContainer = () => {
     setIsAIOpen(true);
   };
 
-  const handleReports = () => {
-    console.log("Opening reports modal");
-    // TODO: Implement reports modal
+  const handleTabChange = (tab: BottomTab) => {
+    setActiveTab(tab);
+    if (tab === "home") {
+      setCurrentView("overview");
+      setSelectedMeetingId(null);
+    } else if (tab === "profile") {
+      setCurrentView("profile");
+    }
   };
 
-  const handleNewAction = () => {
-    console.log("Creating new action");
-    // TODO: Implement new action creation
-  };
-
-  const handleIntelligence = () => {
-    setCurrentView("intelligence");
-  };
+  // Check if we're in a sub-view (no bottom nav)
+  const isSubView = currentView === "prep" || currentView === "debrief" || currentView === "debrief-review";
 
   if (currentView === "prep" && selectedMeetingId) {
     return (
@@ -128,8 +126,40 @@ export const AppContainer = () => {
     );
   }
 
-  if (currentView === "intelligence") {
-    return <MeetingIntelligence />;
+  if (currentView === "profile") {
+    return (
+      <>
+        <div className="min-h-screen bg-background pb-24">
+          <div className="px-4 pt-12 pb-6">
+            <h1 className="text-2xl font-bold text-foreground">Profil</h1>
+            <p className="text-muted-foreground mt-1">Administrer din konto</p>
+          </div>
+          <div className="px-4 space-y-4">
+            <div className="p-4 bg-card rounded-xl border border-border/40">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center">
+                  <span className="text-xl font-semibold text-primary">JD</span>
+                </div>
+                <div>
+                  <h2 className="font-semibold text-foreground">John Doe</h2>
+                  <p className="text-sm text-muted-foreground">jdoe@novonordisk.com</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-card rounded-xl border border-border/40">
+              <h3 className="font-semibold text-foreground mb-3">Indstillinger</h3>
+              <div className="space-y-3">
+                <button className="w-full text-left py-2 text-sm text-muted-foreground">Notifikationer</button>
+                <button className="w-full text-left py-2 text-sm text-muted-foreground">Sprog</button>
+                <button className="w-full text-left py-2 text-sm text-muted-foreground">Support</button>
+                <button className="w-full text-left py-2 text-sm text-destructive">Log ud</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      </>
+    );
   }
 
   return (
@@ -140,10 +170,12 @@ export const AppContainer = () => {
         onDebriefReview={handleDebriefReview}
         onVoiceNote={handleVoiceNote}
         onAskAI={handleAskAI}
-        onReports={handleReports}
-        onNewAction={handleNewAction}
-        onIntelligence={handleIntelligence}
+        onReports={() => {}}
+        onNewAction={() => {}}
+        onIntelligence={() => {}}
       />
+      
+      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       
       <AIAssistant 
         isOpen={isAIOpen} 
