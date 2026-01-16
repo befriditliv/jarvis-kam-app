@@ -97,7 +97,7 @@ export const AIAssistant = ({
   };
   if (!isOpen) return null;
   return <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-      <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-card shadow-xl border-l border-border" onClick={(e) => e.stopPropagation()}>
+      <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-card shadow-xl border-l border-border animate-slide-in-right" onClick={(e) => e.stopPropagation()}>
         <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
           <div className="px-5 pt-8 pb-5 bg-gradient-to-b from-primary/[0.03] to-transparent">
