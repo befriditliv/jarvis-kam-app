@@ -224,10 +224,20 @@ export const DailyOverviewApple = ({
               <span className="text-xs font-medium text-primary">{meetings.length} meetings</span>
             </div>
             {pendingDebriefCount > 0 && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full">
+              <a 
+                href={`#meeting-${meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed")?.id}`}
+                className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full hover:bg-destructive/20 transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
+                  if (firstPending) {
+                    document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+              >
                 <Bell className="h-3.5 w-3.5 text-destructive" />
                 <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
-              </div>
+              </a>
             )}
           </div>
         </div>
@@ -243,7 +253,19 @@ export const DailyOverviewApple = ({
               <div className="hidden sm:flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">{meetings.length} meetings</span>
                 {pendingDebriefCount > 0 && (
-                  <span className="text-xs text-destructive">{pendingDebriefCount} mangler debrief</span>
+                  <a 
+                    href={`#meeting-${meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed")?.id}`}
+                    className="text-xs text-destructive hover:underline cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const firstPending = meetings.find(m => m.status === "debrief-needed" || m.status === "debrief-failed");
+                      if (firstPending) {
+                        document.getElementById(`meeting-${firstPending.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      }
+                    }}
+                  >
+                    {pendingDebriefCount} mangler debrief
+                  </a>
                 )}
               </div>
             </div>
@@ -254,7 +276,7 @@ export const DailyOverviewApple = ({
               const isExpanded = expandedMeetingId === meeting.id;
               
               return (
-                <div key={meeting.id}>
+                <div key={meeting.id} id={`meeting-${meeting.id}`}>
                   <div className={`p-4 sm:p-5 border rounded-2xl hover:shadow-md transition-all duration-300 bg-card backdrop-blur-sm ${isNextUpcoming ? "border-primary/30 bg-primary/5 shadow-sm ring-1 ring-primary/10" : "border-border/50"}`}>
                     {/* Main content */}
                     <div className="flex items-start gap-4">
