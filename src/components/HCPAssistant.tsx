@@ -96,13 +96,48 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           response: "",
           timestamp: new Date(),
           category: "insights",
-          isBriefing: true
+          isBriefing: true,
         };
         setResponses([briefingResponse]);
         setIsLoading(false);
       }, 1500);
     }
   }, [showBriefing, isOpen, hasSentBriefing, hcpName, responses.length]);
+
+  // Prevent background scroll while the drawer is open (robust on iOS)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const scrollY = window.scrollY;
+    const prev = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      width: document.body.style.width,
+      overflow: document.body.style.overflow,
+      overscroll: document.body.style.overscrollBehavior,
+    };
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.position = prev.position;
+      document.body.style.top = prev.top;
+      document.body.style.left = prev.left;
+      document.body.style.right = prev.right;
+      document.body.style.width = prev.width;
+      document.body.style.overflow = prev.overflow;
+      document.body.style.overscrollBehavior = prev.overscroll;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
 
   const BriefingContent = ({ name }: { name: string }) => (
     <div className="text-sm text-card-foreground leading-relaxed space-y-3">
@@ -173,40 +208,53 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-      <div 
-        className="fixed right-0 top-0 z-[61] h-full w-full max-w-md bg-card shadow-xl border-l border-border"
+    <div
+      className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="fixed right-0 top-0 z-[61] h-[100dvh] w-full max-w-md bg-card shadow-xl border-l border-border"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Spørg Jarvis om ${hcpName}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-full flex flex-col overflow-hidden">
+        <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="p-6 border-b border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+          <div className="px-4 pt-safe pb-3 border-b border-border">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
                   <Brain className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis om {hcpName}</h2>
-                  <p className="text-sm text-muted-foreground">HCP-specifikke indsigter</p>
+                <div className="min-w-0">
+                  <h2 className="text-base font-semibold text-card-foreground truncate">Spørg Jarvis om {hcpName}</h2>
+                  <p className="text-xs text-muted-foreground truncate">Briefing + spørgsmål</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {responses.length > 0 && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => {
-                      setResponses([]);
-                      setHasSentBriefing(false);
-                    }} 
-                    className="rounded-full h-8 w-8 p-0"
-                    title="Start forfra"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                  </Button>
-                )}
-                <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full h-8 w-8 p-0 text-lg">
+
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setResponses([]);
+                    setHasSentBriefing(false);
+                  }}
+                  disabled={responses.length === 0}
+                  className="h-9 px-3 rounded-full text-xs font-medium disabled:opacity-40"
+                >
+                  <RotateCcw className="h-4 w-4 mr-1.5" />
+                  Start forfra
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onClose}
+                  className="h-9 w-9 p-0 rounded-full text-lg"
+                  aria-label="Luk"
+                >
                   ×
                 </Button>
               </div>
@@ -214,7 +262,10 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           </div>
 
           {/* Chat History */}
-          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-24 -webkit-overflow-scrolling-touch">
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-none touch-pan-y px-4 py-4 pb-32"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
             {responses.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <h3 className="text-lg font-medium text-card-foreground mb-2">Ask about {hcpName}</h3>
