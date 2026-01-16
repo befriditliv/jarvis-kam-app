@@ -29,15 +29,19 @@ export const SyncStatus = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="relative p-2 -mr-2 active:scale-95 transition-transform">
-          {/* Small dot indicator */}
-          <span className={`block w-2 h-2 rounded-full ${getIndicatorStyle()}`} />
-          {/* Badge count if multiple */}
-          {pendingCount > 1 && (
-            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
-              {pendingCount}
-            </span>
+        <button className="relative flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted/50 hover:bg-muted active:scale-95 transition-all">
+          {/* Status icon */}
+          {hasSubmitting ? (
+            <Loader2 className="h-3 w-3 animate-spin text-primary" />
+          ) : hasFailed ? (
+            <AlertCircle className="h-3 w-3 text-destructive" />
+          ) : (
+            <span className={`block w-2 h-2 rounded-full ${getIndicatorStyle()}`} />
           )}
+          {/* Count */}
+          <span className="text-[10px] font-medium text-muted-foreground">
+            {pendingCount}
+          </span>
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="end">
