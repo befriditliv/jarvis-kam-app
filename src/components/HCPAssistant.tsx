@@ -222,7 +222,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
       >
         <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="px-4 pt-safe pb-4 border-b border-border">
+          <div className="px-4 pt-6 pb-4 border-b border-border">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-3">
                 <img src={jarvisLogo} alt="Jarvis" className="w-10 h-10 shrink-0" />

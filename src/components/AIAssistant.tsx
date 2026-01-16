@@ -100,7 +100,7 @@ export const AIAssistant = ({
       <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-card shadow-xl border-l border-border" onClick={(e) => e.stopPropagation()}>
         <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="px-4 pt-safe pb-4 border-b border-border">
+          <div className="px-4 pt-6 pb-4 border-b border-border">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <img src={jarvisLogo} alt="Jarvis" className="w-10 h-10 shrink-0" />
