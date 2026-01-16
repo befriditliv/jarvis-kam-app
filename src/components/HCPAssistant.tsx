@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Brain, Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp, RotateCcw } from "lucide-react";
+import { Brain, Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp, RotateCcw, X } from "lucide-react";
 
 interface HCPAssistantProps {
   isOpen: boolean;
@@ -221,44 +221,42 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
       >
         <div className="h-[100dvh] flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="px-4 pt-safe pb-3 border-b border-border">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3 min-w-0">
+          <div className="px-4 pt-safe pb-4 border-b border-border">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
                   <Brain className="h-5 w-5 text-primary" />
                 </div>
-                <div className="min-w-0">
-                  <h2 className="text-base font-semibold text-card-foreground truncate">Spørg Jarvis om {hcpName}</h2>
-                  <p className="text-xs text-muted-foreground truncate">Briefing + spørgsmål</p>
+                <div>
+                  <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis</h2>
+                  <p className="text-xs text-muted-foreground">{hcpName}</p>
                 </div>
               </div>
-
-              <div className="flex items-center gap-1 shrink-0">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    setResponses([]);
-                    setHasSentBriefing(false);
-                  }}
-                  disabled={responses.length === 0}
-                  className="h-9 px-3 rounded-full text-xs font-medium disabled:opacity-40"
-                >
-                  <RotateCcw className="h-4 w-4 mr-1.5" />
-                  Start forfra
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onClose}
-                  className="h-9 w-9 p-0 rounded-full text-lg"
-                  aria-label="Luk"
-                >
-                  ×
-                </Button>
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="h-9 w-9 p-0 rounded-full text-muted-foreground hover:text-foreground"
+                aria-label="Luk"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
+            
+            {responses.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setResponses([]);
+                  setHasSentBriefing(false);
+                }}
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <RotateCcw className="h-3 w-3 mr-1" />
+                Start forfra
+              </Button>
+            )}
           </div>
 
           {/* Chat History */}
