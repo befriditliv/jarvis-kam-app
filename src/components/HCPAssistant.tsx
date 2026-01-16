@@ -22,6 +22,7 @@ interface AIResponse {
   response: string;
   timestamp: Date;
   category: string;
+  isBriefing?: boolean;
 }
 
 const getQuerySuggestions = (hcpName: string): QuerySuggestion[] => [
@@ -85,10 +86,11 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
       setIsLoading(true);
       setTimeout(() => {
         const briefingResponse: AIResponse = {
-          query: "Giv mig en hurtig briefing",
-          response: getBriefingSummary(hcpName),
+          query: "",
+          response: "",
           timestamp: new Date(),
-          category: "insights"
+          category: "insights",
+          isBriefing: true
         };
         setResponses([briefingResponse]);
         setIsLoading(false);
@@ -96,22 +98,48 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
     }
   }, [showBriefing, isOpen, hasSentBriefing, hcpName, responses.length]);
 
-  const getBriefingSummary = (name: string): string => {
-    return `Her er din briefing om ${name}:
+  const BriefingContent = ({ name }: { name: string }) => (
+    <div className="space-y-4">
+      <p className="text-sm text-card-foreground">Her er din briefing om {name}:</p>
+      
+      <div>
+        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Profil</h4>
+        <p className="text-sm text-card-foreground leading-relaxed">
+          {name} leder hjertesvigtklinikken ved Metro Medical Center med 800+ patienter årligt. 
+          Høj ordination af ACE-hæmmere og betablokkere med præference for evidensbaserede protokoller.
+        </p>
+      </div>
 
-**Profil**
-${name} leder hjertesvigtklinikken ved Metro Medical Center med 800+ patienter årligt. Høj ordination af ACE-hæmmere og betablokkere med præference for evidensbaserede protokoller.
+      <div>
+        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Seneste aktivitet</h4>
+        <ul className="space-y-1.5">
+          <li className="text-sm text-card-foreground flex items-start gap-2">
+            <span className="text-primary mt-1">•</span>
+            Har vist stærk interesse i patient-adherence løsninger
+          </li>
+          <li className="text-sm text-card-foreground flex items-start gap-2">
+            <span className="text-primary mt-1">•</span>
+            Metro Medical Center har for nylig opdateret deres lægemiddelliste
+          </li>
+          <li className="text-sm text-card-foreground flex items-start gap-2">
+            <span className="text-primary mt-1">•</span>
+            Downloadet 3 whitepapers om SGLT2-hæmmere
+          </li>
+        </ul>
+      </div>
 
-**Seneste aktivitet**
-• Har vist stærk interesse i patient-adherence løsninger
-• Metro Medical Center har for nylig opdateret deres lægemiddelliste
-• Downloadet 3 whitepapers om SGLT2-hæmmere
+      <div>
+        <h4 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">Anbefaling</h4>
+        <p className="text-sm text-card-foreground leading-relaxed">
+          Overvej at nævne CARDIAC-ADVANCE forsøgsresultaterne og diskuter implementeringsstrategi for bedre patientudvælgelse.
+        </p>
+      </div>
 
-**Anbefaling**
-Overvej at nævne CARDIAC-ADVANCE forsøgsresultaterne og diskuter implementeringsstrategi for bedre patientudvælgelse.
-
-Er der andet du gerne vil vide før mødet?`;
-  };
+      <p className="text-sm text-muted-foreground italic pt-2 border-t border-border/30">
+        Er der andet du gerne vil vide før mødet?
+      </p>
+    </div>
+  );
 
   const handleSendQuery = async (queryText?: string) => {
     const finalQuery = queryText || query;
@@ -217,12 +245,14 @@ Er der andet du gerne vil vide før mødet?`;
             <div className="space-y-4">
               {responses.map((response, index) => (
                 <div key={index} className="space-y-3 animate-slide-up">
-                  {/* User Query */}
-                  <div className="flex justify-end">
-                    <div className="max-w-[80%] p-3 bg-primary text-primary-foreground rounded-2xl rounded-br-sm">
-                      <p className="text-sm">{response.query}</p>
+                  {/* User Query - hide for briefings */}
+                  {!response.isBriefing && response.query && (
+                    <div className="flex justify-end">
+                      <div className="max-w-[80%] p-3 bg-primary text-primary-foreground rounded-2xl rounded-br-sm">
+                        <p className="text-sm">{response.query}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
                   {/* AI Response */}
                   <Card className="p-4 shadow-sm">
@@ -231,8 +261,12 @@ Er der andet du gerne vil vide før mødet?`;
                         <Brain className="h-4 w-4 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm text-card-foreground leading-relaxed">{response.response}</p>
-                        <p className="text-xs text-muted-foreground mt-2">
+                        {response.isBriefing ? (
+                          <BriefingContent name={hcpName} />
+                        ) : (
+                          <p className="text-sm text-card-foreground leading-relaxed">{response.response}</p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-3">
                           {response.timestamp.toLocaleTimeString()}
                         </p>
                       </div>
