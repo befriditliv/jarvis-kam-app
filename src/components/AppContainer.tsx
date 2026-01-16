@@ -4,20 +4,10 @@ import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
 import { DebriefReview } from "./DebriefReview";
 import { AIAssistant } from "./AIAssistant";
-import { VoiceRecorder } from "./VoiceRecorder";
 import { BottomNav } from "./BottomNav";
 
 type AppView = "overview" | "prep" | "debrief" | "debrief-review" | "profile";
-type BottomTab = "home" | "meetings" | "profile";
-
-interface VoiceRecording {
-  id: string;
-  title: string;
-  duration: number;
-  transcription: string;
-  timestamp: Date;
-  tags: string[];
-}
+type BottomTab = "home" | "jarvis" | "profile";
 
 interface DebriefData {
   outcome: number;
@@ -33,7 +23,6 @@ export const AppContainer = () => {
   const [activeTab, setActiveTab] = useState<BottomTab>("home");
   const [selectedMeetingId, setSelectedMeetingId] = useState<string | null>(null);
   const [isAIOpen, setIsAIOpen] = useState(false);
-  const [isVoiceRecorderOpen, setIsVoiceRecorderOpen] = useState(false);
 
   const handlePrepare = (meetingId: string) => {
     setSelectedMeetingId(meetingId);
@@ -64,6 +53,7 @@ export const AppContainer = () => {
   const handleBackToOverview = () => {
     setCurrentView("overview");
     setSelectedMeetingId(null);
+    setActiveTab("home");
   };
 
   const handleSaveDebrief = (data: DebriefData) => {
@@ -71,31 +61,19 @@ export const AppContainer = () => {
     handleBackToOverview();
   };
 
-  const handleSaveVoiceRecording = (recording: VoiceRecording) => {
-    console.log("Voice recording saved:", recording);
-  };
-
-  const handleVoiceNote = () => {
-    setIsVoiceRecorderOpen(true);
-  };
-
-  const handleAskAI = () => {
-    setIsAIOpen(true);
-  };
-
   const handleTabChange = (tab: BottomTab) => {
     setActiveTab(tab);
     if (tab === "home") {
       setCurrentView("overview");
       setSelectedMeetingId(null);
+    } else if (tab === "jarvis") {
+      setIsAIOpen(true);
     } else if (tab === "profile") {
       setCurrentView("profile");
     }
   };
 
-  // Check if we're in a sub-view (no bottom nav)
-  const isSubView = currentView === "prep" || currentView === "debrief" || currentView === "debrief-review";
-
+  // Sub-views without bottom nav
   if (currentView === "prep" && selectedMeetingId) {
     return (
       <PrepPage
@@ -126,13 +104,13 @@ export const AppContainer = () => {
     );
   }
 
+  // Profile view
   if (currentView === "profile") {
     return (
       <>
-        <div className="min-h-screen bg-background pb-24">
-          <div className="px-4 pt-12 pb-6">
+        <div className="min-h-screen bg-background pb-20">
+          <div className="px-4 pt-10 pb-6">
             <h1 className="text-2xl font-bold text-foreground">Profil</h1>
-            <p className="text-muted-foreground mt-1">Administrer din konto</p>
           </div>
           <div className="px-4 space-y-4">
             <div className="p-4 bg-card rounded-xl border border-border/40">
@@ -147,12 +125,10 @@ export const AppContainer = () => {
               </div>
             </div>
             <div className="p-4 bg-card rounded-xl border border-border/40">
-              <h3 className="font-semibold text-foreground mb-3">Indstillinger</h3>
               <div className="space-y-3">
-                <button className="w-full text-left py-2 text-sm text-muted-foreground">Notifikationer</button>
-                <button className="w-full text-left py-2 text-sm text-muted-foreground">Sprog</button>
-                <button className="w-full text-left py-2 text-sm text-muted-foreground">Support</button>
-                <button className="w-full text-left py-2 text-sm text-destructive">Log ud</button>
+                <button className="w-full text-left py-3 text-sm text-foreground border-b border-border/30">Notifikationer</button>
+                <button className="w-full text-left py-3 text-sm text-foreground border-b border-border/30">Support</button>
+                <button className="w-full text-left py-3 text-sm text-destructive">Log ud</button>
               </div>
             </div>
           </div>
@@ -162,14 +138,15 @@ export const AppContainer = () => {
     );
   }
 
+  // Main overview
   return (
     <>
       <DailyOverviewApple
         onPrepare={handlePrepare}
         onDebrief={handleDebrief}
         onDebriefReview={handleDebriefReview}
-        onVoiceNote={handleVoiceNote}
-        onAskAI={handleAskAI}
+        onVoiceNote={() => {}}
+        onAskAI={() => setIsAIOpen(true)}
         onReports={() => {}}
         onNewAction={() => {}}
         onIntelligence={() => {}}
@@ -179,13 +156,10 @@ export const AppContainer = () => {
       
       <AIAssistant 
         isOpen={isAIOpen} 
-        onClose={() => setIsAIOpen(false)} 
-      />
-      
-      <VoiceRecorder
-        isOpen={isVoiceRecorderOpen}
-        onClose={() => setIsVoiceRecorderOpen(false)}
-        onSave={handleSaveVoiceRecording}
+        onClose={() => {
+          setIsAIOpen(false);
+          setActiveTab("home");
+        }} 
       />
     </>
   );

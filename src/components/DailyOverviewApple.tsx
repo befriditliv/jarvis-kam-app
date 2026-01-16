@@ -182,41 +182,36 @@ export const DailyOverviewApple = ({
   };
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-border/40 bg-background sticky top-0 z-40 shadow-sm">
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header - Super clean */}
+      <div className="px-4 pt-4 pb-3 bg-background sticky top-0 z-40">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={jarvisLogo} alt="Jarvis" className="h-9 w-9" />
+            <img src={jarvisLogo} alt="Jarvis" className="h-8 w-8" />
             <div>
               <h1 className="text-lg font-semibold text-foreground">{greeting()}</h1>
               <p className="text-xs text-muted-foreground">{todayDate}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <SyncStatus />
-            <Button onClick={onAskAI} size="sm" className="rounded-xl bg-primary hover:bg-primary/90 h-9 w-9 p-0">
-              <MessageCircle className="h-4 w-4" />
-            </Button>
-          </div>
+          <SyncStatus />
         </div>
-        
-        {/* Quick stats */}
-        <div className="flex items-center gap-3 mt-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
-            <Calendar className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-medium text-primary">{meetings.length} møder</span>
-          </div>
-          {pendingDebriefCount > 0 && (
-            <button 
-              onClick={scrollToFirstPending}
-              className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full active:scale-95 transition-transform"
-            >
-              <Bell className="h-3.5 w-3.5 text-destructive" />
-              <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
-            </button>
-          )}
+      </div>
+
+      {/* Stats bar */}
+      <div className="px-4 pb-3 flex items-center gap-3">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
+          <Calendar className="h-3.5 w-3.5 text-primary" />
+          <span className="text-xs font-medium text-primary">{meetings.length} møder</span>
         </div>
+        {pendingDebriefCount > 0 && (
+          <button 
+            onClick={scrollToFirstPending}
+            className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full active:scale-95 transition-transform"
+          >
+            <Bell className="h-3.5 w-3.5 text-destructive" />
+            <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
+          </button>
+        )}
       </div>
 
       {/* Content */}
