@@ -8,7 +8,7 @@ interface BottomNavProps {
 export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const tabs = [
     { id: "home" as const, label: "Hjem", icon: Home },
-    { id: "jarvis" as const, label: "Jarvis", icon: MessageCircle },
+    { id: "jarvis" as const, label: "Spørg Jarvis", icon: MessageCircle },
     { id: "profile" as const, label: "Profil", icon: User },
   ];
 
