@@ -1,7 +1,7 @@
 // Daily Overview Component for Apple-style interface
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone, Loader2, CheckCircle2, WifiOff, CloudUpload } from "lucide-react";
+import { Clock, MapPin, User, MessageCircle, Calendar, Bell, Lightbulb, Target, TrendingUp, ChevronDown, ChevronUp, Mic, Menu, Phone, Loader2, CheckCircle2, WifiOff, CloudUpload, AlertCircle, RotateCcw } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
@@ -30,7 +30,7 @@ interface Meeting {
   location: string;
   address?: string;
   phone?: string;
-  status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "done";
+  status: "upcoming" | "in-progress" | "debrief-needed" | "debrief-submitting" | "debrief-processing" | "debrief-ready" | "debrief-failed" | "done";
   participants?: Participant[];
 }
 interface Nudge {
@@ -55,7 +55,7 @@ const mockMeetings: Meeting[] = [{
   hcpName: "Dr. Michael Chen",
   specialty: "Oncology",
   location: "City General Hospital",
-  status: "debrief-needed"
+  status: "debrief-failed"
 }, {
   id: "3",
   time: "2:00 PM",
@@ -135,6 +135,7 @@ const statusStyles = {
   "debrief-submitting": "text-muted-foreground",
   "debrief-processing": "text-primary",
   "debrief-ready": "text-green-600",
+  "debrief-failed": "text-destructive",
   done: "text-muted-foreground"
 };
 const statusLabels = {
@@ -144,6 +145,7 @@ const statusLabels = {
   "debrief-submitting": "Syncing...",
   "debrief-processing": "Processing",
   "debrief-ready": "Ready for Review",
+  "debrief-failed": "Fejlet",
   done: "Debriefed"
 };
 export const DailyOverviewApple = ({
@@ -293,8 +295,16 @@ export const DailyOverviewApple = ({
                             <span className="text-xs font-medium text-primary">Processing...</span>
                           </div>
                         )}
+
+                        {/* Failed status */}
+                        {meeting.status === "debrief-failed" && (
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-lg">
+                            <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+                            <span className="text-xs font-medium text-destructive">Fejlet</span>
+                          </div>
+                        )}
                         
-                        {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed"].includes(meeting.status) && (
+                        {!["debrief-submitting", "debrief-processing", "debrief-ready", "debrief-needed", "debrief-failed"].includes(meeting.status) && (
                           <span className={`text-xs font-medium ${isNextUpcoming ? "text-primary" : statusStyles[meeting.status]}`}>
                             {isNextUpcoming ? "Next Call" : statusLabels[meeting.status]}
                           </span>
@@ -386,6 +396,17 @@ export const DailyOverviewApple = ({
                             size="sm"
                             className="rounded-xl text-xs font-medium px-4 py-2 h-auto"
                           >
+                            Redo Debrief
+                          </Button>
+                        )}
+                        
+                        {meeting.status === "debrief-failed" && (
+                          <Button 
+                            onClick={() => onDebrief(meeting.id)} 
+                            size="sm"
+                            className="rounded-xl bg-destructive hover:bg-destructive/90 text-white text-xs font-medium px-4 py-2 h-auto"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
                             Redo Debrief
                           </Button>
                         )}
