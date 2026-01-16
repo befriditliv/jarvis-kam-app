@@ -1,16 +1,23 @@
 import { Home, MessageCircle, User } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-interface BottomNavProps {
-  activeTab: "home" | "jarvis" | "profile";
-  onTabChange: (tab: "home" | "jarvis" | "profile") => void;
-}
+export const BottomNav = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const tabs = [
-    { id: "home" as const, label: "Hjem", icon: Home },
-    { id: "jarvis" as const, label: "Spørg Jarvis", icon: MessageCircle },
-    { id: "profile" as const, label: "Profil", icon: User },
+    { id: "home" as const, path: "/", label: "Hjem", icon: Home },
+    { id: "jarvis" as const, path: "/jarvis", label: "Spørg Jarvis", icon: MessageCircle },
+    { id: "profile" as const, path: "/profil", label: "Profil", icon: User },
   ];
+
+  const getActiveTab = () => {
+    if (location.pathname === "/jarvis") return "jarvis";
+    if (location.pathname === "/profil") return "profile";
+    return "home";
+  };
+
+  const activeTab = getActiveTab();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border/40 pb-safe">
@@ -18,11 +25,11 @@ export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
-          
+
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => navigate(tab.path)}
               className={`flex flex-col items-center justify-center flex-1 h-full min-w-[64px] transition-colors active:scale-95 ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}

@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { DailyOverviewApple } from "./DailyOverviewApple";
 import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
 import { DebriefReview } from "./DebriefReview";
-import { AIAssistant } from "./AIAssistant";
 import { BottomNav } from "./BottomNav";
 
-type AppView = "overview" | "prep" | "debrief" | "debrief-review" | "profile";
-type BottomTab = "home" | "jarvis" | "profile";
+type AppView = "overview" | "prep" | "debrief" | "debrief-review";
 
 interface DebriefData {
   outcome: number;
@@ -20,10 +18,9 @@ interface DebriefData {
 }
 
 export const AppContainer = () => {
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<AppView>("overview");
-  const [activeTab, setActiveTab] = useState<BottomTab>("home");
   const [selectedMeetingId, setSelectedMeetingId] = useState<string | null>(null);
-  const [isAIOpen, setIsAIOpen] = useState(false);
 
   const handlePrepare = (meetingId: string) => {
     setSelectedMeetingId(meetingId);
@@ -54,28 +51,11 @@ export const AppContainer = () => {
   const handleBackToOverview = () => {
     setCurrentView("overview");
     setSelectedMeetingId(null);
-    setActiveTab("home");
   };
 
   const handleSaveDebrief = (data: DebriefData) => {
     console.log("Debrief saved:", data);
     handleBackToOverview();
-  };
-
-  const handleTabChange = (tab: BottomTab) => {
-    if (tab === "jarvis") {
-      setIsAIOpen(true);
-      // Don't change activeTab - keep current tab highlighted until AI closes
-    } else {
-      setActiveTab(tab);
-      setIsAIOpen(false);
-      if (tab === "home") {
-        setCurrentView("overview");
-        setSelectedMeetingId(null);
-      } else if (tab === "profile") {
-        setCurrentView("profile");
-      }
-    }
   };
 
   // Sub-views without bottom nav
@@ -109,46 +89,6 @@ export const AppContainer = () => {
     );
   }
 
-  // Profile view
-  if (currentView === "profile") {
-    return (
-      <>
-        <div className="min-h-screen bg-background pb-20">
-          <div className="px-5 pt-6 pb-4 bg-gradient-to-b from-primary/[0.03] to-background flex items-center gap-3">
-            <button 
-              onClick={handleBackToOverview}
-              className="p-2 -ml-2 rounded-full hover:bg-muted active:scale-95 transition-all"
-            >
-              <ChevronLeft className="h-5 w-5 text-foreground" />
-            </button>
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">Profil</h1>
-          </div>
-          <div className="px-4 space-y-4">
-            <div className="p-4 bg-card rounded-xl border border-border/40">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-xl font-semibold text-primary">JD</span>
-                </div>
-                <div>
-                  <h2 className="font-semibold text-foreground">John Doe</h2>
-                  <p className="text-sm text-muted-foreground">jdoe@novonordisk.com</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-4 bg-card rounded-xl border border-border/40">
-              <div className="space-y-3">
-                <button className="w-full text-left py-3 text-sm text-foreground border-b border-border/30">Notifikationer</button>
-                <button className="w-full text-left py-3 text-sm text-foreground border-b border-border/30">Support</button>
-                <button className="w-full text-left py-3 text-sm text-destructive">Log ud</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-      </>
-    );
-  }
-
   // Main overview
   return (
     <>
@@ -157,20 +97,13 @@ export const AppContainer = () => {
         onDebrief={handleDebrief}
         onDebriefReview={handleDebriefReview}
         onVoiceNote={() => {}}
-        onAskAI={() => setIsAIOpen(true)}
+        onAskAI={() => navigate("/jarvis")}
         onReports={() => {}}
         onNewAction={() => {}}
         onIntelligence={() => {}}
       />
       
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-      
-      <AIAssistant 
-        isOpen={isAIOpen} 
-        onClose={() => {
-          setIsAIOpen(false);
-        }} 
-      />
+      <BottomNav />
     </>
   );
 };
