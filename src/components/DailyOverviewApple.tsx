@@ -1,7 +1,7 @@
 // Daily Overview Component - Mobile-first design
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { User, MessageCircle, Calendar, Bell, ChevronDown, ChevronUp, Phone, Loader2, CheckCircle2, WifiOff, AlertCircle, RotateCcw, MapPin, Lightbulb, Target, TrendingUp } from "lucide-react";
+import { User, MessageCircle, Calendar, Bell, ChevronDown, ChevronUp, Phone, Loader2, CheckCircle2, CheckCircle, WifiOff, AlertCircle, RotateCcw, MapPin, Lightbulb, Target, TrendingUp } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
 import { TaskCenter } from "./TaskCenter";
 import { HCPAssistant } from "./HCPAssistant";
@@ -93,6 +93,11 @@ const mockMeetings: Meeting[] = [
   }
 ];
 
+interface ImportantPoint {
+  title: string;
+  description: string;
+}
+
 interface HCPData {
   id: string;
   name: string;
@@ -100,7 +105,7 @@ interface HCPData {
   consentStatus: "OPT IN" | "OPT OUT" | "Blank";
   segmentationStatus: "At risk" | "Stable" | "Growing";
   daysSinceLastInteraction: number;
-  importantPoints: string[];
+  importantPoints: ImportantPoint[];
 }
 
 const mockHCPData: Record<string, HCPData> = {
@@ -111,7 +116,20 @@ const mockHCPData: Record<string, HCPData> = {
     consentStatus: "OPT IN",
     segmentationStatus: "At risk",
     daysSinceLastInteraction: 34,
-    importantPoints: ["Præsenter nye studiedata om kardiovaskulære outcomes", "Adresser patient-adherence strategier"]
+    importantPoints: [
+      {
+        title: "Gennemgå Wegovy administration",
+        description: "Diskuter eventuelle opdateringer til dosering eller workflow der er relevante for kardiologisk praksis siden sidste møde."
+      },
+      {
+        title: "Afdæk præferencer for klinisk indhold",
+        description: "Spørg ind til HCP'ens interesse for at modtage fremtidige kliniske opdateringer eller undervisningsmateriale digitalt."
+      },
+      {
+        title: "Klarlæg behov for patientstøtte",
+        description: "Undersøg hvilke ressourcer der kan hjælpe med at forbedre patient-adherence og outcomes med Wegovy."
+      }
+    ]
   },
   "Dr. Emily Rodriguez": {
     id: "3",
@@ -120,7 +138,10 @@ const mockHCPData: Record<string, HCPData> = {
     consentStatus: "OPT IN",
     segmentationStatus: "Growing",
     daysSinceLastInteraction: 14,
-    importantPoints: ["Diskuter multidisciplinær tilgang", "Gennemgå diabetes protokoller"]
+    importantPoints: [
+      { title: "Multidisciplinær tilgang", description: "Diskuter fordele ved tværfagligt samarbejde for bedre patientresultater." },
+      { title: "Diabetes protokoller", description: "Gennemgå de nyeste guidelines for diabetes-behandling og Wegovy integration." }
+    ]
   }
 };
 
@@ -423,15 +444,18 @@ export const DailyOverviewApple = ({
 
                     {/* Jarvis Recommendations */}
                     <div>
-                      <h3 className="text-xs font-medium text-foreground mb-2 flex items-center gap-2">
-                        <Lightbulb className="w-3.5 h-3.5 text-primary" />
-                        Jarvis anbefalinger
+                      <h3 className="text-sm font-semibold text-foreground mb-1 flex items-center gap-2">
+                        <Lightbulb className="w-4 h-4 text-primary" />
+                        Jarvis recommended actions
                       </h3>
-                      <div className="space-y-1.5">
+                      <p className="text-xs text-muted-foreground mb-3">Personlige anbefalinger for din kommende samtale</p>
+                      <div className="space-y-3">
                         {hcpData.importantPoints.map((point, idx) => (
-                          <div key={idx} className="flex items-start gap-2 p-2 bg-primary/5 rounded-lg border border-primary/10">
-                            <Target className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
-                            <p className="text-xs text-foreground">{point}</p>
+                          <div key={idx} className="flex items-start gap-3">
+                            <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm text-foreground leading-relaxed">{point.description}</p>
+                            </div>
                           </div>
                         ))}
                       </div>
