@@ -79,6 +79,12 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
   
   const querySuggestions = getQuerySuggestions(hcpName);
 
+  const quickChips = [
+    "Hvad diskuterede vi sidst?",
+    "Hvem arbejder på klinikken?",
+    "Opsummer digitalt engagement",
+  ];
+
   // Auto-send briefing when opened with showBriefing
   useEffect(() => {
     if (showBriefing && isOpen && !hasSentBriefing && responses.length === 0) {
@@ -167,8 +173,8 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-fade-in">
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card shadow-xl border-l border-border">
+    <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm animate-fade-in">
+      <div className="fixed right-0 top-0 z-[61] h-full w-full max-w-md bg-card shadow-xl border-l border-border">
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="p-6 border-b border-border">
@@ -189,7 +195,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           </div>
 
           {/* Chat History */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 pb-24">
             {responses.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <h3 className="text-lg font-medium text-card-foreground mb-2">Ask about {hcpName}</h3>
@@ -265,7 +271,21 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           </div>
 
           {/* Chat Input */}
-          <div className="p-4 pb-safe border-t border-border bg-background/50">
+          <div className="p-4 pb-safe border-t border-border bg-background/70 backdrop-blur">
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+              {quickChips.map((text) => (
+                <button
+                  key={text}
+                  type="button"
+                  onClick={() => handleSendQuery(text)}
+                  disabled={isLoading}
+                  className="shrink-0 text-[11px] font-medium px-3 py-1.5 rounded-full bg-muted/60 text-foreground hover:bg-muted active:scale-95 transition-all disabled:opacity-50"
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+
             <div className="flex gap-3">
               <Input
                 value={query}
