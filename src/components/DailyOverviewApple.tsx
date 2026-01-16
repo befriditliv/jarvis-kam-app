@@ -317,11 +317,6 @@ export const DailyOverviewApple = ({
                         </div>
                       </div>
                     </div>
-
-                    {/* Expand indicator */}
-                    <div className="flex-shrink-0">
-                      {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                    </div>
                   </div>
                   
                   {/* Status row */}
