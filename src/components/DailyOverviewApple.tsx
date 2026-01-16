@@ -171,6 +171,7 @@ export const DailyOverviewApple = ({
   });
   const upcomingCount = meetings.filter(m => m.status === "upcoming").length;
   const debriefCount = meetings.filter(m => m.status === "debrief-needed").length;
+  const pendingDebriefCount = meetings.filter(m => m.status === "debrief-needed" || m.status === "debrief-failed").length;
 
   // Get next upcoming meeting
   const nextMeeting = meetings.find(m => m.status === "upcoming");
@@ -239,7 +240,12 @@ export const DailyOverviewApple = ({
           <div className="relative">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <h2 className="text-base sm:text-lg font-semibold text-foreground">Today's Schedule</h2>
-              <span className="text-xs text-muted-foreground hidden sm:block">{meetings.length} meetings</span>
+              <div className="hidden sm:flex items-center gap-3">
+                <span className="text-xs text-muted-foreground">{meetings.length} meetings</span>
+                {pendingDebriefCount > 0 && (
+                  <span className="text-xs text-destructive">{pendingDebriefCount} mangler debrief</span>
+                )}
+              </div>
             </div>
             <div className="space-y-3">
               {meetings.map((meeting, index) => {
