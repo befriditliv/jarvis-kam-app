@@ -127,8 +127,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div>
-                  <h1 className="text-xl font-semibold text-foreground">Quick Debrief Setup</h1>
-                  <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Set your template first</p>
+                  <h1 className="text-xl font-semibold text-foreground">Debrief</h1>
+                  <p className="text-sm text-muted-foreground">Dr. Sarah Johnson</p>
                 </div>
               </div>
               <SyncStatus />
