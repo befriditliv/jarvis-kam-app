@@ -259,13 +259,13 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
         {/* Main Content - Centered success message */}
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
           <div className="text-center space-y-6 max-w-sm mx-auto">
-            {/* Success icon */}
-            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-              <CheckCircle className="h-10 w-10 text-green-600" />
+            {/* Success icon - using primary color */}
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+              <CheckCircle className="h-10 w-10 text-primary" />
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-foreground">Debrief gemt succesfuldt</h2>
+              <h2 className="text-xl font-semibold text-foreground">Debrief gemt</h2>
               <p className="text-sm text-muted-foreground">
                 Dit debrief behandles nu. Du får en notifikation, når det er klar til gennemgang.
               </p>
@@ -273,12 +273,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </div>
         </div>
 
-        {/* Bottom button */}
+        {/* Bottom button - using primary color */}
         <div className="px-6 pb-8">
           <Button 
             onClick={onBack}
             size="lg"
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white rounded-2xl py-4 text-base font-semibold"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-4 text-base font-semibold"
           >
             OK
           </Button>
