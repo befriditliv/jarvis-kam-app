@@ -47,7 +47,7 @@ const mockMeetings: Meeting[] = [{
   location: "Metro Medical Center",
   address: "1234 Healthcare Blvd, Suite 200, New York, NY 10001",
   phone: "+1 (212) 555-0123",
-  status: "debrief-processing"
+  status: "debrief-ready"
 }, {
   id: "2",
   time: "11:30 AM",
