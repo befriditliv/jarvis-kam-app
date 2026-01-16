@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Send, Loader2, TrendingUp, Users, Calendar, Building, X } from "lucide-react";
+import { Send, Loader2, TrendingUp, Users, Calendar, Building, X, Lightbulb } from "lucide-react";
+import jarvisLogo from "@/assets/jarvis-logo.svg";
 interface AIAssistantProps {
   isOpen: boolean;
   onClose: () => void;
@@ -34,7 +35,7 @@ const querySuggestions: QuerySuggestion[] = [{
 }];
 const categoryConfig = {
   insights: {
-    icon: Brain,
+    icon: Lightbulb,
     color: "text-primary",
     bg: "bg-primary/10"
   },
@@ -102,9 +103,7 @@ export const AIAssistant = ({
           <div className="px-4 pt-safe pb-4 border-b border-border">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                  <Brain className="h-5 w-5 text-primary" />
-                </div>
+                <img src={jarvisLogo} alt="Jarvis" className="w-10 h-10 shrink-0" />
                 <div>
                   <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis</h2>
                   <p className="text-xs text-muted-foreground">Spørg om hvad som helst</p>
@@ -166,9 +165,7 @@ export const AIAssistant = ({
                   {/* AI Response */}
                   <Card className="p-4 shadow-sm">
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Brain className="h-4 w-4 text-primary-foreground" />
-                      </div>
+                      <img src={jarvisLogo} alt="Jarvis" className="w-8 h-8 flex-shrink-0" />
                       <div className="flex-1">
                         <p className="text-sm text-card-foreground leading-relaxed">{response.response}</p>
                         <p className="text-xs text-muted-foreground mt-2">
