@@ -253,13 +253,13 @@ export const DailyOverviewApple = ({
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header - Super clean */}
-      <div className="px-4 pt-4 pb-3 bg-background sticky top-0 z-40">
+      <div className="px-5 pt-6 pb-4 bg-gradient-to-b from-primary/[0.03] to-background sticky top-0 z-40">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={jarvisLogo} alt="Jarvis" className="h-8 w-8" />
+          <div className="flex items-center gap-4">
+            <img src={jarvisLogo} alt="Jarvis" className="h-10 w-10" />
             <div>
-              <h1 className="text-lg font-semibold text-foreground">{greeting()}</h1>
-              <p className="text-xs text-muted-foreground">{todayDate}</p>
+              <h1 className="text-xl font-semibold text-foreground tracking-tight">{greeting()}</h1>
+              <p className="text-sm text-muted-foreground">{todayDate}</p>
             </div>
           </div>
           <SyncStatus />
