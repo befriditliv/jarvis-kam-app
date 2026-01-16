@@ -99,44 +99,32 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
   }, [showBriefing, isOpen, hasSentBriefing, hcpName, responses.length]);
 
   const BriefingContent = ({ name }: { name: string }) => (
-    <div className="space-y-4">
-      {/* Intro summary */}
-      <p className="text-sm text-card-foreground leading-relaxed">
-        Metro Medical Center er en kardiologisk klinik med 12 specialister. Seneste møde omhandlede Wegovy og SGLT2-hæmmere. 
-        Digitalt engagement er moderat – {name} har åbnet 3 nyhedsbreve den seneste måned.
-      </p>
-
-      {/* Last meeting */}
-      <div className="p-3 bg-muted/30 rounded-lg">
-        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Seneste møde</h4>
-        <p className="text-xs text-muted-foreground mb-1">7. jan 2026 • Telefonopkald</p>
-        <p className="text-sm text-card-foreground">
-          Diskuterede patient-adherence og Wegovy dosering. God dialog, men ingen endelige aftaler. 
-          Ønsker opfølgning på CARDIAC-ADVANCE resultater.
-        </p>
+    <div className="text-sm text-card-foreground leading-relaxed space-y-3">
+      <p>Metro Medical Center er en kardiologisk klinik med 12 specialister. {name} leder hjertesvigtklinikken.</p>
+      
+      <div>
+        <p className="font-medium mb-1">Seneste møde (7. jan)</p>
+        <p className="text-muted-foreground">Telefonopkald om Wegovy og patient-adherence. God dialog, ønsker opfølgning på CARDIAC-ADVANCE.</p>
       </div>
 
-      {/* Key people */}
-      <div className="p-3 bg-muted/30 rounded-lg">
-        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Nøglepersoner</h4>
-        <div className="space-y-1 text-sm text-card-foreground">
-          <p><span className="font-medium">{name}</span> – Leder af hjertesvigtklinikken</p>
-          <p><span className="text-muted-foreground">Dr. Hansen</span> – Diabetes-specialist, OPT IN</p>
-        </div>
+      <div>
+        <p className="font-medium mb-1">Nøglepersoner</p>
+        <ul className="text-muted-foreground space-y-0.5">
+          <li>• {name} – Leder, hjertesvigt</li>
+          <li>• Dr. Hansen – Diabetes, OPT IN</li>
+        </ul>
       </div>
 
-      {/* Digital engagement */}
-      <div className="p-3 bg-muted/30 rounded-lg">
-        <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Digitalt engagement</h4>
-        <p className="text-sm text-card-foreground">
-          3 af 12 HCP'er har marketingtilladelse. {name} har åbnet nyhedsbreve om SGLT2 og downloadet 2 whitepapers.
-        </p>
+      <div>
+        <p className="font-medium mb-1">Digitalt engagement</p>
+        <ul className="text-muted-foreground space-y-0.5">
+          <li>• 3/12 HCP'er har marketingtilladelse</li>
+          <li>• Åbnet 3 nyhedsbreve (SGLT2)</li>
+          <li>• Downloadet 2 whitepapers</li>
+        </ul>
       </div>
 
-      {/* Follow-up prompt */}
-      <p className="text-sm text-muted-foreground italic">
-        Er der andet du vil vide?
-      </p>
+      <p className="text-muted-foreground italic pt-1">Er der andet du vil vide?</p>
     </div>
   );
 
