@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Mic, Send, Lightbulb } from "lucide-react";
+import { ArrowLeft, CheckCircle, Mic, Lightbulb, AlertCircle, RotateCcw, FileText } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 import { SyncStatus } from "./SyncStatus";
 
@@ -37,7 +37,7 @@ const quickDebriefOptions = [
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
   const { addToQueue } = useDebriefQueue();
-  const [phase, setPhase] = useState<'template' | 'debrief' | 'preview'>('template');
+  const [phase, setPhase] = useState<'template' | 'debrief' | 'saved' | 'failed'>('template');
   const [isRecording, setIsRecording] = useState(false);
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
@@ -88,14 +88,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     return prompt;
   };
 
-  const handleSave = () => {
-    setPhase('preview');
-  };
-
-  const handleFinalSubmit = () => {
+  const handleSaveDebrief = () => {
     const debriefData: DebriefData = {
       quickDebrief: template.quickDebrief,
-      outcome: 0, // Not used anymore but keeping for compatibility
+      outcome: 0,
       objectivesAchieved: [],
       keyConcerns: template.hasObjections || false,
       hasInizioFollowUp: template.hasFollowUpTasks || false,
@@ -106,8 +102,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     // Add to queue for syncing
     addToQueue(meetingId, debriefData);
     
-    // Call onSave callback
-    onSave(debriefData);
+    // Go to saved confirmation
+    setPhase('saved');
+  };
+
+  const handleRetryDebrief = () => {
+    setPhase('template');
   };
 
   if (phase === 'template') {
@@ -171,12 +171,12 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                     {quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label}
                   </p>
                   <Button 
-                    onClick={handleSave}
+                    onClick={handleSaveDebrief}
                     size="lg"
                     className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-3 text-base font-semibold"
                   >
-                    <Send className="h-5 w-5 mr-3" />
-                    Submit Debrief
+                    <CheckCircle className="h-5 w-5 mr-3" />
+                    Gem Debrief
                   </Button>
                 </div>
               </Card>
@@ -234,80 +234,123 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     );
   }
 
-  // Preview Phase
-  if (phase === 'preview') {
+  // Saved Confirmation Phase
+  if (phase === 'saved') {
     return (
-      <div className="min-h-screen bg-gradient-surface animate-fade-in">
+      <div className="min-h-screen bg-background flex flex-col animate-fade-in">
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-xl border-b border-border/50">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onBack}
-                  className="rounded-full p-2 hover:bg-secondary/80"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <div>
-                  <h1 className="text-xl font-semibold text-foreground">Debrief Preview</h1>
-                  <p className="text-sm text-muted-foreground">Dr. Sarah Johnson • Review before submitting</p>
-                </div>
-              </div>
+        <div className="px-4 sm:px-6 py-4 border-b border-border/30">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBack}
+              className="rounded-xl p-2 h-9 w-9"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="flex-1 text-center">
+              <h1 className="text-lg font-semibold text-foreground">Debrief</h1>
+            </div>
+            <div className="w-9" /> {/* Spacer for centering */}
+          </div>
+        </div>
+
+        {/* Main Content - Centered success message */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+          <div className="text-center space-y-6 max-w-sm mx-auto">
+            {/* Success icon */}
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-foreground">Debrief gemt succesfuldt</h2>
+              <p className="text-sm text-muted-foreground">
+                Dit debrief behandles nu. Du får en notifikation, når det er klar til gennemgang.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="px-6 py-6 space-y-6">
-          {/* Notes Preview Card */}
-          <Card className="p-6 shadow-card hover:shadow-lg transition-all duration-300 border-0 bg-card/80 backdrop-blur-sm">
-            <h3 className="text-lg font-semibold text-card-foreground mb-4">Meeting Notes</h3>
+        {/* Bottom button */}
+        <div className="px-6 pb-8">
+          <Button 
+            onClick={onBack}
+            size="lg"
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white rounded-2xl py-4 text-base font-semibold"
+          >
+            OK
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-            {/* Detailed Notes */}
-            <div className="prose prose-sm max-w-none">
-              <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-                <p className="text-foreground mb-3">
-                  Meeting went very well with Dr. Sarah Johnson. We had a productive discussion about the new cardiovascular protocol updates and their potential impact on patient adherence rates in her practice.
-                </p>
-                <p className="text-foreground mb-3">
-                  Dr. Johnson expressed strong interest in implementing the updated CV protocol, particularly the simplified dosing schedule which she believes will significantly improve patient compliance. She mentioned that approximately 40% of her current CV patients struggle with the current regimen complexity.
-                </p>
-                <p className="text-foreground mb-3">
-                  Key discussion points included the recent clinical trial data showing 23% improvement in adherence rates, the new patient education materials, and the digital monitoring tools that integrate with her existing EHR system.
-                </p>
-                <p className="text-foreground mb-3">
-                  Dr. Johnson raised concerns about reimbursement pathways for the new monitoring devices but was satisfied with the coverage information provided. She requested additional materials for her nursing staff and agreed to a pilot implementation with 20 patients starting next month.
-                </p>
-                <p className="text-foreground">
-                  Follow-up scheduled for 6 weeks to review initial patient feedback and discuss expansion to her full CV patient panel of approximately 150 patients.
-                </p>
+  // Failed Phase
+  if (phase === 'failed') {
+    return (
+      <div className="min-h-screen bg-background flex flex-col animate-fade-in">
+        {/* Header */}
+        <div className="px-4 sm:px-6 py-4 border-b border-border/30">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBack}
+              className="rounded-xl p-2 h-9 w-9"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold text-foreground">Møde debrief</h1>
+              <p className="text-xs text-muted-foreground">Dr. Sarah Johnson • 2026-01-16</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Status badge */}
+        <div className="px-6 pt-4 flex justify-end">
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-full text-sm font-medium">
+            <CheckCircle className="h-4 w-4" />
+            Fejlet
+          </div>
+        </div>
+
+        {/* Debrief Card - Loading/Empty state */}
+        <div className="px-6 py-4">
+          <Card className="p-5 border-0 bg-muted/30 rounded-xl">
+            <div className="flex items-start gap-3">
+              <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-medium text-foreground mb-3">Debrief</h3>
+                <div className="h-1 w-8 bg-primary/40 rounded-full animate-pulse" />
               </div>
             </div>
-
           </Card>
+        </div>
 
-          {/* Action Buttons - Mobile friendly */}
-          <div className="flex flex-col sm:flex-row gap-3 pb-6">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setPhase('debrief')}
-              className="rounded-xl flex-1 py-4 text-base"
-            >
-              Edit Notes
-            </Button>
-            <Button
-              variant="default"
-              size="lg"
-              onClick={handleFinalSubmit}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl flex-1 py-4 text-base shadow-lg"
-            >
-              <Send className="h-5 w-5 mr-2" />
-              Submit to IOengage
-            </Button>
-          </div>
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Bottom buttons */}
+        <div className="px-6 pb-8 space-y-3">
+          <Button 
+            onClick={handleRetryDebrief}
+            size="lg"
+            className="w-full bg-destructive hover:bg-destructive/90 text-white rounded-2xl py-4 text-base font-semibold"
+          >
+            <RotateCcw className="h-5 w-5 mr-2" />
+            Redo Debrief
+          </Button>
+          <Button 
+            onClick={onBack}
+            variant="outline"
+            size="lg"
+            className="w-full rounded-2xl py-4 text-base font-medium border-2"
+          >
+            Tilbage
+          </Button>
         </div>
       </div>
     );
@@ -387,15 +430,15 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <button
               onClick={() => {
                 setIsRecording(false);
-                // Generate notes and go to preview
+                // Generate notes and save debrief
                 const adaptivePrompt = generateAdaptivePrompt(template);
                 setVoiceNotes(prev => prev + (prev ? "\n\n" : "") + adaptivePrompt);
-                setPhase('preview');
+                handleSaveDebrief();
               }}
               className="w-full py-4 px-6 rounded-2xl bg-primary text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3"
             >
               <CheckCircle className="h-5 w-5" />
-              Finish Debrief
+              Afslut Debrief
             </button>
             
             <button
