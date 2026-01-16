@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Brain, Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp, RotateCcw, X } from "lucide-react";
+import { Send, Loader2, FileText, AlertCircle, Lightbulb, TrendingUp, RotateCcw, X } from "lucide-react";
+import jarvisLogo from "@/assets/jarvis-logo.svg";
 
 interface HCPAssistantProps {
   isOpen: boolean;
@@ -224,9 +225,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           <div className="px-4 pt-safe pb-4 border-b border-border">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                  <Brain className="h-5 w-5 text-primary" />
-                </div>
+                <img src={jarvisLogo} alt="Jarvis" className="w-10 h-10 shrink-0" />
                 <div>
                   <h2 className="text-lg font-semibold text-card-foreground">Spørg Jarvis</h2>
                   <p className="text-xs text-muted-foreground">{hcpName}</p>
@@ -318,9 +317,7 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
                   {/* AI Response */}
                   <Card className="p-4 shadow-sm">
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Brain className="h-4 w-4 text-primary" />
-                      </div>
+                      <img src={jarvisLogo} alt="Jarvis" className="w-8 h-8 flex-shrink-0" />
                       <div className="flex-1">
                         {response.isBriefing ? (
                           <BriefingContent name={hcpName} />
