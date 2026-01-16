@@ -84,8 +84,8 @@ const mockMeetings: Meeting[] = [
   },
   {
     id: "5",
-    time: "I går",
-    duration: "45 min",
+    time: "08:00",
+    duration: "30 min",
     hcpName: "Dr. Amanda Peters",
     specialty: "Reumatologi",
     location: "Wellness Medical Group",
