@@ -495,7 +495,7 @@ export const DailyOverviewApple = ({
                         className="flex-1 rounded-xl text-sm font-medium h-10 gap-1.5"
                       >
                         <MessageCircle className="h-4 w-4" />
-                        Spørg Jarvis
+                        Mere info
                       </Button>
                       <Button
                         onClick={() => onDebrief(meeting.id)}
