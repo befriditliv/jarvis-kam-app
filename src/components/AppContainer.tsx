@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronLeft } from "lucide-react";
 import { DailyOverviewApple } from "./DailyOverviewApple";
 import { PrepPage } from "./PrepPage";
 import { DebriefForm } from "./DebriefForm";
@@ -109,7 +110,13 @@ export const AppContainer = () => {
     return (
       <>
         <div className="min-h-screen bg-background pb-20">
-          <div className="px-4 pt-10 pb-6">
+          <div className="px-4 pt-10 pb-6 flex items-center gap-3">
+            <button 
+              onClick={handleBackToOverview}
+              className="p-2 -ml-2 rounded-full hover:bg-muted active:scale-95 transition-all"
+            >
+              <ChevronLeft className="h-5 w-5 text-foreground" />
+            </button>
             <h1 className="text-2xl font-bold text-foreground">Profil</h1>
           </div>
           <div className="px-4 space-y-4">
