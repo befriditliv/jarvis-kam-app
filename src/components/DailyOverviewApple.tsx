@@ -218,15 +218,15 @@ export const DailyOverviewApple = ({
           </div>
           
           {/* Quick stats for mobile */}
-          <div className="flex items-center gap-4 mt-4 sm:mt-0 sm:hidden">
+          <div className="flex items-center gap-3 mt-4 sm:mt-0 sm:hidden">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full">
               <Calendar className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-medium text-primary">{meetings.length} meetings</span>
             </div>
-            {debriefCount > 0 && (
+            {pendingDebriefCount > 0 && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-destructive/10 rounded-full">
                 <Bell className="h-3.5 w-3.5 text-destructive" />
-                <span className="text-xs font-medium text-destructive">{debriefCount} missing debrief{debriefCount !== 1 ? 's' : ''}</span>
+                <span className="text-xs font-medium text-destructive">{pendingDebriefCount} mangler debrief</span>
               </div>
             )}
           </div>
