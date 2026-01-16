@@ -80,29 +80,6 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
 
       {/* Content */}
       <div className="flex-1 px-4 sm:px-6 py-4 space-y-4 overflow-y-auto">
-        {/* Meeting Info Card */}
-        <Card className="p-4 border-0 bg-muted/30 rounded-xl">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-              <User className="h-5 w-5 text-primary" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-foreground">{notes.meeting.hcpName}</h3>
-              <p className="text-sm text-muted-foreground">{notes.meeting.specialty}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {notes.meeting.date} • {notes.meeting.time}
-                </span>
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-3 w-3" />
-                  {notes.meeting.location}
-                </span>
-              </div>
-            </div>
-          </div>
-        </Card>
-
         {/* Summary */}
         <Card className="p-4 border-0 bg-card rounded-xl">
           <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
