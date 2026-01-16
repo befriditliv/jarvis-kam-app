@@ -63,14 +63,18 @@ export const AppContainer = () => {
   };
 
   const handleTabChange = (tab: BottomTab) => {
-    setActiveTab(tab);
-    if (tab === "home") {
-      setCurrentView("overview");
-      setSelectedMeetingId(null);
-    } else if (tab === "jarvis") {
+    if (tab === "jarvis") {
       setIsAIOpen(true);
-    } else if (tab === "profile") {
-      setCurrentView("profile");
+      // Don't change activeTab - keep current tab highlighted until AI closes
+    } else {
+      setActiveTab(tab);
+      setIsAIOpen(false);
+      if (tab === "home") {
+        setCurrentView("overview");
+        setSelectedMeetingId(null);
+      } else if (tab === "profile") {
+        setCurrentView("profile");
+      }
     }
   };
 
@@ -165,7 +169,6 @@ export const AppContainer = () => {
         isOpen={isAIOpen} 
         onClose={() => {
           setIsAIOpen(false);
-          setActiveTab("home");
         }} 
       />
     </>
