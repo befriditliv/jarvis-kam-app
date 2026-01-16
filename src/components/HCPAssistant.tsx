@@ -265,12 +265,12 @@ export const HCPAssistant = ({ isOpen, onClose, hcpName, showBriefing = false }:
           </div>
 
           {/* Chat Input */}
-          <div className="p-4 border-t border-border bg-background/50">
+          <div className="p-4 pb-safe border-t border-border bg-background/50">
             <div className="flex gap-3">
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={`Ask about ${hcpName}...`}
+                placeholder={`Spørg om ${hcpName}...`}
                 onKeyDown={(e) => e.key === "Enter" && handleSendQuery()}
                 className="flex-1 rounded-xl border-border/50 focus:border-primary bg-background"
                 disabled={isLoading}
