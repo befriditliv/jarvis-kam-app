@@ -10,6 +10,7 @@ import { BurgerMenu } from "./BurgerMenu";
 interface DailyOverviewProps {
   onPrepare: (id: string) => void;
   onDebrief: (id: string) => void;
+  onDebriefReview: (id: string) => void;
   onVoiceNote: () => void;
   onAskAI: () => void;
   onReports: () => void;
@@ -151,6 +152,7 @@ const statusLabels = {
 export const DailyOverviewApple = ({
   onPrepare,
   onDebrief,
+  onDebriefReview,
   onVoiceNote,
   onAskAI,
   onReports,
@@ -345,12 +347,12 @@ export const DailyOverviewApple = ({
                       <div className="flex items-center gap-2">
                         {meeting.status === "debrief-ready" && (
                           <Button 
-                            onClick={() => console.log('Approve debrief for', meeting.id)} 
+                            onClick={() => onDebriefReview(meeting.id)} 
                             size="sm"
-                            className="rounded-xl bg-green-600 hover:bg-green-700 text-white text-xs font-medium px-4 py-2 h-auto"
+                            className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-medium px-4 py-2 h-auto"
                           >
                             <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                            Approve
+                            Gennemse
                           </Button>
                         )}
                         
