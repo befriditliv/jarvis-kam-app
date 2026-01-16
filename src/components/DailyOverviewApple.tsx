@@ -253,13 +253,61 @@ export const DailyOverviewApple = ({
         <div className="space-y-3">
           <h2 className="text-base font-semibold text-foreground">Dagens program</h2>
           
-          {activeMeetings.map((meeting) => {
+          {/* Timeline container */}
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-[7px] top-0 bottom-0 w-0.5 bg-border/50" />
+            
+            {/* Current time indicator */}
+            {(() => {
+              const now = new Date();
+              const currentHour = now.getHours();
+              const currentMinute = now.getMinutes();
+              const currentTimeStr = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+              
+              // Find position based on meetings
+              const allMeetingTimes = activeMeetings.map(m => {
+                const [h, min] = m.time.split(':').map(Number);
+                return h * 60 + (min || 0);
+              });
+              const currentMinutes = currentHour * 60 + currentMinute;
+              
+              // Find the meeting index where current time falls
+              let insertIndex = allMeetingTimes.findIndex(t => t > currentMinutes);
+              if (insertIndex === -1) insertIndex = activeMeetings.length;
+              
+              return (
+                <div 
+                  className="absolute left-0 right-0 flex items-center gap-2 z-10 pointer-events-none"
+                  style={{ top: `${insertIndex * 90 + (insertIndex > 0 ? -8 : 0)}px` }}
+                >
+                  <div className="w-[15px] h-[15px] rounded-full bg-primary border-2 border-background shadow-lg flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse" />
+                  </div>
+                  <div className="flex-1 h-0.5 bg-primary/40" />
+                  <span className="text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                    {currentTimeStr}
+                  </span>
+                </div>
+              );
+            })()}
+            
+            {/* Meetings with timeline dots */}
+            <div className="space-y-3 pl-6">
+          {activeMeetings.map((meeting, index) => {
             const isNextUpcoming = meeting.id === nextUpcomingId;
             const hcpData = mockHCPData[meeting.hcpName];
             const isExpanded = expandedMeetingId === meeting.id;
+            const isPast = meeting.status === "done" || meeting.status === "debrief-ready" || meeting.status === "debrief-needed" || meeting.status === "debrief-failed" || meeting.status === "debrief-processing" || meeting.status === "debrief-submitting";
 
             return (
-              <div key={meeting.id} id={`meeting-${meeting.id}`}>
+              <div key={meeting.id} id={`meeting-${meeting.id}`} className="relative">
+                {/* Timeline dot */}
+                <div className={`absolute -left-6 top-5 w-[15px] h-[15px] rounded-full border-2 border-background shadow-sm flex items-center justify-center ${
+                  isPast ? 'bg-muted-foreground/50' : isNextUpcoming ? 'bg-primary' : 'bg-border'
+                }`}>
+                  {isPast && <CheckCircle className="w-2.5 h-2.5 text-background" />}
+                </div>
                 <button
                   type="button"
                   onClick={() => toggleExpand(meeting.id)}
@@ -462,8 +510,8 @@ export const DailyOverviewApple = ({
               </div>
             );
           })}
-
-          {/* Completed meetings accordion */}
+          </div>
+          </div>
           {completedMeetings.length > 0 && (
             <div className="mt-6">
               <button
