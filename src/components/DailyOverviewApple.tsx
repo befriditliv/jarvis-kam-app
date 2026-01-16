@@ -142,6 +142,41 @@ const mockHCPData: Record<string, HCPData> = {
       { title: "Multidisciplinær tilgang", description: "Diskuter fordele ved tværfagligt samarbejde for bedre patientresultater." },
       { title: "Diabetes protokoller", description: "Gennemgå de nyeste guidelines for diabetes-behandling og Wegovy integration." }
     ]
+  },
+  "Dr. Michael Chen": {
+    id: "2",
+    name: "Dr. Michael Chen",
+    accessLevel: "Medium",
+    consentStatus: "OPT IN",
+    segmentationStatus: "Stable",
+    daysSinceLastInteraction: 21,
+    importantPoints: [
+      { title: "Onkologi-samarbejde", description: "Afdæk muligheder for samarbejde om patienter med cancer og metaboliske tilstande." },
+      { title: "Kliniske data", description: "Del de seneste kliniske resultater og evidens for Wegovy i onkologisk kontekst." }
+    ]
+  },
+  "Dr. James Wilson": {
+    id: "4",
+    name: "Dr. James Wilson",
+    accessLevel: "Low",
+    consentStatus: "Blank",
+    segmentationStatus: "At risk",
+    daysSinceLastInteraction: 62,
+    importantPoints: [
+      { title: "Første kontakt", description: "Introducer Novo Nordisks produktportefølje og afdæk interesse for fremtidigt samarbejde." },
+      { title: "Neurologisk vinkel", description: "Diskuter potentielle fordele ved Wegovy for neurologiske patienter med overvægt." }
+    ]
+  },
+  "Dr. Amanda Peters": {
+    id: "5",
+    name: "Dr. Amanda Peters",
+    accessLevel: "Medium",
+    consentStatus: "OPT IN",
+    segmentationStatus: "Stable",
+    daysSinceLastInteraction: 7,
+    importantPoints: [
+      { title: "Reumatologi-opfølgning", description: "Følg op på tidligere samtale om Wegovy og ledproblematikker." }
+    ]
   }
 };
 
