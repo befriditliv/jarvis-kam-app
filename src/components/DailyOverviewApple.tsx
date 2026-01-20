@@ -382,9 +382,33 @@ export const DailyOverviewApple = ({
                         <span className="text-[11px] font-medium text-primary">Klar til review</span>
                       )}
                       {meeting.status === "upcoming" && (
-                        <span className={`text-[11px] font-medium ${isNextUpcoming ? "text-primary" : "text-muted-foreground"}`}>
-                          {isNextUpcoming ? "Næste møde" : "Kommende"}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[11px] font-medium ${isNextUpcoming ? "text-primary" : "text-muted-foreground"}`}>
+                            {isNextUpcoming ? "Næste møde" : "Kommende"}
+                          </span>
+                          {meeting.address && (
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(meeting.address)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-muted-foreground hover:text-primary bg-muted/50 hover:bg-primary/10 rounded-md transition-colors"
+                            >
+                              <MapPin className="h-3 w-3" />
+                              Rutevejledning
+                            </a>
+                          )}
+                          {meeting.phone && (
+                            <a
+                              href={`tel:${meeting.phone}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-muted-foreground hover:text-primary bg-muted/50 hover:bg-primary/10 rounded-md transition-colors"
+                            >
+                              <Phone className="h-3 w-3" />
+                              Ring
+                            </a>
+                          )}
+                        </div>
                       )}
                     </div>
 
