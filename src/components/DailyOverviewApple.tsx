@@ -536,6 +536,14 @@ export const DailyOverviewApple = ({
                           <RotateCcw className="h-4 w-4 mr-1.5" />
                           Redo Debrief
                         </Button>
+                      ) : meeting.status === "debrief-failed" ? (
+                        <Button
+                          onClick={() => onDebrief(meeting.id)}
+                          className="flex-1 rounded-xl bg-destructive hover:bg-destructive/90 text-destructive-foreground text-sm font-medium h-10"
+                        >
+                          <RotateCcw className="h-4 w-4 mr-1.5" />
+                          Redo
+                        </Button>
                       ) : (
                         <Button
                           onClick={() => onDebrief(meeting.id)}
