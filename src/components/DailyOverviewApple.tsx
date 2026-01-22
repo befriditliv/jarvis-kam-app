@@ -253,7 +253,7 @@ export const DailyOverviewApple = ({
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header - Super clean */}
-      <div className="px-5 pt-6 pb-4">
+      <div className="px-5 pt-6 pb-4 bg-gradient-to-b from-primary/[0.03] to-background">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12" />
