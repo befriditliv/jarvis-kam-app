@@ -527,12 +527,23 @@ export const DailyOverviewApple = ({
                         <MessageCircle className="h-4 w-4" />
                         Mere info
                       </Button>
-                      <Button
-                        onClick={() => onDebrief(meeting.id)}
-                        className="flex-1 rounded-xl bg-primary hover:bg-primary/90 text-sm font-medium h-10"
-                      >
-                        Debrief
-                      </Button>
+                      {meeting.status === "debrief-ready" ? (
+                        <Button
+                          onClick={() => onDebrief(meeting.id)}
+                          variant="outline"
+                          className="flex-1 rounded-xl text-sm font-medium h-10 text-muted-foreground border-muted-foreground/30"
+                        >
+                          <RotateCcw className="h-4 w-4 mr-1.5" />
+                          Redo Debrief
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => onDebrief(meeting.id)}
+                          className="flex-1 rounded-xl bg-primary hover:bg-primary/90 text-sm font-medium h-10"
+                        >
+                          Debrief
+                        </Button>
+                      )}
                     </div>
                   </div>
                 )}
