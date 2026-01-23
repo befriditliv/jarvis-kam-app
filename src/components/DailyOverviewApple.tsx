@@ -379,7 +379,10 @@ export const DailyOverviewApple = ({
                         <span className="text-[11px] font-medium text-destructive">Mangler debrief</span>
                       )}
                       {meeting.status === "debrief-ready" && (
-                        <span className="text-[11px] font-medium text-primary">Klar til review</span>
+                        <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 rounded-lg">
+                          <CheckCircle2 className="h-3 w-3 text-primary" />
+                          <span className="text-[11px] font-medium text-primary">Klar til review</span>
+                        </div>
                       )}
                       {meeting.status === "upcoming" && (
                         <div className="flex items-center gap-2">
