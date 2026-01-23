@@ -509,11 +509,11 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <div className="text-center space-y-6 w-full">
               <div className="flex items-center justify-center gap-2">
                 <span className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
-                <span className="text-lg font-medium text-foreground">Optager</span>
+                <span className="text-base font-medium text-foreground tracking-tight">Optager</span>
               </div>
               
               {/* Timer */}
-              <div className="text-3xl font-mono text-foreground font-semibold">
+              <div className="text-2xl font-semibold text-foreground tracking-tight tabular-nums">
                 {formatTime(recordingTime)}
               </div>
 
