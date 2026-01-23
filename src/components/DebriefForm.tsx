@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Mic, Lightbulb, AlertCircle, RotateCcw, FileText } from "lucide-react";
+import { ArrowLeft, CheckCircle, Mic, Lightbulb, AlertCircle, RotateCcw, FileText, ChevronRight, Square } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 import { SyncStatus } from "./SyncStatus";
 
@@ -34,11 +34,23 @@ const quickDebriefOptions = [
   { value: "material-handover", label: "Debrief Not Relevant" }
 ];
 
+const debriefQuestions = [
+  "Hvordan gik mødet overordnet? Fortæl om de vigtigste samtalepunkter.",
+  "Var der nogen bekymringer eller indvendinger fra lægen?",
+  "Hvilke materialer delte du, og hvad er de næste skridt?"
+];
 
 export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => {
   const { addToQueue } = useDebriefQueue();
   const [phase, setPhase] = useState<'template' | 'debrief' | 'saved' | 'failed'>('template');
   const [isRecording, setIsRecording] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isPlayingQuestion, setIsPlayingQuestion] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
     hasObjections: undefined,
@@ -48,44 +60,95 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   });
   const [voiceNotes, setVoiceNotes] = useState("");
 
+  // Play beep sound
+  const playBeep = () => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  };
 
+  // Start debrief flow - immediately show first question
   const handleStartDebrief = () => {
     setPhase('debrief');
-  };
-
-  const handleVoiceRecording = () => {
-    setIsRecording(!isRecording);
-    if (!isRecording) {
-      // Simulate AI generating adaptive questions based on template
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    // Play question with beep after a short delay
+    setTimeout(() => {
+      playBeep();
+      setIsPlayingQuestion(true);
+      // Simulate question being "spoken" for 2 seconds
       setTimeout(() => {
-        const adaptivePrompt = generateAdaptivePrompt(template);
-        setVoiceNotes(prev => prev + (prev ? "\n\n" : "") + adaptivePrompt);
-        setIsRecording(false);
+        setIsPlayingQuestion(false);
       }, 2000);
+    }, 300);
+  };
+
+  // Start recording
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    setRecordingTime(0);
+    timerRef.current = setInterval(() => {
+      setRecordingTime(prev => prev + 1);
+    }, 1000);
+  };
+
+  // Stop recording and go to next question
+  const handleNextQuestion = () => {
+    setIsRecording(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    
+    // Save simulated answer
+    setAnswers(prev => [...prev, `Answer for question ${currentQuestionIndex + 1}`]);
+    
+    if (currentQuestionIndex < debriefQuestions.length - 1) {
+      // Move to next question
+      setCurrentQuestionIndex(prev => prev + 1);
+      setRecordingTime(0);
+      
+      // Play next question with beep
+      setTimeout(() => {
+        playBeep();
+        setIsPlayingQuestion(true);
+        setTimeout(() => {
+          setIsPlayingQuestion(false);
+        }, 2000);
+      }, 300);
     }
   };
 
-  const generateAdaptivePrompt = (template: DebriefTemplate) => {
-    let prompt = `AI: Based on your template, I have some targeted questions:\n\n`;
-    
-    if (template.hasObjections) {
-      prompt += "• What were the specific objections raised by the client?\n";
+  // Finish debrief
+  const handleFinishDebrief = () => {
+    setIsRecording(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
     }
     
-    if (template.materialsShared) {
-      prompt += "• Tell me about the materials you shared or presented during the meeting.\n";
-    }
+    const debriefData: DebriefData = {
+      quickDebrief: template.quickDebrief,
+      outcome: 0,
+      objectivesAchieved: [],
+      keyConcerns: template.hasObjections || false,
+      hasInizioFollowUp: template.hasFollowUpTasks || false,
+      materialsShared: template.materialsShared || false,
+      voiceNotes: answers.join('\n\n')
+    };
     
-    if (template.hasFollowUpTasks) {
-      prompt += "• What specific follow-up tasks were identified?\n";
-    }
-    
-    if (template.newMeetingScheduled) {
-      prompt += "• When is the new meeting scheduled and what's the agenda?\n";
-    }
-    
-    prompt += "\nNow, please share your detailed thoughts about the meeting...";
-    return prompt;
+    addToQueue(meetingId, debriefData);
+    setPhase('saved');
   };
 
   const handleSaveDebrief = () => {
@@ -99,16 +162,32 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       voiceNotes
     };
     
-    // Add to queue for syncing
     addToQueue(meetingId, debriefData);
-    
-    // Go to saved confirmation
     setPhase('saved');
   };
 
   const handleRetryDebrief = () => {
     setPhase('template');
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
   };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  const isLastQuestion = currentQuestionIndex === debriefQuestions.length - 1;
 
   if (phase === 'template') {
     return (
@@ -356,7 +435,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     );
   }
 
-  // Debrief Phase - Simplified flow
+  // Debrief Phase - Question-based flow
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Minimal Header */}
@@ -374,78 +453,123 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             <h1 className="text-lg font-semibold text-foreground truncate">Voice Debrief</h1>
             <p className="text-xs text-muted-foreground truncate">Dr. Sarah Johnson</p>
           </div>
+          {/* Question indicator */}
+          <div className="text-xs text-muted-foreground font-medium">
+            {currentQuestionIndex + 1} / {debriefQuestions.length}
+          </div>
         </div>
       </div>
 
-      {/* Main Content - Centered */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
-        {!isRecording ? (
-          // Start state
-          <div className="text-center space-y-8 max-w-sm mx-auto">
-            <div className="space-y-3">
-              <h2 className="text-2xl font-semibold text-foreground">Ready to Debrief</h2>
-              <p className="text-muted-foreground text-sm">
-                Tap the button below to start recording. Jarvis will guide you through the debrief.
+      {/* Progress bar */}
+      <div className="px-6 pt-4">
+        <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-primary rounded-full transition-all duration-500"
+            style={{ width: `${((currentQuestionIndex + (isRecording ? 0.5 : 0)) / debriefQuestions.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col px-6 py-8">
+        {/* Question display */}
+        <div className="mb-8">
+          <div className={`p-5 rounded-2xl bg-primary/5 border border-primary/20 transition-all duration-300 ${isPlayingQuestion ? 'animate-pulse' : ''}`}>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Mic className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs text-primary font-medium mb-1">Jarvis spørger:</p>
+                <p className="text-foreground font-medium leading-relaxed">
+                  {debriefQuestions[currentQuestionIndex]}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recording area */}
+        <div className="flex-1 flex flex-col items-center justify-center">
+          {!isRecording ? (
+            // Ready to record state
+            <div className="text-center space-y-6">
+              <button
+                onClick={handleStartRecording}
+                disabled={isPlayingQuestion}
+                className={`w-24 h-24 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto shadow-lg transition-all duration-300 ${
+                  isPlayingQuestion 
+                    ? 'opacity-50 cursor-not-allowed' 
+                    : 'hover:shadow-xl hover:scale-105 active:scale-95'
+                }`}
+              >
+                <Mic className="h-9 w-9" />
+              </button>
+              <p className="text-sm text-muted-foreground">
+                {isPlayingQuestion ? 'Lytter til spørgsmål...' : 'Tryk for at svare'}
               </p>
             </div>
-            
-            <button
-              onClick={handleVoiceRecording}
-              className="w-28 h-28 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 active:scale-95"
-            >
-              <Mic className="h-10 w-10" />
-            </button>
-            
-            <p className="text-xs text-muted-foreground">Tap to start recording</p>
-          </div>
-        ) : (
-          // Recording state
-          <div className="text-center space-y-8 max-w-sm mx-auto w-full">
-            <div className="space-y-3">
+          ) : (
+            // Recording state
+            <div className="text-center space-y-6 w-full">
               <div className="flex items-center justify-center gap-2">
                 <span className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
-                <h2 className="text-xl font-semibold text-foreground">Recording...</h2>
+                <span className="text-lg font-medium text-foreground">Optager</span>
               </div>
-              <p className="text-muted-foreground text-sm">
-                Speak naturally about your meeting. Tap below when finished.
-              </p>
-            </div>
+              
+              {/* Timer */}
+              <div className="text-3xl font-mono text-foreground font-semibold">
+                {formatTime(recordingTime)}
+              </div>
 
-            {/* Recording visualization */}
-            <div className="flex items-center justify-center gap-1 h-16">
-              {[...Array(7)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-1.5 bg-primary rounded-full animate-pulse"
-                  style={{
-                    height: `${20 + Math.random() * 40}px`,
-                    animationDelay: `${i * 0.1}s`,
-                    animationDuration: `${0.5 + Math.random() * 0.5}s`
-                  }}
-                />
-              ))}
+              {/* Recording visualization */}
+              <div className="flex items-center justify-center gap-1 h-12">
+                {[...Array(9)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1.5 bg-primary rounded-full animate-pulse"
+                    style={{
+                      height: `${16 + Math.random() * 32}px`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: `${0.5 + Math.random() * 0.5}s`
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-            
-            {/* Finish button - Primary action */}
+          )}
+        </div>
+
+        {/* Bottom action button */}
+        {isRecording && (
+          <div className="pt-6 space-y-3">
+            {isLastQuestion ? (
+              <Button
+                onClick={handleFinishDebrief}
+                size="lg"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-4 text-base font-semibold"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Afslut Debrief
+              </Button>
+            ) : (
+              <Button
+                onClick={handleNextQuestion}
+                size="lg"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl py-4 text-base font-semibold"
+              >
+                Næste Spørgsmål
+                <ChevronRight className="h-5 w-5 ml-2" />
+              </Button>
+            )}
             <button
               onClick={() => {
                 setIsRecording(false);
-                // Generate notes and save debrief
-                const adaptivePrompt = generateAdaptivePrompt(template);
-                setVoiceNotes(prev => prev + (prev ? "\n\n" : "") + adaptivePrompt);
-                handleSaveDebrief();
+                if (timerRef.current) clearInterval(timerRef.current);
               }}
-              className="w-full py-4 px-6 rounded-2xl bg-primary text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl hover:bg-primary/90 transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-3"
+              className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
             >
-              <CheckCircle className="h-5 w-5" />
-              Afslut Debrief
-            </button>
-            
-            <button
-              onClick={() => setIsRecording(false)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Cancel
+              Annuller
             </button>
           </div>
         )}
