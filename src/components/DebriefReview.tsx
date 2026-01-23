@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit3, Send, Loader2, MoreVertical, Trash2, AlertTriangle, Target, MessageSquare, ArrowRight } from "lucide-react";
+import { ArrowLeft, Edit3, Send, Loader2, MoreVertical, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -205,10 +205,7 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
 
         {/* Purpose / Formål */}
         <Card className="p-4 border-0 bg-card rounded-xl">
-          <div className="flex items-center gap-2 mb-3">
-            <Target className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold text-foreground">Formål med besøget</h3>
-          </div>
+          <h3 className="font-semibold text-foreground mb-2">Formål med besøget</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {notes.purpose}
           </p>
@@ -218,8 +215,8 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-muted-foreground px-1">Aktivitetsoversigt</h3>
           
-          {notes.brands.map((brandNote, index) => {
-            const hasContent = brandNote.activities.length > 0 || brandNote.reactions.length > 0;
+          {notes.brands?.map((brandNote, index) => {
+            const hasContent = (brandNote.activities?.length ?? 0) > 0 || (brandNote.reactions?.length ?? 0) > 0;
             
             return (
               <Card key={index} className="p-4 border-0 bg-card rounded-xl">
@@ -231,23 +228,20 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
                 
                 {hasContent ? (
                   <div className="space-y-3">
-                    {brandNote.activities.length > 0 && (
-                      <div>
-                        <p className="text-xs font-medium text-muted-foreground mb-1.5">Aktiviteter</p>
-                        <ul className="space-y-1.5">
-                          {brandNote.activities.map((activity, actIndex) => (
-                            <li key={actIndex} className="flex items-start gap-2 text-sm text-foreground">
-                              <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                              <span>{activity}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                    {(brandNote.activities?.length ?? 0) > 0 && (
+                      <ul className="space-y-1.5">
+                        {brandNote.activities.map((activity, actIndex) => (
+                          <li key={actIndex} className="flex items-start gap-2 text-sm text-foreground">
+                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                            <span>{activity}</span>
+                          </li>
+                        ))}
+                      </ul>
                     )}
                     
-                    {brandNote.reactions.length > 0 && (
+                    {(brandNote.reactions?.length ?? 0) > 0 && (
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground mb-1.5">HCP reaktioner/bekymringer</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">HCP reaktioner</p>
                         <ul className="space-y-1.5">
                           {brandNote.reactions.map((reaction, reactIndex) => (
                             <li key={reactIndex} className="flex items-start gap-2 text-sm text-foreground">
@@ -266,35 +260,6 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
             );
           })}
         </div>
-
-        {/* Objections / Indvendinger */}
-        {notes.objections.length > 0 && (
-          <Card className="p-4 border-0 bg-muted/50 rounded-xl">
-            <div className="flex items-center gap-2 mb-3">
-              <MessageSquare className="h-4 w-4 text-amber-600" />
-              <h3 className="font-semibold text-foreground">Indvendinger</h3>
-            </div>
-            <ul className="space-y-2">
-              {notes.objections.map((objection, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm text-foreground">
-                  <span className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                  <span>{objection}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        )}
-
-        {/* Next Action / Næste aktion */}
-        <Card className="p-4 border-0 bg-card rounded-xl">
-          <div className="flex items-center gap-2 mb-3">
-            <ArrowRight className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold text-foreground">Næste aktion</h3>
-          </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {notes.nextAction}
-          </p>
-        </Card>
       </div>
 
       {/* Bottom action buttons */}
