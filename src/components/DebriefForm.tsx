@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle, Mic, Lightbulb, AlertCircle, RotateCcw, FileText, ChevronRight, Square } from "lucide-react";
 import { useDebriefQueue } from "@/hooks/useDebriefQueue";
 import { SyncStatus } from "./SyncStatus";
+import jarvisLogo from "@/assets/jarvis-logo.svg";
 
 interface DebriefFormProps {
   meetingId: string;
@@ -499,8 +500,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           {isPlayingQuestion ? (
             // Jarvis is asking the question
             <div className="text-center space-y-6">
-              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mx-auto animate-pulse">
-                <Mic className="h-9 w-9 text-primary" />
+              <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto animate-pulse">
+                <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12" />
               </div>
               <p className="text-sm text-muted-foreground">Jarvis stiller spørgsmål...</p>
             </div>
