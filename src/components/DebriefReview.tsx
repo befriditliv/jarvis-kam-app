@@ -109,7 +109,7 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
     onBack();
   };
 
-  const hasComplianceIssues = notes.complianceIssues.length > 0;
+  const hasComplianceIssues = (notes.complianceIssues?.length ?? 0) > 0;
 
   return (
     <div className="min-h-screen bg-background flex flex-col animate-fade-in">
