@@ -537,7 +537,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             // Waiting state (brief moment)
             <div className="text-center space-y-6">
               <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mx-auto">
-                <Mic className="h-9 w-9 text-muted-foreground" />
+                <img src={jarvisLogo} alt="Jarvis" className="h-12 w-12 opacity-50" />
               </div>
               <p className="text-sm text-muted-foreground">Forbereder...</p>
             </div>
