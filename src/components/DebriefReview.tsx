@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Edit3, Send, User, Calendar, MapPin, FileText, Loader2, MoreVertical, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit3, Send, Loader2, MoreVertical, Trash2, AlertTriangle, Target, MessageSquare, ArrowRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
@@ -26,33 +26,58 @@ interface DebriefReviewProps {
   onApprove: () => void;
 }
 
-// Mock data for the debrief
+interface BrandNote {
+  brand: string;
+  activities: string[];
+  reactions: string[];
+}
+
+// Mock data for the debrief - structured by brand
 const mockDebriefData = {
   meeting: {
-    hcpName: "Dr. Sarah Johnson",
-    specialty: "Cardiology",
-    date: "16. januar 2026",
-    time: "9:00",
-    location: "Metro Medical Center"
+    hcpName: "Marianne Lindberg Pedersen + 1",
+    specialty: "Endokrinologi",
+    date: "12. januar 2026",
+    time: "13:00",
+    location: "Rigshospitalet"
   },
-  summary: "Produktivt møde om nye kardiovaskulære protokolopdateringer.",
-  keyPoints: [
-    "Dr. Johnson viste stærk interesse i den opdaterede CV-protokol",
-    "Diskuterede forenklet dosisplan som kan forbedre patientens compliance",
-    "Ca. 40% af hendes nuværende CV-patienter kæmper med den nuværende kompleksitet",
-    "Klinisk forsøgsdata viser 23% forbedring i adherence-rater"
+  complianceIssues: [] as string[], // Empty = no issues, populated = show warning
+  purpose: "Formålet med mødet var en konstruktiv diskussion om flere medicinske emner, inklusive hjertekar-sygdomme, off-label brug, samt specifikke brands som Ozempic, Wegovy, Rebelsus og GLP-1. Derudover blev initiering og kommunale tilskudsplaner drøftet.",
+  brands: [
+    {
+      brand: "Ozempic",
+      activities: [
+        "Diskussion om Ozempic og dets anvendelse, herunder off-label use og relaterede kommunale tilskudsplaner."
+      ],
+      reactions: []
+    },
+    {
+      brand: "Wegovy",
+      activities: [
+        "Gennemgang af Wegovy til vægtbehandling og patientprofiler der egner sig til behandlingen."
+      ],
+      reactions: [
+        "HCP udtrykte bekymring om tilgængelighed og ventetid på produktet."
+      ]
+    },
+    {
+      brand: "Rebelsus",
+      activities: [],
+      reactions: []
+    },
+    {
+      brand: "GLP-1",
+      activities: [
+        "Drøftelse af GLP-1 og dets betydning ved behandling af hjertekar-sygdomme."
+      ],
+      reactions: []
+    }
+  ] as BrandNote[],
+  objections: [
+    "Spørgsmål om refusionsveje for nye behandlinger",
+    "Bekymring om patientens evne til at håndtere injektionsbehandling"
   ],
-  concerns: [
-    "Spørgsmål om refusionsveje for de nye overvågningsenheder"
-  ],
-  followUp: [
-    "Pilot-implementering med 20 patienter starter næste måned",
-    "Opfølgningsmøde planlagt om 6 uger"
-  ],
-  materialsShared: [
-    "Ny protokoldokumentation",
-    "Patientuddannelsesmaterialer"
-  ]
+  nextAction: "Opfølgning på kommunale tilskudsplaner samt yderligere drøftelser om SWIP-præsentationen."
 };
 
 export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewProps) => {
@@ -83,6 +108,8 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
     });
     onBack();
   };
+
+  const hasComplianceIssues = notes.complianceIssues.length > 0;
 
   return (
     <div className="min-h-screen bg-background flex flex-col animate-fade-in">
@@ -150,79 +177,125 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
       </AlertDialog>
 
       {/* Content */}
-      <div className="flex-1 px-4 sm:px-6 py-4 space-y-4 overflow-y-auto">
-        {/* Summary */}
+      <div className="flex-1 px-4 sm:px-6 py-4 space-y-4 overflow-y-auto pb-48">
+        
+        {/* Compliance Warning - Yellow box at top if issues detected */}
+        {hasComplianceIssues && (
+          <Card className="p-4 border-0 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-amber-500/20 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-1">Compliance advarsel</h3>
+                <ul className="space-y-1">
+                  {notes.complianceIssues.map((issue, index) => (
+                    <li key={index} className="text-sm text-amber-700 dark:text-amber-300">
+                      • {issue}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Purpose / Formål */}
         <Card className="p-4 border-0 bg-card rounded-xl">
-          <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-primary" />
-            Sammenfatning
-          </h3>
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="h-4 w-4 text-primary" />
+            <h3 className="font-semibold text-foreground">Formål med besøget</h3>
+          </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {notes.summary}
+            {notes.purpose}
           </p>
         </Card>
 
-        {/* Key Points */}
-        <Card className="p-4 border-0 bg-card rounded-xl">
-          <h3 className="font-semibold text-foreground mb-3">Vigtigste punkter</h3>
-          <ul className="space-y-2">
-            {notes.keyPoints.map((point, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
+        {/* Brand Notes - Each brand in its own box */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-muted-foreground px-1">Aktivitetsoversigt</h3>
+          
+          {notes.brands.map((brandNote, index) => {
+            const hasContent = brandNote.activities.length > 0 || brandNote.reactions.length > 0;
+            
+            return (
+              <Card key={index} className="p-4 border-0 bg-card rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2.5 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-lg">
+                    {brandNote.brand}
+                  </span>
+                </div>
+                
+                {hasContent ? (
+                  <div className="space-y-3">
+                    {brandNote.activities.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">Aktiviteter</p>
+                        <ul className="space-y-1.5">
+                          {brandNote.activities.map((activity, actIndex) => (
+                            <li key={actIndex} className="flex items-start gap-2 text-sm text-foreground">
+                              <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+                              <span>{activity}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {brandNote.reactions.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">HCP reaktioner/bekymringer</p>
+                        <ul className="space-y-1.5">
+                          {brandNote.reactions.map((reaction, reactIndex) => (
+                            <li key={reactIndex} className="flex items-start gap-2 text-sm text-foreground">
+                              <span className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
+                              <span>{reaction}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">Ingen aktivitet registreret</p>
+                )}
+              </Card>
+            );
+          })}
+        </div>
 
-        {/* Concerns */}
-        {notes.concerns.length > 0 && (
-          <Card className="p-4 border-0 bg-amber-50 dark:bg-amber-950/20 rounded-xl">
-            <h3 className="font-semibold text-foreground mb-3">Bekymringer / Indvendinger</h3>
+        {/* Objections / Indvendinger */}
+        {notes.objections.length > 0 && (
+          <Card className="p-4 border-0 bg-muted/50 rounded-xl">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageSquare className="h-4 w-4 text-amber-600" />
+              <h3 className="font-semibold text-foreground">Indvendinger</h3>
+            </div>
             <ul className="space-y-2">
-              {notes.concerns.map((concern, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+              {notes.objections.map((objection, index) => (
+                <li key={index} className="flex items-start gap-2 text-sm text-foreground">
                   <span className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
-                  <span>{concern}</span>
+                  <span>{objection}</span>
                 </li>
               ))}
             </ul>
           </Card>
         )}
 
-        {/* Follow-up */}
+        {/* Next Action / Næste aktion */}
         <Card className="p-4 border-0 bg-card rounded-xl">
-          <h3 className="font-semibold text-foreground mb-3">Opfølgning</h3>
-          <ul className="space-y-2">
-            {notes.followUp.map((item, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex items-center gap-2 mb-3">
+            <ArrowRight className="h-4 w-4 text-primary" />
+            <h3 className="font-semibold text-foreground">Næste aktion</h3>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {notes.nextAction}
+          </p>
         </Card>
-
-        {/* Materials Shared */}
-        {notes.materialsShared.length > 0 && (
-          <Card className="p-4 border-0 bg-card rounded-xl">
-            <h3 className="font-semibold text-foreground mb-3">Delte materialer</h3>
-            <div className="flex flex-wrap gap-2">
-              {notes.materialsShared.map((material, index) => (
-                <span 
-                  key={index} 
-                  className="px-3 py-1.5 bg-muted/50 text-muted-foreground text-xs rounded-lg"
-                >
-                  {material}
-                </span>
-              ))}
-            </div>
-          </Card>
-        )}
       </div>
 
       {/* Bottom action buttons */}
-      <div className="px-6 pb-8 pt-4 space-y-3 bg-background border-t border-border/30">
+      <div className="fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 space-y-3 bg-background border-t border-border/30">
         <Button 
           onClick={handleApprove}
           disabled={isSubmitting}
@@ -237,7 +310,7 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
           ) : (
             <>
               <Send className="h-5 w-5 mr-2" />
-              Godkend & Send til IOengage
+              Indsend til IOengage
             </>
           )}
         </Button>
