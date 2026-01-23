@@ -41,7 +41,10 @@ const mockDebriefData = {
     time: "13:00",
     location: "Rigshospitalet"
   },
-  complianceIssues: [] as string[], // Empty = no issues, populated = show warning
+  complianceIssues: [
+    "Mulig off-label diskussion detekteret - verificér at samtalen holdt sig inden for godkendt indikation",
+    "Reference til konkurrentprodukt uden sammenlignende data"
+  ],
   purpose: "Formålet med mødet var en konstruktiv diskussion om flere medicinske emner, inklusive hjertekar-sygdomme, off-label brug, samt specifikke brands som Ozempic, Wegovy, Rebelsus og GLP-1. Derudover blev initiering og kommunale tilskudsplaner drøftet.",
   brands: [
     {
