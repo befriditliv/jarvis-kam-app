@@ -1,8 +1,24 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle, Edit3, Send, User, Calendar, MapPin, FileText, Loader2 } from "lucide-react";
+import { ArrowLeft, CheckCircle, Edit3, Send, User, Calendar, MapPin, FileText, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface DebriefReviewProps {
   meetingId: string;
@@ -43,6 +59,7 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
   const [isEditing, setIsEditing] = useState(false);
   const [notes, setNotes] = useState(mockDebriefData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleApprove = async () => {
     setIsSubmitting(true);
@@ -59,6 +76,14 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
     onApprove();
   };
 
+  const handleDelete = () => {
+    toast({
+      title: "Debrief slettet",
+      description: "Dit debrief er blevet slettet",
+    });
+    onBack();
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col animate-fade-in">
       {/* Header */}
@@ -73,21 +98,56 @@ export const DebriefReview = ({ meetingId, onBack, onApprove }: DebriefReviewPro
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div className="flex-1">
-              <h1 className="text-lg font-semibold text-foreground">Gennemse Debrief</h1>
-              <p className="text-xs text-muted-foreground">{notes.meeting.hcpName}</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg font-semibold text-foreground tracking-tight">Møde debrief</h1>
+              <p className="text-xs text-muted-foreground truncate">{notes.meeting.hcpName} · {notes.meeting.date}</p>
             </div>
+            
+            {/* Three-dot menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-xl p-2 h-9 w-9"
+                >
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 rounded-xl border-border/50 shadow-lg">
+                <DropdownMenuItem 
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="text-destructive focus:text-destructive focus:bg-destructive/10 rounded-lg cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Slet debrief
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
 
-      {/* Status badge */}
-      <div className="px-6 pt-4 flex justify-end">
-        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium">
-          <CheckCircle className="h-4 w-4" />
-          Klar til godkendelse
-        </div>
-      </div>
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="rounded-2xl mx-4">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Slet debrief?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Er du sikker på, at du vil slette dette debrief? Denne handling kan ikke fortrydes.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl">Annuller</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete}
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-xl"
+            >
+              Slet
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Content */}
       <div className="flex-1 px-4 sm:px-6 py-4 space-y-4 overflow-y-auto">
