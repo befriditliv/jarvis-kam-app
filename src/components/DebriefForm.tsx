@@ -79,29 +79,38 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     oscillator.stop(audioContext.currentTime + 0.3);
   };
 
-  // Start debrief flow - immediately show first question
-  const handleStartDebrief = () => {
-    setPhase('debrief');
-    setCurrentQuestionIndex(0);
-    setAnswers([]);
-    // Play question with beep after a short delay
-    setTimeout(() => {
-      playBeep();
-      setIsPlayingQuestion(true);
-      // Simulate question being "spoken" for 2 seconds
-      setTimeout(() => {
-        setIsPlayingQuestion(false);
-      }, 2000);
-    }, 300);
-  };
-
-  // Start recording
-  const handleStartRecording = () => {
+  // Start recording automatically
+  const startRecordingAuto = () => {
     setIsRecording(true);
     setRecordingTime(0);
     timerRef.current = setInterval(() => {
       setRecordingTime(prev => prev + 1);
     }, 1000);
+  };
+
+  // Play question, then beep, then start recording automatically
+  const playQuestionAndStartRecording = () => {
+    setIsPlayingQuestion(true);
+    // Simulate question being "spoken" for 2 seconds
+    setTimeout(() => {
+      setIsPlayingQuestion(false);
+      // Play beep and start recording
+      playBeep();
+      setTimeout(() => {
+        startRecordingAuto();
+      }, 400);
+    }, 2000);
+  };
+
+  // Start debrief flow - immediately show first question and auto-start recording
+  const handleStartDebrief = () => {
+    setPhase('debrief');
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    // Play question after a short delay
+    setTimeout(() => {
+      playQuestionAndStartRecording();
+    }, 300);
   };
 
   // Stop recording and go to next question
@@ -119,13 +128,9 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       setCurrentQuestionIndex(prev => prev + 1);
       setRecordingTime(0);
       
-      // Play next question with beep
+      // Play next question and auto-start recording
       setTimeout(() => {
-        playBeep();
-        setIsPlayingQuestion(true);
-        setTimeout(() => {
-          setIsPlayingQuestion(false);
-        }, 2000);
+        playQuestionAndStartRecording();
       }, 300);
     }
   };
@@ -491,25 +496,15 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
 
         {/* Recording area */}
         <div className="flex-1 flex flex-col items-center justify-center">
-          {!isRecording ? (
-            // Ready to record state
+          {isPlayingQuestion ? (
+            // Jarvis is asking the question
             <div className="text-center space-y-6">
-              <button
-                onClick={handleStartRecording}
-                disabled={isPlayingQuestion}
-                className={`w-24 h-24 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto shadow-lg transition-all duration-300 ${
-                  isPlayingQuestion 
-                    ? 'opacity-50 cursor-not-allowed' 
-                    : 'hover:shadow-xl hover:scale-105 active:scale-95'
-                }`}
-              >
-                <Mic className="h-9 w-9" />
-              </button>
-              <p className="text-sm text-muted-foreground">
-                {isPlayingQuestion ? 'Lytter til spørgsmål...' : 'Tryk for at svare'}
-              </p>
+              <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mx-auto animate-pulse">
+                <Mic className="h-9 w-9 text-primary" />
+              </div>
+              <p className="text-sm text-muted-foreground">Jarvis stiller spørgsmål...</p>
             </div>
-          ) : (
+          ) : isRecording ? (
             // Recording state
             <div className="text-center space-y-6 w-full">
               <div className="flex items-center justify-center gap-2">
@@ -536,6 +531,14 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                   />
                 ))}
               </div>
+            </div>
+          ) : (
+            // Waiting state (brief moment)
+            <div className="text-center space-y-6">
+              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mx-auto">
+                <Mic className="h-9 w-9 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">Forbereder...</p>
             </div>
           )}
         </div>
