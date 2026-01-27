@@ -232,12 +232,16 @@ export const DailyOverviewApple = ({
   // Update indicator position when expanded card changes
   useEffect(() => {
     const updateIndicator = () => {
-      if (!expandedMeetingId || !containerRef.current) {
+      if (!containerRef.current) return;
+      
+      // Use expanded card, or fall back to next upcoming meeting
+      const targetId = expandedMeetingId || nextUpcomingId;
+      if (!targetId) {
         setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
         return;
       }
       
-      const cardEl = cardRefs.current.get(expandedMeetingId);
+      const cardEl = cardRefs.current.get(targetId);
       if (!cardEl) return;
       
       const containerRect = containerRef.current.getBoundingClientRect();
