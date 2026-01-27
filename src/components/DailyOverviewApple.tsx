@@ -1,5 +1,5 @@
 // Daily Overview Component - Mobile-first design
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { User, MessageCircle, Calendar, Bell, ChevronDown, ChevronUp, Phone, Loader2, CheckCircle2, CheckCircle, WifiOff, AlertCircle, RotateCcw, MapPin, Lightbulb, Target, TrendingUp } from "lucide-react";
 import jarvisLogo from "@/assets/jarvis-logo.svg";
@@ -221,8 +221,49 @@ export const DailyOverviewApple = ({
   const completedMeetings = meetings.filter(m => m.status === "done");
   
   // Find next upcoming meeting to auto-expand
-  const nextUpcomingId = activeMeetings.find(m => m.status === "upcoming")?.id || null;
+  const nextUpcomingId = activeMeetings.find(m => m.status === "upcoming")?.id || activeMeetings[0]?.id || null;
   const [expandedMeetingId, setExpandedMeetingId] = useState<string | null>(nextUpcomingId);
+  
+  // Refs for selection indicator
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0, opacity: 0 });
+
+  // Update indicator position when expanded card changes
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (!expandedMeetingId || !containerRef.current) {
+        setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
+        return;
+      }
+      
+      const cardEl = cardRefs.current.get(expandedMeetingId);
+      if (!cardEl) return;
+      
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const cardRect = cardEl.getBoundingClientRect();
+      
+      setIndicatorStyle({
+        top: cardRect.top - containerRect.top,
+        height: cardRect.height,
+        opacity: 1
+      });
+    };
+
+    // Update immediately and after a short delay (for expand animation)
+    updateIndicator();
+    const timeout = setTimeout(updateIndicator, 350);
+    
+    // Also update on scroll and resize
+    window.addEventListener('scroll', updateIndicator, { passive: true });
+    window.addEventListener('resize', updateIndicator);
+    
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('scroll', updateIndicator);
+      window.removeEventListener('resize', updateIndicator);
+    };
+  }, [expandedMeetingId]);
 
   const todayDate = new Date().toLocaleDateString("da-DK", {
     weekday: "long",
@@ -289,25 +330,17 @@ export const DailyOverviewApple = ({
           <h2 className="text-base font-semibold text-foreground">Dagens program</h2>
           
           {/* Timeline container */}
-          <div className="relative">
-            {/* Progress bar - subtle blue line showing day progress */}
-            {(() => {
-              const now = new Date();
-              const currentMinutes = now.getHours() * 60 + now.getMinutes();
-              // Day runs from 8:00 (480min) to 18:00 (1080min)
-              const dayStart = 480;
-              const dayEnd = 1080;
-              const progress = Math.max(0, Math.min(100, ((currentMinutes - dayStart) / (dayEnd - dayStart)) * 100));
-              
-              return (
-                <div className="absolute left-0 top-0 bottom-0 w-1 rounded-full bg-primary/10 overflow-hidden">
-                  <div 
-                    className="w-full bg-primary/40 rounded-full transition-all duration-1000"
-                    style={{ height: `${progress}%` }}
-                  />
-                </div>
-              );
-            })()}
+          <div className="relative" ref={containerRef}>
+            {/* Selection indicator - floating blue bar */}
+            <div 
+              className="absolute left-0 w-1 bg-primary rounded-full transition-all duration-300 ease-out z-10"
+              style={{ 
+                top: indicatorStyle.top, 
+                height: indicatorStyle.height,
+                opacity: indicatorStyle.opacity,
+                transform: 'translateZ(0)' // GPU acceleration
+              }}
+            />
             
             {/* Meetings */}
             <div className="space-y-3 pl-3">
@@ -317,7 +350,14 @@ export const DailyOverviewApple = ({
             const isExpanded = expandedMeetingId === meeting.id;
 
             return (
-              <div key={meeting.id} id={`meeting-${meeting.id}`}>
+              <div 
+                key={meeting.id} 
+                id={`meeting-${meeting.id}`}
+                ref={(el) => {
+                  if (el) cardRefs.current.set(meeting.id, el);
+                  else cardRefs.current.delete(meeting.id);
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => toggleExpand(meeting.id)}
