@@ -239,6 +239,17 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Scroll to tip card when all questions answered
+  const allQuestionsAnswered = template.brand !== undefined && template.offLabelDiscussed !== undefined && template.hasNextSteps !== undefined && template.hasObjections !== undefined;
+  
+  useEffect(() => {
+    if (allQuestionsAnswered && tipCardRef.current) {
+      setTimeout(() => {
+        tipCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [allQuestionsAnswered]);
+
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {
