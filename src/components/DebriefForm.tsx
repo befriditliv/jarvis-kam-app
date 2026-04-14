@@ -419,7 +419,6 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </Button>
           </div>
         )}
-        </div>
       </div>
     );
   }
