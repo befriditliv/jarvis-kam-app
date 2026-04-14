@@ -202,8 +202,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       outcome: 0,
       objectivesAchieved: [],
       keyConcerns: template.hasObjections || false,
-      hasInizioFollowUp: template.hasFollowUpTasks || false,
-      materialsShared: template.materialsShared || false,
+      hasInizioFollowUp: template.hasNextSteps || false,
+      materialsShared: false,
       voiceNotes: answers.join('\n\n')
     };
     
@@ -217,8 +217,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       outcome: 0,
       objectivesAchieved: [],
       keyConcerns: template.hasObjections || false,
-      hasInizioFollowUp: template.hasFollowUpTasks || false,
-      materialsShared: template.materialsShared || false,
+      hasInizioFollowUp: template.hasNextSteps || false,
+      materialsShared: false,
       voiceNotes
     };
     
