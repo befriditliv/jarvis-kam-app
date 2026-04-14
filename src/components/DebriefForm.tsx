@@ -83,7 +83,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [isPlayingQuestion, setIsPlayingQuestion] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const [template, setTemplate] = useState<DebriefTemplate>({
@@ -302,39 +302,46 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           ) : (
             <>
-              {/* Tips & Best Practices Info Box */}
-              <Card className="p-6 shadow-card border-0 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <Lightbulb className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-card-foreground mb-3">Tips for a Great Debrief</h3>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>Be specific about key discussion points and outcomes</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>Note any objections or concerns raised during the meeting</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>Capture action items and follow-up commitments</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>Record any materials shared or requested</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>Include relevant context for future reference</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </Card>
+              {/* Yes/No Template Questions */}
+              <div className="space-y-3">
+                {templateQuestions.map((q) => {
+                  const value = template[q.id];
+                  return (
+                    <div key={q.id} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-foreground">{q.label}</span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setTemplate(prev => ({ ...prev, [q.id]: prev[q.id] === true ? undefined : true }))}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                              value === true
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            Ja
+                          </button>
+                          <button
+                            onClick={() => setTemplate(prev => ({ ...prev, [q.id]: prev[q.id] === false ? undefined : false }))}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                              value === false
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                            }`}
+                          >
+                            Nej
+                          </button>
+                        </div>
+                      </div>
+                      {value !== undefined && (
+                        <p className="text-xs text-primary/80 bg-primary/5 rounded-lg px-3 py-2 animate-fade-in">
+                          💡 {value ? q.tipYes : q.tipNo}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
 
               <div className="text-center pt-2">
                 <Button 
