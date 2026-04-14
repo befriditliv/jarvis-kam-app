@@ -24,45 +24,65 @@ interface DebriefData {
 
 interface DebriefTemplate {
   quickDebrief?: string;
+  brand?: 'wegovy' | 'ozempic' | 'other';
+  offLabelDiscussed: boolean | undefined;
+  hasNextSteps: boolean | undefined;
   hasObjections: boolean | undefined;
-  materialsShared: boolean | undefined;
-  hasFollowUpTasks: boolean | undefined;
-  newMeetingScheduled: boolean | undefined;
 }
 
+const brandOptions = [
+  { value: 'wegovy' as const, label: 'Wegovy' },
+  { value: 'ozempic' as const, label: 'Ozempic' },
+  { value: 'other' as const, label: 'Andet' },
+];
+
 interface TemplateQuestion {
-  id: keyof Pick<DebriefTemplate, 'hasObjections' | 'materialsShared' | 'hasFollowUpTasks' | 'newMeetingScheduled'>;
+  id: keyof Pick<DebriefTemplate, 'offLabelDiscussed' | 'hasNextSteps' | 'hasObjections'>;
   label: string;
-  tipYes: string;
-  tipNo: string;
 }
 
 const templateQuestions: TemplateQuestion[] = [
-  {
-    id: 'hasObjections',
-    label: 'Var der indvendinger?',
-    tipYes: 'Beskriv indvendingerne konkret – hvad sagde lægen, og hvordan reagerede du?',
-    tipNo: 'Nævn hvad der gik godt, og hvad lægen var mest positiv omkring.',
-  },
-  {
-    id: 'materialsShared',
-    label: 'Delte du materialer?',
-    tipYes: 'Fortæl hvilke materialer du delte, og hvordan lægen reagerede på dem.',
-    tipNo: 'Overvej om der er materialer du kan sende som opfølgning.',
-  },
-  {
-    id: 'hasFollowUpTasks',
-    label: 'Er der opfølgning?',
-    tipYes: 'Beskriv de konkrete næste skridt og deadlines.',
-    tipNo: 'Overvej om der er en naturlig anledning til at følge op.',
-  },
-  {
-    id: 'newMeetingScheduled',
-    label: 'Nyt møde aftalt?',
-    tipYes: 'Nævn hvornår, og hvad formålet med næste møde er.',
-    tipNo: 'Tænk over hvad der kunne motivere et nyt møde.',
-  },
+  { id: 'offLabelDiscussed', label: 'Blev off-label brug diskuteret?' },
+  { id: 'hasNextSteps', label: 'Er der aftalt næste skridt?' },
+  { id: 'hasObjections', label: 'Var der indvendinger?' },
 ];
+
+interface BrandInsight {
+  text: string;
+}
+
+const wegovyInsights: BrandInsight[] = [
+  { text: 'Ozempic off-label brug? (til ingen, til alle, til udvalgte pt-grupper)' },
+  { text: 'Anvendelse af Mounjaro – til hvilke patienter?' },
+  { text: 'Proaktiv Wegovy-udskrivning til pt med komorbiditeter' },
+  { text: '7,2 mg dosis – vil HCP anvende dosis?' },
+  { text: 'Vægtvedligehold og stay-time på Wegovy' },
+  { text: 'SundVægtSammen – vil HCP anvende/overveje/ikke benytte tilbuddet? Begrundelse' },
+];
+
+const ozempicInsights: BrandInsight[] = [
+  { text: 'Off-label brug til vægttab – omfang og patientgrupper?' },
+  { text: 'Dosisoptrapning – følger HCP anbefalingerne?' },
+  { text: 'Skift fra andre GLP-1 – hvad driver beslutningen?' },
+  { text: 'Kardiovaskulære fordele – indgår det i samtalen med patienten?' },
+];
+
+const getInsightsForBrand = (brand?: string) => {
+  if (brand === 'wegovy') return wegovyInsights;
+  if (brand === 'ozempic') return ozempicInsights;
+  return [];
+};
+
+const getTipsForTemplate = (template: DebriefTemplate): string[] => {
+  const tips: string[] = [];
+  if (template.offLabelDiscussed === true) tips.push('Beskriv hvilke patientgrupper off-label blev diskuteret for.');
+  if (template.offLabelDiscussed === false) tips.push('Nævn om HCP er opmærksom på off-label tendenser i praksis.');
+  if (template.hasNextSteps === true) tips.push('Fortæl om de konkrete næste skridt, hvem der ejer dem, og deadline.');
+  if (template.hasNextSteps === false) tips.push('Overvej hvad der kunne skabe en naturlig opfølgning.');
+  if (template.hasObjections === true) tips.push('Beskriv indvendingerne konkret – og hvordan du håndterede dem.');
+  if (template.hasObjections === false) tips.push('Nævn hvad lægen var mest positiv omkring.');
+  return tips;
+};
 
 const quickDebriefOptions = [
   { value: "meeting-cancelled", label: "Meeting Cancelled" },
@@ -88,10 +108,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
-    hasObjections: undefined,
-    materialsShared: undefined,
-    hasFollowUpTasks: undefined,
-    newMeetingScheduled: undefined
+    brand: undefined,
+    offLabelDiscussed: undefined,
+    hasNextSteps: undefined,
+    hasObjections: undefined
   });
   const [voiceNotes, setVoiceNotes] = useState("");
 
@@ -182,8 +202,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       outcome: 0,
       objectivesAchieved: [],
       keyConcerns: template.hasObjections || false,
-      hasInizioFollowUp: template.hasFollowUpTasks || false,
-      materialsShared: template.materialsShared || false,
+      hasInizioFollowUp: template.hasNextSteps || false,
+      materialsShared: false,
       voiceNotes: answers.join('\n\n')
     };
     
@@ -197,8 +217,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
       outcome: 0,
       objectivesAchieved: [],
       keyConcerns: template.hasObjections || false,
-      hasInizioFollowUp: template.hasFollowUpTasks || false,
-      materialsShared: template.materialsShared || false,
+      hasInizioFollowUp: template.hasNextSteps || false,
+      materialsShared: false,
       voiceNotes
     };
     
@@ -302,13 +322,33 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
             </div>
           ) : (
             <>
-              {/* Yes/No Template Questions */}
-              <div className="space-y-3">
-                {templateQuestions.map((q) => {
-                  const value = template[q.id];
-                  return (
-                    <div key={q.id} className="space-y-2">
-                      <div className="flex items-center justify-between">
+              {/* Step 1: Brand Selection */}
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Hvilket brand handlede mødet om?</p>
+                <div className="flex gap-2">
+                  {brandOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setTemplate(prev => ({ ...prev, brand: prev.brand === option.value ? undefined : option.value }))}
+                      className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                        template.brand === option.value
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 2: Yes/No Questions (shown after brand selected) */}
+              {template.brand && (
+                <div className="space-y-3 animate-fade-in">
+                  {templateQuestions.map((q) => {
+                    const value = template[q.id];
+                    return (
+                      <div key={q.id} className="flex items-center justify-between">
                         <span className="text-sm font-medium text-foreground">{q.label}</span>
                         <div className="flex gap-2">
                           <button
@@ -333,15 +373,45 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                           </button>
                         </div>
                       </div>
-                      {value !== undefined && (
-                        <p className="text-xs text-primary/80 bg-primary/5 rounded-lg px-3 py-2 animate-fade-in">
-                          💡 {value ? q.tipYes : q.tipNo}
-                        </p>
-                      )}
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Contextual Tips + Brand Insights Card */}
+              {template.brand && (
+                <Card className="p-4 border-0 bg-primary/5 rounded-xl animate-fade-in">
+                  <div className="flex items-start gap-3 mb-3">
+                    <Lightbulb className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Den gode {template.brand === 'wegovy' ? 'Wegovy' : template.brand === 'ozempic' ? 'Ozempic' : ''} debriefing
+                    </h3>
+                  </div>
+
+                  {/* Brand-specific insight prompts */}
+                  {getInsightsForBrand(template.brand).length > 0 && (
+                    <div className="space-y-1.5 mb-3">
+                      <p className="text-xs font-medium text-muted-foreground">Husk at nævne:</p>
+                      {getInsightsForBrand(template.brand).map((insight, i) => (
+                        <div key={i} className="flex items-start gap-2 text-xs text-foreground/80">
+                          <span className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0" />
+                          <span>{insight.text}</span>
+                        </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
+                  )}
+
+                  {/* Dynamic tips based on yes/no answers */}
+                  {getTipsForTemplate(template).length > 0 && (
+                    <div className="space-y-1.5 pt-2 border-t border-primary/10">
+                      <p className="text-xs font-medium text-muted-foreground">Tips baseret på dine svar:</p>
+                      {getTipsForTemplate(template).map((tip, i) => (
+                        <p key={i} className="text-xs text-primary/80">💡 {tip}</p>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              )}
 
               <div className="text-center pt-2">
                 <Button 
