@@ -24,45 +24,65 @@ interface DebriefData {
 
 interface DebriefTemplate {
   quickDebrief?: string;
+  brand?: 'wegovy' | 'ozempic' | 'other';
+  offLabelDiscussed: boolean | undefined;
+  hasNextSteps: boolean | undefined;
   hasObjections: boolean | undefined;
-  materialsShared: boolean | undefined;
-  hasFollowUpTasks: boolean | undefined;
-  newMeetingScheduled: boolean | undefined;
 }
 
+const brandOptions = [
+  { value: 'wegovy' as const, label: 'Wegovy' },
+  { value: 'ozempic' as const, label: 'Ozempic' },
+  { value: 'other' as const, label: 'Andet' },
+];
+
 interface TemplateQuestion {
-  id: keyof Pick<DebriefTemplate, 'hasObjections' | 'materialsShared' | 'hasFollowUpTasks' | 'newMeetingScheduled'>;
+  id: keyof Pick<DebriefTemplate, 'offLabelDiscussed' | 'hasNextSteps' | 'hasObjections'>;
   label: string;
-  tipYes: string;
-  tipNo: string;
 }
 
 const templateQuestions: TemplateQuestion[] = [
-  {
-    id: 'hasObjections',
-    label: 'Var der indvendinger?',
-    tipYes: 'Beskriv indvendingerne konkret – hvad sagde lægen, og hvordan reagerede du?',
-    tipNo: 'Nævn hvad der gik godt, og hvad lægen var mest positiv omkring.',
-  },
-  {
-    id: 'materialsShared',
-    label: 'Delte du materialer?',
-    tipYes: 'Fortæl hvilke materialer du delte, og hvordan lægen reagerede på dem.',
-    tipNo: 'Overvej om der er materialer du kan sende som opfølgning.',
-  },
-  {
-    id: 'hasFollowUpTasks',
-    label: 'Er der opfølgning?',
-    tipYes: 'Beskriv de konkrete næste skridt og deadlines.',
-    tipNo: 'Overvej om der er en naturlig anledning til at følge op.',
-  },
-  {
-    id: 'newMeetingScheduled',
-    label: 'Nyt møde aftalt?',
-    tipYes: 'Nævn hvornår, og hvad formålet med næste møde er.',
-    tipNo: 'Tænk over hvad der kunne motivere et nyt møde.',
-  },
+  { id: 'offLabelDiscussed', label: 'Blev off-label brug diskuteret?' },
+  { id: 'hasNextSteps', label: 'Er der aftalt næste skridt?' },
+  { id: 'hasObjections', label: 'Var der indvendinger?' },
 ];
+
+interface BrandInsight {
+  text: string;
+}
+
+const wegovyInsights: BrandInsight[] = [
+  { text: 'Ozempic off-label brug? (til ingen, til alle, til udvalgte pt-grupper)' },
+  { text: 'Anvendelse af Mounjaro – til hvilke patienter?' },
+  { text: 'Proaktiv Wegovy-udskrivning til pt med komorbiditeter' },
+  { text: '7,2 mg dosis – vil HCP anvende dosis?' },
+  { text: 'Vægtvedligehold og stay-time på Wegovy' },
+  { text: 'SundVægtSammen – vil HCP anvende/overveje/ikke benytte tilbuddet? Begrundelse' },
+];
+
+const ozempicInsights: BrandInsight[] = [
+  { text: 'Off-label brug til vægttab – omfang og patientgrupper?' },
+  { text: 'Dosisoptrapning – følger HCP anbefalingerne?' },
+  { text: 'Skift fra andre GLP-1 – hvad driver beslutningen?' },
+  { text: 'Kardiovaskulære fordele – indgår det i samtalen med patienten?' },
+];
+
+const getInsightsForBrand = (brand?: string) => {
+  if (brand === 'wegovy') return wegovyInsights;
+  if (brand === 'ozempic') return ozempicInsights;
+  return [];
+};
+
+const getTipsForTemplate = (template: DebriefTemplate): string[] => {
+  const tips: string[] = [];
+  if (template.offLabelDiscussed === true) tips.push('Beskriv hvilke patientgrupper off-label blev diskuteret for.');
+  if (template.offLabelDiscussed === false) tips.push('Nævn om HCP er opmærksom på off-label tendenser i praksis.');
+  if (template.hasNextSteps === true) tips.push('Fortæl om de konkrete næste skridt, hvem der ejer dem, og deadline.');
+  if (template.hasNextSteps === false) tips.push('Overvej hvad der kunne skabe en naturlig opfølgning.');
+  if (template.hasObjections === true) tips.push('Beskriv indvendingerne konkret – og hvordan du håndterede dem.');
+  if (template.hasObjections === false) tips.push('Nævn hvad lægen var mest positiv omkring.');
+  return tips;
+};
 
 const quickDebriefOptions = [
   { value: "meeting-cancelled", label: "Meeting Cancelled" },
@@ -88,10 +108,10 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   
   const [template, setTemplate] = useState<DebriefTemplate>({
     quickDebrief: undefined,
-    hasObjections: undefined,
-    materialsShared: undefined,
-    hasFollowUpTasks: undefined,
-    newMeetingScheduled: undefined
+    brand: undefined,
+    offLabelDiscussed: undefined,
+    hasNextSteps: undefined,
+    hasObjections: undefined
   });
   const [voiceNotes, setVoiceNotes] = useState("");
 
