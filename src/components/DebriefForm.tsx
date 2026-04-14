@@ -275,65 +275,56 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 py-4 space-y-4">
+        <div className="px-4 py-4 space-y-5 pb-32">
           {/* Quick Debrief Options */}
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Quick options</p>
-            <div className="flex flex-wrap gap-2">
-              {quickDebriefOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setTemplate(prev => ({ 
-                    ...prev, 
-                    quickDebrief: prev.quickDebrief === option.value ? undefined : option.value 
-                  }))}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    template.quickDebrief === option.value 
-                      ? "bg-primary text-primary-foreground shadow-sm" 
-                      : "bg-muted/50 text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
+          <div className="flex gap-2">
+            {quickDebriefOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setTemplate(prev => ({ 
+                  ...prev, 
+                  quickDebrief: prev.quickDebrief === option.value ? undefined : option.value 
+                }))}
+                className={`px-3.5 py-2 rounded-full text-xs font-medium transition-all duration-200 ${
+                  template.quickDebrief === option.value 
+                    ? "bg-primary text-primary-foreground" 
+                    : "bg-muted/60 text-muted-foreground"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
 
           {/* Conditional rendering based on quick debrief selection */}
           {template.quickDebrief ? (
-            <div className="space-y-4">
-              <Card className="p-6 bg-gradient-subtle border-primary/20 border">
-                <div className="text-center">
-                  <CheckCircle className="h-12 w-12 text-primary mx-auto mb-3" />
-                  <h4 className="font-semibold text-lg mb-2 text-primary">Quick Debrief Selected</h4>
-                  <p className="text-muted-foreground mb-6">
-                    {quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label}
-                  </p>
-                  <Button 
-                    onClick={handleSaveDebrief}
-                    size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-3 text-base font-semibold"
-                  >
-                    <CheckCircle className="h-5 w-5 mr-3" />
-                    Gem Debrief
-                  </Button>
-                </div>
-              </Card>
-            </div>
+            <Card className="p-5 border-0 bg-primary/5 rounded-2xl text-center">
+              <CheckCircle className="h-10 w-10 text-primary mx-auto mb-2" />
+              <p className="text-sm font-medium text-foreground mb-1">
+                {quickDebriefOptions.find(o => o.value === template.quickDebrief)?.label}
+              </p>
+              <p className="text-xs text-muted-foreground mb-4">Gem for at registrere</p>
+              <Button 
+                onClick={handleSaveDebrief}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-6 h-11 text-sm font-semibold"
+              >
+                Gem Debrief
+              </Button>
+            </Card>
           ) : (
             <>
-              {/* Step 1: Brand Selection */}
+              {/* Brand Selection */}
               <div className="space-y-2">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Hvilket brand handlede mødet om?</p>
+                <p className="text-xs text-muted-foreground font-medium">Brand</p>
                 <div className="flex gap-2">
                   {brandOptions.map((option) => (
                     <button
                       key={option.value}
                       onClick={() => setTemplate(prev => ({ ...prev, brand: prev.brand === option.value ? undefined : option.value }))}
-                      className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                         template.brand === option.value
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted/50 text-muted-foreground"
                       }`}
                     >
                       {option.label}
@@ -342,31 +333,36 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 </div>
               </div>
 
-              {/* Step 2: Yes/No Questions (shown after brand selected) */}
+              {/* Yes/No Questions */}
               {template.brand && (
-                <div className="space-y-3 animate-fade-in">
-                  {templateQuestions.map((q) => {
+                <div className="space-y-0 animate-fade-in rounded-xl bg-card overflow-hidden">
+                  {templateQuestions.map((q, i) => {
                     const value = template[q.id];
                     return (
-                      <div key={q.id} className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-foreground">{q.label}</span>
-                        <div className="flex gap-2">
+                      <div
+                        key={q.id}
+                        className={`flex items-center justify-between px-4 py-3.5 ${
+                          i < templateQuestions.length - 1 ? "border-b border-border/30" : ""
+                        }`}
+                      >
+                        <span className="text-sm text-foreground">{q.label}</span>
+                        <div className="flex gap-1.5 flex-shrink-0">
                           <button
                             onClick={() => setTemplate(prev => ({ ...prev, [q.id]: prev[q.id] === true ? undefined : true }))}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                            className={`w-12 py-1.5 rounded-lg text-xs font-medium transition-all ${
                               value === true
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted/50 text-muted-foreground"
                             }`}
                           >
                             Ja
                           </button>
                           <button
                             onClick={() => setTemplate(prev => ({ ...prev, [q.id]: prev[q.id] === false ? undefined : false }))}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                            className={`w-12 py-1.5 rounded-lg text-xs font-medium transition-all ${
                               value === false
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted/50 text-muted-foreground"
                             }`}
                           >
                             Nej
@@ -378,54 +374,51 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 </div>
               )}
 
-              {/* Contextual Tips + Brand Insights Card */}
-              {template.brand && (
-                <Card className="p-4 border-0 bg-primary/5 rounded-xl animate-fade-in">
-                  <div className="flex items-start gap-3 mb-3">
-                    <Lightbulb className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+              {/* "Den gode debriefing" - shown after questions */}
+              {template.brand && getInsightsForBrand(template.brand).length > 0 && (
+                <div className="animate-fade-in space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-primary" />
                     <h3 className="text-sm font-semibold text-foreground">
                       Den gode {template.brand === 'wegovy' ? 'Wegovy' : template.brand === 'ozempic' ? 'Ozempic' : ''} debriefing
                     </h3>
                   </div>
+                  <div className="rounded-xl bg-primary/5 px-4 py-3 space-y-2">
+                    {getInsightsForBrand(template.brand).map((insight, i) => (
+                      <div key={i} className="flex items-start gap-2.5 text-xs text-foreground/80">
+                        <span className="w-1 h-1 bg-primary rounded-full mt-1.5 flex-shrink-0" />
+                        <span>{insight.text}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                  {/* Brand-specific insight prompts */}
-                  {getInsightsForBrand(template.brand).length > 0 && (
-                    <div className="space-y-1.5 mb-3">
-                      <p className="text-xs font-medium text-muted-foreground">Husk at nævne:</p>
-                      {getInsightsForBrand(template.brand).map((insight, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-foreground/80">
-                          <span className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                          <span>{insight.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Dynamic tips based on yes/no answers */}
+                  {/* Dynamic tips */}
                   {getTipsForTemplate(template).length > 0 && (
-                    <div className="space-y-1.5 pt-2 border-t border-primary/10">
-                      <p className="text-xs font-medium text-muted-foreground">Tips baseret på dine svar:</p>
+                    <div className="rounded-xl bg-muted/30 px-4 py-3 space-y-1.5">
                       {getTipsForTemplate(template).map((tip, i) => (
-                        <p key={i} className="text-xs text-primary/80">💡 {tip}</p>
+                        <p key={i} className="text-xs text-muted-foreground">💡 {tip}</p>
                       ))}
                     </div>
                   )}
-                </Card>
+                </div>
               )}
-
-              <div className="text-center pt-2">
-                <Button 
-                  onClick={handleStartDebrief}
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg transition-all duration-300 rounded-xl px-8 py-3 text-base font-semibold"
-                >
-                  <Mic className="h-5 w-5 mr-3" />
-                  Start Voice Debrief
-                </Button>
-              </div>
             </>
           )}
         </div>
+
+        {/* Fixed bottom CTA */}
+        {!template.quickDebrief && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-sm border-t border-border/30">
+            <Button 
+              onClick={handleStartDebrief}
+              size="lg"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-12 text-base font-semibold"
+            >
+              <Mic className="h-5 w-5 mr-2" />
+              Start Voice Debrief
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
