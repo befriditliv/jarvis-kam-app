@@ -374,8 +374,8 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
                 </div>
               )}
 
-              {/* "Den gode debriefing" - shown after questions */}
-              {template.brand && getInsightsForBrand(template.brand).length > 0 && (
+              {/* "Den gode debriefing" - shown after all questions answered */}
+              {template.brand && getInsightsForBrand(template.brand).length > 0 && template.offLabelDiscussed !== undefined && template.hasNextSteps !== undefined && template.hasObjections !== undefined && (
                 <div className="animate-fade-in space-y-2">
                   <div className="flex items-center gap-2">
                     <Lightbulb className="h-4 w-4 text-primary" />
