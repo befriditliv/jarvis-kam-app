@@ -30,6 +30,40 @@ interface DebriefTemplate {
   newMeetingScheduled: boolean | undefined;
 }
 
+interface TemplateQuestion {
+  id: keyof Pick<DebriefTemplate, 'hasObjections' | 'materialsShared' | 'hasFollowUpTasks' | 'newMeetingScheduled'>;
+  label: string;
+  tipYes: string;
+  tipNo: string;
+}
+
+const templateQuestions: TemplateQuestion[] = [
+  {
+    id: 'hasObjections',
+    label: 'Var der indvendinger?',
+    tipYes: 'Beskriv indvendingerne konkret – hvad sagde lægen, og hvordan reagerede du?',
+    tipNo: 'Nævn hvad der gik godt, og hvad lægen var mest positiv omkring.',
+  },
+  {
+    id: 'materialsShared',
+    label: 'Delte du materialer?',
+    tipYes: 'Fortæl hvilke materialer du delte, og hvordan lægen reagerede på dem.',
+    tipNo: 'Overvej om der er materialer du kan sende som opfølgning.',
+  },
+  {
+    id: 'hasFollowUpTasks',
+    label: 'Er der opfølgning?',
+    tipYes: 'Beskriv de konkrete næste skridt og deadlines.',
+    tipNo: 'Overvej om der er en naturlig anledning til at følge op.',
+  },
+  {
+    id: 'newMeetingScheduled',
+    label: 'Nyt møde aftalt?',
+    tipYes: 'Nævn hvornår, og hvad formålet med næste møde er.',
+    tipNo: 'Tænk over hvad der kunne motivere et nyt møde.',
+  },
+];
+
 const quickDebriefOptions = [
   { value: "meeting-cancelled", label: "Meeting Cancelled" },
   { value: "material-handover", label: "Debrief Not Relevant" }
