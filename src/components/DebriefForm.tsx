@@ -104,6 +104,7 @@ export const DebriefForm = ({ meetingId, onBack, onSave }: DebriefFormProps) => 
   const [recordingTime, setRecordingTime] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tipCardRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const [template, setTemplate] = useState<DebriefTemplate>({
